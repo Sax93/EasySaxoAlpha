@@ -21,6 +21,6 @@ Also, do not treat this software as something serious, but more as a really unco
 # Alternate between ES commands and System commands
 
 If you want to make static changes, you can use `set cmdmatch sys` to use commands from your system shell. As well you can use `set cmdmatch es` to use ES commands.
-IF you want to make instant changes, you can type the command you want followed by " s" or " e" [System or EasySaxo].
+IF you want to make instant changes, you can type the command you want followed by " -s" or " -e" [System or EasySaxo].
 
 sxf.
