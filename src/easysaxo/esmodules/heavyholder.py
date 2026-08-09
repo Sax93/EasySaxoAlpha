@@ -5,7 +5,7 @@
 # `heavyholder.py` ONLY FOR COMPLEX TASK & OVERLAP COMMAND DEFINING
 # you know what else is heavy?
 
-import threading, os, json, time
+import threading, time
 from colorama import Fore, Style
 from .dirloct import base_dir, DirLocation
 from .mathf import MathFunc
@@ -45,6 +45,8 @@ class ThreadData:
             print(f"Timer set for {Fore.CYAN}{sec} seconds{Style.RESET_ALL} in the background.")
         except ValueError: print(f"{Fore.RED}Please provide a valid integer for seconds.{Style.RESET_ALL}")
         
+import json, os
+
 class SessionManager:
     active_session_file = os.path.join(base_dir, "session.json")
     

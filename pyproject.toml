@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "easysaxo"
-version = "1.0.4"
+version = "1.0.41"
 description = "EasySaxo Alpha Edition, mini-shell CLI that works with your system commands as well!"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -24,9 +24,10 @@ dependencies = [
     "cputil>=1.0.0",
     "gputil>=1.4.0",
     "ascii-magic>=2.3.0",
-    "tensorflow>=2.21.0",
     "bcrypt>=5.0.0",
     "scikit-learn>=1.9.0",
+    "art>=6.5",
+    "numpy>=2.5.1",
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -39,7 +40,6 @@ classifiers = [
 
 [project.optional-dependencies]
 ml = [
-    "tensorflow>=2.21.0",
     "scikit-learn>=1.9.0",
 ]
 

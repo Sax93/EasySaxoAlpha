@@ -82,10 +82,12 @@ CMDlist = (
     f"{Fore.BLUE}fileopn{Style.RESET_ALL}     : Opens a {Fore.RED}file{Style.RESET_ALL}.\n"
     f"{Fore.BLUE}filecls{Style.RESET_ALL}     : Closes a {Fore.RED}file{Style.RESET_ALL}.\n"
     f"{Fore.BLUE}jsonrd{Style.RESET_ALL}      : Reads a {Fore.RED}JSON file{Style.RESET_ALL}.\n"
-    f"{Fore.BLUE}regex{Style.RESET_ALL}       : Looks for {Fore.GREEN}patterns{Style.RESET_ALL} in a text.\n"
+    f"{Fore.BLUE}regex{Style.RESET_ALL}       : Looks for {Fore.GREEN}patterns{Style.RESET_ALL} in a text or textfile.\n"
     f"{Fore.BLUE}playaudio{Style.RESET_ALL}   : Plays an {Fore.RED}audio file{Style.RESET_ALL} (specify the route).\n"
     f"{Fore.BLUE}stopaudio{Style.RESET_ALL}   : Stops the current {Fore.RED}audio file{Style.RESET_ALL}.\n"
     f"{Fore.BLUE}render{Style.RESET_ALL}      : Renders and draws a specified {Fore.RED}image file{Style.RESET_ALL} (specify route).\n"
+    f"{Fore.BLUE}banner{Style.RESET_ALL}      : Renders and prints inputted {Fore.GREEN}text{Style.RESET_ALL}.\n"
+    f"{Fore.BLUE}pkm{Style.RESET_ALL}         : Enters the {Fore.CYAN}Piano Keyboard Mode{Style.RESET_ALL} (experimental).\n"
     f"{Fore.BLUE}unins{Style.RESET_ALL}       : Guides to uninstall {Fore.LIGHTRED_EX}{easysaxo.name}{Style.RESET_ALL}.\n"
     f"{Fore.BLUE}boot{Style.RESET_ALL}        : Auto-checks if {Fore.LIGHTRED_EX}app{Style.RESET_ALL} has all recourses, as a reboot.\n"
     f"{Fore.BLUE}exit{Style.RESET_ALL}        : Exit {Fore.CYAN}{easysaxo.name}{Style.RESET_ALL}.\n"
@@ -120,7 +122,8 @@ files_to_allow = [
     "esmodules/misc",
     "esmodules/builtinrender",
     "esmodules/lister",
-    "esmodules/easters"
+    "esmodules/easters",
+    "esmodules/mamidi"
 ]
 
 # math lists =====================================================================================
@@ -172,7 +175,7 @@ _allowed_operators = {
 required_modules = [
     "os", "sys", "re", "time", "subprocess", "platform", "random", "locale",
     "psutil", "json", "math", "pygame", "threading", "socket", "colorama", "rich", "prompt_toolkit",
-    "gputil", "cputil", "cpuinfo", "importlib", "ascii_magic"
+    "cpuinfo", "importlib", "ascii_magic"
 ]
 
 # unins (files)
@@ -188,3 +191,41 @@ colors = [
     "LIGHTRED_EX", "LIGHTBLUE_EX", "LIGHTGREEN_EX", "LIGHTBLACK_EX",
     "LIGHTMAGENTA_EX", "LIGHTYELLOW_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX"
 ]
+
+# mamidi ============================================================================================
+
+note_freqs = {
+    'C4': 261.63, 'C#4': 277.18,
+    'D4': 293.66, 'D#4': 311.13,
+    'E4': 329.63,
+    'F4': 349.23, 'F#4': 369.99,
+    'G4': 392.00, 'G#4': 415.30,
+    'A4': 440.00, 'A#4': 466.16,
+    'B4': 493.88,
+    'C5': 523.25, 'C#5': 554.37,
+    'D5': 587.33, 'D#5': 622.25,
+    'E5': 659.26,
+    'F5': 698.46, 'F#5': 739.99,
+    'G5': 783.99, 'G#5': 830.61,
+    'A5': 880.00, 'A#5': 932.33,
+    'B5': 987.77,
+    'C6': 1046.50 
+}
+
+note_k_bindings = {
+    'q': ('C', note_freqs['C4']), '2': ('C#4', note_freqs['C#4']),
+    'w': ('D', note_freqs['D4']), '3': ('D#4', note_freqs['D#4']),
+    'e': ('E', note_freqs['E4']),
+    'r': ('F', note_freqs['F4']), '5': ('F#4', note_freqs['F#4']),
+    't': ('G', note_freqs['G4']), '6': ('G#4', note_freqs['G#4']),
+    'y': ('A', note_freqs['A4']), '7': ('A#4', note_freqs['A#4']),
+    'u': ('B', note_freqs['B4']),
+    'i': ('C5', note_freqs['C5']), '9': ('C#5', note_freqs['C#5']),
+    'o': ('D5', note_freqs['D5']), '0': ('D#5', note_freqs['D#5']),
+    'p': ('E5', note_freqs['E5']),
+    'z': ('F5', note_freqs['F5']), 's': ('F#5', note_freqs['F#5']),
+    'x': ('G5', note_freqs['G5']), 'd': ('G#5', note_freqs['G#5']),
+    'c': ('A5', note_freqs['A5']), 'f': ('A#5', note_freqs['A#5']),
+    'v': ('B5', note_freqs['B5']),
+    'b': ('C6', note_freqs['C6'])
+}

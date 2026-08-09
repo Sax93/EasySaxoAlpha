@@ -43,7 +43,7 @@ class MediaData:
                 print(f"{Fore.GREEN}Audio stopped.{Style.RESET_ALL}")
             else: print(f"{Fore.YELLOW}No audio is currently playing.{Style.RESET_ALL}")
         except Exception as e: print(f"{Fore.RED}Error stopping audio: {e}{Style.RESET_ALL}")
-    
+        
     # render area
     @staticmethod
     def render_preset(name):
@@ -51,10 +51,11 @@ class MediaData:
         from . import builtinrender as bt
         from .lister import colors
         import random
-        attr_name = f"{name.lower()}Logo"
-        logo = getattr(bt, attr_name, None)
+        
         rancolor = random.choice(colors)
         ranfore = getattr(Fore, rancolor)
+        attr_name = f"{name.lower()}Logo"
+        logo = getattr(bt, attr_name, None)
         if logo:
             print(f"{ranfore}{logo}{Style.RESET_ALL}")
         else:
@@ -65,6 +66,8 @@ class MediaData:
         if not ASCII_AVAILABLE:
             print(f"{Fore.RED}ASCII Art not available.{Style.RESET_ALL}")
             return
+            # on top of it all, we check if asciiart is available
+            # to avoid errors with the command
 
         resolved_path = DirLocation._resolve_path(filepath)
 
@@ -84,5 +87,14 @@ class MediaData:
             ascii_r.to_terminal(columns=cols)
         except Exception as e:
             print(f"{Fore.RED}Could not render: {e}{Style.RESET_ALL}")
+    
+    @staticmethod
+    def txt2rt(text):
+        try: from art import text2art
+        except ImportError:
+            print(f"{Fore.RED}Art not available.{Style.RESET_ALL}")
+            return
+        result = text2art(text)
+        print(f"{Fore.CYAN}{result}{Style.RESET_ALL}")
         
 # holy useless code

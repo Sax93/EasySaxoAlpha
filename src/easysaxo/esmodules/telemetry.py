@@ -79,7 +79,7 @@ class TelemetryData:
         except ImportError: speedtest = None
         
         if not speedtest:
-            print(f"{Fore.YELLOW}Speedtest package not installed. Install with 'pip install speedtest-cli'.{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}Speedtest package not installed.{Style.RESET_ALL}")
             return
         print("Testing network speed (this may take a few seconds)...")
         try:

@@ -7,11 +7,8 @@ from colorama import Fore, Style
 def whats_new():
     print(
         f"\n===== {Fore.CYAN}What's New!{Style.RESET_ALL} ({Fore.YELLOW}{easysaxo.name} v{easysaxo.ver}{Style.RESET_ALL}) =====\n"
-        f"2. Added commands: {Fore.BLUE}'render', 'unins'{Style.RESET_ALL}. Deleted commands: {Fore.LIGHTRED_EX}'fileloc', 'import'{Style.RESET_ALL}.\n"
+        f"2. Added commands: {Fore.BLUE}'banner', 'pkm'{Style.RESET_ALL}.\n"
         f"2. Fixed {Fore.LIGHTGREEN_EX}code & miscellaneous{Style.RESET_ALL} bugs.\n"
-        f"3. Modified {Fore.GREEN}module installer/checking{Style.RESET_ALL}.\n"
-        f"4. {Fore.GREEN}Code{Style.RESET_ALL} optimization and {Fore.MAGENTA}file{Style.RESET_ALL} distribution.\n"
-        f"5. Added {Fore.MAGENTA}password encryption{Style.RESET_ALL}\n"
     )
 
 # Talking
@@ -64,10 +61,10 @@ def module_importing(modlist):
 from .lister import required_modules as mods
 from .dirloct import DirLocation
 def bootcheck():
+    clr()
     print(f"{Fore.LIGHTYELLOW_EX}This might take a few seconds...{Style.RESET_ALL}")
     module_importing(mods)
     DirLocation.allowance()
-    time.sleep(3)
     clr()
     
 bootcheck()
@@ -80,7 +77,7 @@ def uninstaller():
     note_path = os.path.join(base_dir, "goodbye.txt")
 
     with open(note_path, "w", encoding="utf-8") as f: # farewell :(
-        f.write("Thanks for using EasySaxo! We'll miss you. :(\n")
+        f.write("Thanks for using EasySaxo! I'll miss you. :(\n")
 
     try:
         if os.name == 'nt': os.startfile(note_path)
@@ -106,11 +103,11 @@ def unins_guide():
     print(f"{Fore.LIGHTRED_EX}WARNING! This will delete all EasySaxo files and info.{Style.RESET_ALL}")
     con = input(f"{Fore.LIGHTCYAN_EX}Do you still want to proceed? (Y/N): {Style.RESET_ALL}").strip().lower() # please do not
     
-    if con in ["y", "yes"]: # a.k.a if you_are == a_dumbass:
+    if con in ["y", "yes"]:
         print(f"Uninstalling EasySaxo {easysaxo.ver}...")
         time.sleep(0.5)
         uninstaller()
-    else: print("Uninstall canceled.") #yeeeeeeah
+    else: print("Uninstall canceled.")
 
 # Fake traceback
 

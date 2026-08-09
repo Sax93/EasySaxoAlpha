@@ -68,7 +68,9 @@ def Core(session_info=None):
         ThreadData.current_user = session_info.get("user_name", "User")
         ThreadData.current_pswd = session_info.get("password")
     else: ThreadData.current_user = session_info
-        
+    
+    from .esmodules.dirloct import base_dir
+    print(f"{Fore.LIGHTBLACK_EX}Default path: {base_dir}{Style.RESET_ALL}")
     print(f"Welcome to {Fore.CYAN}{easysaxo.name}{Style.RESET_ALL}! Insert commands down below.")
 
     all_commands = list(COMMAND_REGISTRY.keys()) + list(translations.keys())
@@ -125,10 +127,6 @@ def Core(session_info=None):
         arg = parts[1] if len(parts) > 1 else None
         
         if cmd in translations: cmd = translations[cmd]
-        
-        if cmd in ["exit", "quit", "kill"]:
-            SessionManager.save_session(ThreadData.current_user)
-            break
 
         in_easysaxo = cmd in COMMAND_REGISTRY
         sys_binary = shutil.which(cmd)

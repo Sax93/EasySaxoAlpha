@@ -7,7 +7,7 @@ class App:
         self.ver = ver
         self.dev = "SXF"
         self.problem = "in the chair" 
-easysaxo = App("EasySaxo", "Alpha 1.04") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.041") # yes im that lazy to write this ever again
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
@@ -26,4 +26,4 @@ def register_command(name, aliases=None, help_text=None, registry=COMMAND_REGIST
 
 def clr(): os.system('cls' if os.name == 'nt' else 'clear')
 
-# its ugly to be the 29th codeline in a config script. att, a pyzon comment 
+# its ugly to be the 29th codeline in a config script.
