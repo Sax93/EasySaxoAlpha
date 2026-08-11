@@ -11,18 +11,17 @@ from .esmodules.misc import whats_new, hrs, StatusHandler, module_importing, StH
 from .esmodules.jsonregex import JsonData, RegexData
 from .esmodules.medi import MediaData
 from .esmodules.heavyholder import ThreadData, SessionManager
-from .esmodules.lister import MATHSET_HELP, mathset, required_modules
+from .esmodules.lister import MathList
 from colorama import Fore, Style
 
 ee4 = True
-developer = "ID-10T"
 
 #=================================================
 # Command Mappings
 #=================================================
 
 # For in-MathSet guide
-for math_key, help_str in MATHSET_HELP.items():
+for math_key, help_str in MathList.MATHSET_HELP.items():
     HELP_REGISTRY[math_key] = help_str
 
 # =========== EASTER EGGS SECTION ============
@@ -36,8 +35,8 @@ def e2():
     easters.eas2()
         
 def e3():
-    from .esmodules.lister import osaka
-    print(f"{Fore.LIGHTYELLOW_EX}{random.choice(osaka)} :D{Style.RESET_ALL}")
+    from .esmodules.lister import EasterList
+    print(f"{Fore.LIGHTYELLOW_EX}{random.choice(EasterList.osaka)} :D{Style.RESET_ALL}")
 
 def e4():
     global ee4
@@ -130,8 +129,8 @@ def g_appv(): print(f"App version: {Fore.CYAN}{easysaxo.ver}{Style.RESET_ALL}")
 
 @register_command("appdev", aliases=["developer", "creator", "devs", "dev"], registry=GET_REGISTRY)
 def g_appd():
-    possible_devs = ["SXF", "SFX", "Your mom lol", developer]
-    pctg = [98, 1.2, 0.7, 0.1]
+    possible_devs = ["SXF", "SFX", "Your mom lol"]
+    pctg = [98, 1.2, 0.8]
     easysaxo.dev = random.choices(possible_devs, weights=pctg, k=1)[0]
     print(f"App developer: {Fore.CYAN}{easysaxo.dev}{Style.RESET_ALL}")
 
@@ -161,8 +160,8 @@ def g_all():
 @register_command("help", aliases=["?", "-h"], help_text="help [command] - Shows command list or syntax details for a target command.")
 def c_help(arg):
     if not arg:
-        from .esmodules.lister import CMDlist
-        print(CMDlist)
+        from .esmodules.lister import CommandList
+        print(CommandList.CMDlist)
     else:
         target = arg.lower().strip()
         if target in HELP_REGISTRY:
@@ -256,11 +255,11 @@ def c_filedel(arg): DirLocation.filedel(arg) if arg else print(f"{Fore.RED}Missi
 
 @register_command("filewrt", aliases=["writef"], help_text="filewrt <filepath> <content> - [ONE LINE] Overwrites target file with text content.")
 def c_filewrt(arg):
-    from .esmodules.lister import files_to_allow as rsv
+    from .esmodules.lister import FileList
     parts = arg.split(maxsplit=1) if arg else []
     if not parts: print(f"{Fore.RED}Usage: filewrt <filepath> <content>{Style.RESET_ALL}")
     target_file = parts[0][:-3] if parts[0].endswith(".py") else parts[0]
-    if parts[0] in rsv or target_file in rsv:
+    if parts[0] in FileList._allow or target_file in FileList._allow:
         print(f"{Fore.LIGHTRED_EX}Hey, hey, no touching there.{Style.RESET_ALL}")
         return
     elif len(parts) == 2: DirLocation.filewrt(parts[0], parts[1])
@@ -295,14 +294,14 @@ def c_pkm(arg):
 
 @register_command("render", aliases=["asciiart", "art"], help_text="render <imagepath> [columnnum] - Renders an image in ASCII.")
 def c_render(arg):
-    from .esmodules.lister import RENlist
+    from .esmodules.lister import CommandList
     if not arg:
         print(f"{Fore.RED}Usage: render <imgpath> [colnum]{Style.RESET_ALL}")
         return
     parts = arg.split()
     target = parts[0]
     colnum = parts[1] if len(parts) > 1 else "80"
-    if target.upper() in RENlist:
+    if target.upper() in CommandList.RENlist:
         MediaData.render_preset(target.lower())
         return
     
@@ -313,43 +312,8 @@ def c_banner(arg): MediaData.txt2rt(arg) if arg else MediaData.txt2rt('Missing t
 
 @register_command("set", help_text="set <varfeature> <val> - Updates session settings or math variables.")
 def c_set(arg): # prob greatest cmd
-    if not arg: print(f"{Fore.RED}Usage: set name/password <new_name/new_password>\nset var <var_name> <value>\nset cmdmatch es/sys{Style.RESET_ALL}")
-    else:
-        parts = arg.split(maxsplit=2)
-        # edit username
-        if parts[0].lower() == "name" and len(parts) >= 2:
-            ThreadData.current_user = parts[1]
-            print(f"User name replaced to {Fore.GREEN}{parts[1]}{Style.RESET_ALL}.")
-            SessionManager.save_session(ThreadData.current_user)
-            
-        # edit/add variable
-        elif parts[0].lower() in ["var", "variable"] and len(parts) == 3:
-            MathFunc.set_var(parts[1], parts[2]); SessionManager.save_session(ThreadData.current_user)
-        
-        # set new password
-        elif parts[0].lower() in ["password", "key", "pswd"] and len(parts) >= 2:
-            import bcrypt
-            plain_pwd = parts[1].encode('utf-8')
-            hashed_bytes = bcrypt.hashpw(plain_pwd, bcrypt.gensalt())
-            ThreadData.current_pswd = hashed_bytes.decode('utf-8')
-            print(f"Password assigned successfully. It will load {Fore.MAGENTA}next session{Style.RESET_ALL}.")
-            SessionManager.save_session(ThreadData.current_user)
-        
-        # set command match
-        elif parts[0].lower() in ["cmdmatch", "cmdrun", "mode"] and len(parts) >= 2:
-            mode_arg = parts[1].lower()
-            if mode_arg in ["sys", "path", "device", "s"]: # system
-                ThreadData.target_mode = "system"
-                print(f"{Fore.LIGHTGREEN_EX}Default execution mode set to: System Shell{Style.RESET_ALL}")
-            elif mode_arg in ["es", "app", "local", "e"]: # app
-                ThreadData.target_mode = "easysaxo"
-                print(f"{Fore.LIGHTCYAN_EX}Default execution mode set to: {easysaxo.name} Shell (Internal){Style.RESET_ALL}")
-            else: # auto
-                ThreadData.target_mode = "auto"
-                print(f"{Fore.LIGHTYELLOW_EX}Default execution mode set to: Auto (EasySaxo -> System){Style.RESET_ALL}")
-                print(f"You can either use {Fore.CYAN}'-e'{Style.RESET_ALL} to force app command, or {Fore.CYAN}'-s'{Style.RESET_ALL} to force system command!")
-                
-        else: print(f"{Fore.RED}Unknown/malformed set subcommand.{Style.RESET_ALL}")
+    from .esmodules.heavyholder import set_stat
+    set_stat(arg)
 
 @register_command("reset", help_text="reset <name/password>")
 def c_reset(arg):
@@ -395,15 +359,7 @@ def c_mathhelp(arg): # useless though
         print(f"{Fore.RED}Usage: mathhelp <attribute>{Style.RESET_ALL}")
         print(f"Available attributes: {Fore.CYAN}{', '.join(mathset.keys())}{Style.RESET_ALL}")
     else: MathFunc.help_attribute(arg)
-
-@register_command("boot", aliases=["reboot"], help_text=f"boot - Reboots {easysaxo.name} safely")
-def c_boot(arg):
-    from . import main
-    SessionManager.save_session(ThreadData.current_user)
-    bootcheck()
-    main.Core()
     
-
 @register_command("time", aliases=["date"], help_text="time - Displays current system date and time.")
 def c_time(arg): hrs()
 

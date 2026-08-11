@@ -49,10 +49,10 @@ class MediaData:
     def render_preset(name):
         # this function stands to print preset arts, and not accidentally trying to access a file.
         from . import builtinrender as bt
-        from .lister import colors
+        from .lister import ColorList
         import random
         
-        rancolor = random.choice(colors)
+        rancolor = random.choice(ColorList.colors)
         ranfore = getattr(Fore, rancolor)
         attr_name = f"{name.lower()}Logo"
         logo = getattr(bt, attr_name, None)

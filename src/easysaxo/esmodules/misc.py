@@ -1,5 +1,6 @@
 from ..config import easysaxo, clr
 from colorama import Fore, Style
+import time
 
 # `misc.py` may handle miscellaneous data and functions.
 
@@ -7,7 +8,7 @@ from colorama import Fore, Style
 def whats_new():
     print(
         f"\n===== {Fore.CYAN}What's New!{Style.RESET_ALL} ({Fore.YELLOW}{easysaxo.name} v{easysaxo.ver}{Style.RESET_ALL}) =====\n"
-        f"2. Added commands: {Fore.BLUE}'banner', 'pkm'{Style.RESET_ALL}.\n"
+        f"1. Added built-in songs in {Fore.BLUE}PK Mode{Style.RESET_ALL}.\n"
         f"2. Fixed {Fore.LIGHTGREEN_EX}code & miscellaneous{Style.RESET_ALL} bugs.\n"
     )
 
@@ -17,15 +18,11 @@ def talk(text: str, sleeptime: float = None):
     time.sleep(sleeptime) if sleeptime else time.sleep(0.73)
 
 # Time and Date
-import time
-
 def hrs():
     print(f"Time: {Fore.LIGHTYELLOW_EX}{time.strftime('%H:%M:%S')}{Style.RESET_ALL}")
     print(f"Date: {Fore.LIGHTRED_EX}{time.strftime('%Y-%m-%d')}{Style.RESET_ALL}")
 
 # Status Handler for modules
-import importlib
-
 class StatusHandler:
     def __init__(self, label_width=25):
         self.ok = f"{Fore.GREEN}OK{Style.RESET_ALL}"
@@ -37,6 +34,7 @@ class StatusHandler:
         print(f"{label:<{self.label_width}}: [{status}] {extra_info}".strip())
 
     def check_imports(self, modules: list[str]):
+        import importlib
         all_success = True
         for mod in modules:
             try:
@@ -58,17 +56,14 @@ def module_importing(modlist):
 # Module importing might throw ERROR over GPutil and CPUinfo
 # for actually no reason..
 
-from .lister import required_modules as mods
-from .dirloct import DirLocation
 def bootcheck():
+    from .lister import MiscList
+    from .dirloct import DirLocation
     clr()
     print(f"{Fore.LIGHTYELLOW_EX}This might take a few seconds...{Style.RESET_ALL}")
-    module_importing(mods)
+    module_importing(MiscList.required_modules)
     DirLocation.allowance()
     clr()
-    
-bootcheck()
-
 
 # Uninstaller
 def uninstaller():
@@ -89,8 +84,8 @@ def uninstaller():
         folder_path = os.path.join(base_dir, folder)
         if os.path.exists(folder_path): shutil.rmtree(folder_path, ignore_errors=True)
         
-    from .lister import files_to_delete as fls
-    for file in fls: # delete app files
+    from .lister import FileList
+    for file in FileList._delete: # delete app files
         file_path = os.path.join(base_dir, file)
         if os.path.exists(file_path):
             try: os.remove(file_path)
@@ -112,7 +107,6 @@ def unins_guide():
 # Fake traceback
 
 def traceback(err):
-    import time
     from .dirloct import base_dir
     print()
     print("Traceback (most recent call last):\n"

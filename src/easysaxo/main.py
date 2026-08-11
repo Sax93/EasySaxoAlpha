@@ -3,19 +3,21 @@
 # Runs main processes like command input and user data processing
 # Ironically, it is not the most dangerous file to modify
 
-import sys, os, unicodedata, time, shlex, subprocess, shutil
+print(f"Loading EasySaxo...")
+
+import os
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1" # was tired of the pygame msg
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0" # tensorflow hide msgs
-
-# if this code works, it was written by sxf
-# if it doesnt, ion know who did :p
 
 # =================================================
 # Import section
 # =================================================
-from .config import easysaxo, COMMAND_REGISTRY, clr
-from . import commands
-from .esmodules.heavyholder import ThreadData, SessionManager
+# Standard library imports
+import sys, unicodedata, shutil, subprocess
+import time, json, bcrypt
+from pathlib import Path
+from colorama import Fore, Style, just_fix_windows_console
+just_fix_windows_console()
 
 # Rich support
 try:
@@ -33,8 +35,11 @@ try:
     PROMPT_TOOLKIT_AVAILABLE = True
 except ImportError: PROMPT_TOOLKIT_AVAILABLE = False
 
-from colorama import Fore, Style, just_fix_windows_console
-just_fix_windows_console()
+# Project imports
+from . import commands
+from .esmodules.dirloct import base_dir
+from .config import easysaxo, COMMAND_REGISTRY, clr
+from .esmodules.heavyholder import ThreadData, SessionManager
 
 #=================================================
 # Core main loop
@@ -42,8 +47,6 @@ just_fix_windows_console()
 def Core(session_info=None):
     enable_ee = False
     scee = True
-    import json
-    from pathlib import Path
     
     Tdir = Path(__file__).resolve().parent
     TRANSLATIONS_FILE = Tdir / "translations.json"
@@ -61,7 +64,6 @@ def Core(session_info=None):
         if len(sys.argv) > 1:
             if sys.argv[1].lower() == "load" and len(sys.argv) > 2: preboot_file = sys.argv[2]
             elif sys.argv[1].endswith(".json"): preboot_file = sys.argv[1]
-
         session_info = SessionManager.load_session(preboot_file)
 
     if isinstance(session_info, dict):
@@ -69,7 +71,6 @@ def Core(session_info=None):
         ThreadData.current_pswd = session_info.get("password")
     else: ThreadData.current_user = session_info
     
-    from .esmodules.dirloct import base_dir
     print(f"{Fore.LIGHTBLACK_EX}Default path: {base_dir}{Style.RESET_ALL}")
     print(f"Welcome to {Fore.CYAN}{easysaxo.name}{Style.RESET_ALL}! Insert commands down below.")
 
@@ -97,7 +98,6 @@ def Core(session_info=None):
             if PROMPT_TOOLKIT_AVAILABLE:
                 with patch_stdout(): usit = session.prompt(f"{ThreadData.current_user} > ").strip()
             else: usit = input(prompt_str).strip()
-            
         except KeyboardInterrupt:
             try:
                 extoken = input(f"\n{Fore.LIGHTBLACK_EX}Want to exit? (Y/N): {Style.RESET_ALL}").lower()
@@ -127,7 +127,7 @@ def Core(session_info=None):
         arg = parts[1] if len(parts) > 1 else None
         
         if cmd in translations: cmd = translations[cmd]
-
+        
         in_easysaxo = cmd in COMMAND_REGISTRY
         sys_binary = shutil.which(cmd)
 
@@ -168,6 +168,7 @@ def Core(session_info=None):
 import bcrypt
 
 def run():
+    clr()
     preboot_file = None
     #session loader
     if len(sys.argv) > 1:
@@ -180,24 +181,20 @@ def run():
         ThreadData.current_pswd = session_data.get("password")
     else: ThreadData.current_user = session_data
     
-    if ThreadData.current_pswd is not None: # password checker
-        while True:
-            keyacc = input(f"{Fore.LIGHTRED_EX}Insert password: {Style.RESET_ALL}{Fore.LIGHTBLACK_EX}")
-            
-            try:
-                is_valid = bcrypt.checkpw(keyacc.encode('utf-8'), ThreadData.current_pswd.encode('utf-8'))
-            except Exception:
-                is_valid = False
-                
-            if is_valid:
-                print(f"{Fore.LIGHTGREEN_EX}Opening app...{Style.RESET_ALL}")
-                time.sleep(0.5)
-                clr()
-                break
-                
-            print(f"{Fore.RED}Wrong password, try again.{Style.RESET_ALL}\n")
-    
-    Core(session_info=session_data) # nothing special yet 
+    try:
+        if ThreadData.current_pswd is not None: # password checker
+            while True:
+                keyacc = input(f"{Fore.LIGHTRED_EX}Insert password: {Style.RESET_ALL}{Fore.LIGHTBLACK_EX}")
+                try: is_valid = bcrypt.checkpw(keyacc.encode('utf-8'), ThreadData.current_pswd.encode('utf-8'))
+                except Exception: is_valid = False
+                if is_valid:
+                    print(f"{Fore.LIGHTGREEN_EX}Opening app...{Style.RESET_ALL}")
+                    time.sleep(0.5)
+                    clr()
+                    break
+                print(f"{Fore.RED}Wrong password, try again.{Style.RESET_ALL}\n")
+        Core(session_info=session_data) # nothing special yet 
+    except KeyboardInterrupt: sys.exit("\nExiting.")
     
 if __name__ == "__main__":
     run()

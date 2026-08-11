@@ -33,11 +33,11 @@ class DirLocation:
 
     @staticmethod
     def allowance():
-        from .lister import files_to_allow
+        from .lister import FileList
 
-        files_to_allow = [f"{file}.py" for file in files_to_allow]
+        FileList._allow = [f"{file}.py" for file in FileList._allow]
 
-        for file in files_to_allow:
+        for file in FileList._allow:
             resolved_path = DirLocation._resolve_path(file)
             
             if not os.path.exists(resolved_path):

@@ -7,18 +7,18 @@
 
 import ast, random, math, operator
 from colorama import Fore, Style
-from .lister import MATHSET_HELP, mathset, _reserved, _allowed_operators
+from .lister import MathList
 
 class MathFunc:
     @staticmethod
     def help_attribute(attr: str):
         """Displays help for a specific MathSet attribute or custom variable."""
         attr = attr.lower().strip()
-        if attr in MATHSET_HELP:
+        if attr in MathList.MATHSET_HELP:
             print(f"{Fore.GREEN}=== MathSet Help: {attr} ==={Style.RESET_ALL}")
-            print(f"{Fore.YELLOW}{MATHSET_HELP[attr]}{Style.RESET_ALL}")
-        elif attr in mathset and attr not in _reserved:
-            print(f"{Fore.CYAN}{attr}{Style.RESET_ALL} is a custom user variable with current value: {Fore.GREEN}{mathset[attr]}{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}{MathList.MATHSET_HELP[attr]}{Style.RESET_ALL}")
+        elif attr in MathList.mathset and attr not in MathList._reserved:
+            print(f"{Fore.CYAN}{attr}{Style.RESET_ALL} is a custom user variable with current value: {Fore.GREEN}{MathList.mathset[attr]}{Style.RESET_ALL}")
         else:
             print(f"{Fore.RED}No MathSet documentation found for '{attr}'.{Style.RESET_ALL}")
 
@@ -37,7 +37,7 @@ class MathFunc:
             raise ValueError(f"Undefined variable '{node.id}'")
         elif isinstance(node, ast.UnaryOp):
             op_type = type(node.op)
-            if op_type in _allowed_operators: return _allowed_operators[op_type](MathFunc._eval_ast_node(node.operand))
+            if op_type in MathList._allowed_operators: return MathList._allowed_operators[op_type](MathFunc._eval_ast_node(node.operand))
             raise ValueError(f"Unsupported unary operator: {op_type.__name__}")
         elif isinstance(node, ast.BinOp):
             op_type = type(node.op)
@@ -46,9 +46,9 @@ class MathFunc:
         elif isinstance(node, ast.Call):
             if isinstance(node.func, ast.Name):
                 func_name = node.func.id
-                if func_name in mathset and callable(mathset[func_name]):
+                if func_name in MathList.mathset and callable(MathList.mathset[func_name]):
                     args = [MathFunc._eval_ast_node(arg) for arg in node.args]
-                    return mathset[func_name](*args)
+                    return MathList.mathset[func_name](*args)
                 raise ValueError(f"Unknown function '{func_name}'")
             raise ValueError("Complex function calls not supported.")
         else: raise ValueError(f"Unsupported syntax expression: {type(node).__name__}")
@@ -77,28 +77,28 @@ class MathFunc:
     @staticmethod
     def set_var(var_name: str, value: float):
         try:
-            mathset[var_name] = float(value)
+            MathList.mathset[var_name] = float(value)
             print(f"Variable {Fore.CYAN}{var_name}{Style.RESET_ALL} assigned value {Fore.GREEN}{float(value)}{Style.RESET_ALL}.")
         except ValueError: print(f"{Fore.RED}Invalid numeric value provided.{Style.RESET_ALL}")
 
     @staticmethod
     def del_var(var_name: str):
         if var_name in _reserved: print(f"{Fore.RED}Cannot delete built-in constant/function '{var_name}'.{Style.RESET_ALL}")
-        elif var_name in mathset:
-            del mathset[var_name]
+        elif var_name in MathList.mathset:
+            del MathList.mathset[var_name]
             print(f"Variable {Fore.GREEN}{var_name}{Style.RESET_ALL} deleted.")
         else: print(f"{Fore.RED}Variable '{var_name}' not found.{Style.RESET_ALL}")
 
     @staticmethod
     def getvar(var_name: str):
-        if var_name in mathset and var_name not in _reserved:
-            print(f"{Fore.CYAN}{var_name}{Style.RESET_ALL} = {Fore.GREEN}{mathset[var_name]}{Style.RESET_ALL}")
+        if var_name in MathList.mathset and var_name not in _reserved:
+            print(f"{Fore.CYAN}{var_name}{Style.RESET_ALL} = {Fore.GREEN}{MathList.mathset[var_name]}{Style.RESET_ALL}")
         elif var_name in _reserved: print(f"{Fore.YELLOW}'{var_name}' is a built-in function/constant.{Style.RESET_ALL}")
         else: print(f"{Fore.RED}Variable '{var_name}' not found.{Style.RESET_ALL}")
 
     @staticmethod
     def list_vars():
-        user_vars = {k: v for k, v in mathset.items() if k not in _reserved}
+        user_vars = {k: v for k, v in MathList.mathset.items() if k not in MathList._reserved}
         if user_vars:
             print(f"{Fore.BLUE}== USER VARIABLES =={Style.RESET_ALL}")
             for k, v in user_vars.items(): print(f"{Fore.CYAN}{k:<15}{Style.RESET_ALL}: {Fore.GREEN}{v}{Style.RESET_ALL}")

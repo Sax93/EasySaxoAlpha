@@ -1,13 +1,11 @@
 """EasySaxo Alpha Main configuration"""
-import os
-
 class App:
     def __init__(self, name, ver):
         self.name = name
         self.ver = ver
         self.dev = "SXF"
         self.problem = "in the chair" 
-easysaxo = App("EasySaxo", "Alpha 1.041") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.042") # yes im that lazy to write this ever again
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
@@ -24,6 +22,8 @@ def register_command(name, aliases=None, help_text=None, registry=COMMAND_REGIST
         return func
     return decorator
 
-def clr(): os.system('cls' if os.name == 'nt' else 'clear')
+def clr():
+    import os
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 # its ugly to be the 29th codeline in a config script.

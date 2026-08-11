@@ -29,10 +29,10 @@ def eas2():
     match case_number:
         case 1:
             from ..commands import c_filecrt, c_filewrt
-            from .lister import slop
+            from .lister import EasterList
             print("js use the app bud...")
             c_filecrt("slop.txt")
-            c_filewrt(f"slop.txt {random.choice(slop)}")
+            c_filewrt(f"slop.txt {random.choice(EasterList.slop)}")
 
         case 2:
             from .dirloct import DirLocation
@@ -91,7 +91,7 @@ def eas4():
         DirLocation.ls("/bin")
         
 def eas5():
-    from .lister import ERRlist
+    from .lister import EasterList
     from .misc import traceback
-    ranerror = random.choice(ERRlist)
+    ranerror = random.choice(EasterList.ERRlist)
     traceback(ranerror)
