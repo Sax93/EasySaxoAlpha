@@ -7,14 +7,25 @@ from colorama import Fore, Style
 pygame.mixer.init(frequency=44100, size=-16, channels=1, buffer=512)
 
 class MusicIns:
-    def p_note(frequency, duration = 0.4):
+    @staticmethod
+    def p_note(frequencies, duration=0.4):
+        if isinstance(frequencies, (int, float)):
+            frequencies = [frequencies]
+            
         sample_rate = 44100
         t = np.linspace(0, duration, int(sample_rate * duration), False)
-        wave = np.sin(2 * np.pi * frequency * t)
+        
+        wave = np.zeros_like(t)
+        for freq in frequencies:
+            wave += np.sin(2 * np.pi * freq * t)
+            
+        if len(frequencies) > 0:
+            wave /= len(frequencies)
         
         fade = min(int(sample_rate * 0.05), len(wave) // 2)
         env = np.ones(len(wave))
-        env[-fade:] = np.linspace(1.0, 0.0, fade)
+        if fade > 0:
+            env[-fade:] = np.linspace(1.0, 0.0, fade)
         
         buf = (wave * env * 16384).astype(np.int16)
         sound = pygame.mixer.Sound(buffer=buf)
@@ -22,25 +33,55 @@ class MusicIns:
 
 # song playback support ==============================================================================
 
+import threading
+import time
+from colorama import Fore, Style
+
+def _play_track(track_notes):
+    from .lister import MidiSetList
+
+    for note_entry in track_notes:
+        keys = note_entry.get("key", [])
+        duration = note_entry.get("duration", 0.4)
+
+        if isinstance(keys, str):
+            keys = [keys]
+
+        freqs = []
+        for k in keys:
+            k_lower = k.lower()
+            if k_lower in MidiSetList.note_k_bindings:
+                _, freq = MidiSetList.note_k_bindings[k_lower]
+                freqs.append(freq)
+
+        if freqs:
+            MusicIns.p_note(freqs, duration)
+
+        time.sleep(duration)
+
 def play_song(song_name: str) -> bool:
-    from .lister import SongSet, MidiSetList
-    
-    song = SongSet.get_song(song_name)
-    if not song:
+    from .lister import SongSet
+
+    song_data = SongSet.get_song(song_name)
+    if not song_data:
         print(f"{Fore.RED}Song '{song_name}' not found.{Style.RESET_ALL}")
         return False
-    
+
     draw_piano()
     print(f"Playing: {Fore.CYAN}{song_name}{Style.RESET_ALL}")
-    for note in song:
-        key = note.get("key", "").lower()
-        duration = note.get("duration", 0.4)
-        
-        if key in MidiSetList.note_k_bindings:
-            note_name, freq = MidiSetList.note_k_bindings[key]
-            MusicIns.p_note(freq, duration)
-            time.sleep(duration)
-    
+
+    if isinstance(song_data, list):
+        song_data = {"track_1": song_data}
+
+    threads = []
+    for track_name, track_notes in song_data.items():
+        t = threading.Thread(target=_play_track, args=(track_notes,), daemon=True)
+        threads.append(t)
+        t.start()
+
+    for t in threads:
+        t.join()
+
     return True
 
 def prompt_song_selection():

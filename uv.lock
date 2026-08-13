@@ -106,7 +106,7 @@ sdist = { url = "https://files.pythonhosted.org/packages/da/7f/59c7e664c98d39881
 
 [[package]]
 name = "easysaxo"
-version = "1.0.5"
+version = "1.0.51"
 source = { editable = "." }
 dependencies = [
     { name = "art" },

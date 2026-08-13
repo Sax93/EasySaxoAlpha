@@ -1,13 +1,12 @@
 """EasySaxo Alpha Command Input/Registry"""
 # NOTE: `commands.py` is strictly for command creation, not meant to support other than command registering.
 
-import os, time, sys, shutil, subprocess
-from .config import register_command, GET_REGISTRY, HELP_REGISTRY, easysaxo, clr
+from .config import register_command, GET_REGISTRY, HELP_REGISTRY, easysaxo, whats_new
 from .esmodules.computer import ComputerData
 from .esmodules.telemetry import TelemetryData
 from .esmodules.dirloct import DirLocation, base_dir
 from .esmodules.mathf import MathFunc
-from .esmodules.misc import whats_new, hrs, StatusHandler, module_importing, StHd, bootcheck
+from .esmodules.misc import hrs, StatusHandler, module_importing, StHd, bootcheck
 from .esmodules.jsonregex import JsonData, RegexData
 from .esmodules.medi import MediaData
 from .esmodules.heavyholder import ThreadData, SessionManager
@@ -175,11 +174,14 @@ def c_help(arg):
 
 @register_command("exit", aliases=["quit", "kill", "-q"], help_text="exit - Save session state and exit app.")
 def c_exit(arg):
+    import sys
     SessionManager.save_session(ThreadData.current_user)
     sys.exit(0)
 
 @register_command("clear", aliases=["clr", "clrscr"], help_text="clear - Clears the terminal screen.")
-def c_clear(arg): clr()
+def c_clear(arg):
+    from .config import clr
+    clr()
 
 @register_command("save", help_text="save [filepath.json] - Saves the current session state along with its storable data.")
 def c_save(arg): SessionManager.save_session(ThreadData.current_user, arg)
@@ -244,6 +246,7 @@ def c_filecls(arg): DirLocation.filecls(arg) if arg else print(f"{Fore.RED}Missi
 
 @register_command("filecrt", aliases=["createf", "touch"], help_text="filecrt <filepath> - Creates an empty file at the designated location.")
 def c_filecrt(arg):
+    import os
     if not arg:
         print(f"{Fore.RED}Missing filepath.{Style.RESET_ALL}")
         return
@@ -342,12 +345,25 @@ def c_render(arg):
     if target.upper() in CommandList.RENlist:
         MediaData.render_preset(target.lower())
         return
-    
     MediaData.render(target, colnum)
 
 @register_command("banner", aliases=["tart", "amply"], help_text="banner <text> - Reprints the input text, bigger.")
-def c_banner(arg): MediaData.txt2rt(arg) if arg else MediaData.txt2rt('Missing text!')
-
+def c_banner(arg):
+    parts = arg.split()
+    
+    if parts[0].lower() in ["render", "-r"]:
+        from .esmodules.lister import CommandList
+        toggler = parts[0]
+        image = parts[1]
+        if image.upper() in CommandList.RENlist2:
+            MediaData.renderbanner(image)
+            return
+        else:
+            print(f"{Fore.RED}No banner image found for '{image}'.{Style.RESET_ALL}")
+            return
+            
+    MediaData.txt2rt(arg) if arg else MediaData.txt2rt('Missing text!')
+    
 @register_command("set", help_text="set <varfeature> <val> - Updates session settings or math variables.")
 def c_set(arg): # prob greatest cmd
     from .esmodules.heavyholder import set_stat
@@ -401,7 +417,7 @@ def c_mathhelp(arg): # useless though
 @register_command("time", aliases=["date"], help_text="time - Displays current system date and time.")
 def c_time(arg): hrs()
 
-@register_command("whatsnew", aliases=["news", "upd", "updates", "changes"], help_text="whatsnew - Displays software changelog highlights.")
+@register_command("changelog", aliases=["news", "upd", "updates", "whatsnew"], help_text="changelog - Displays software changelog highlights.")
 def c_whatsnew(arg): whats_new()
 
 @register_command("unins", aliases=["uninstall", "selfdel", "sdelete"], help_text="unins - Guider to uninstall the program.")

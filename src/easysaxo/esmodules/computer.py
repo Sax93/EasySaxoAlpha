@@ -1,7 +1,3 @@
-#=================================================
-# Computer Data
-#=================================================
-
 # `computer.py` ONLY FOR COMPUTER COMMAND DEFINING
 
 # dark magic, only watching

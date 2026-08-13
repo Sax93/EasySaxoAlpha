@@ -1,7 +1,3 @@
-#=================================================
-# Multimedia
-#=================================================
-
 #`medi.py` ONLY FOR MULTIMEDIA FILE HANDLING COMMAND DEFINING
 
 import os
@@ -48,7 +44,7 @@ class MediaData:
     @staticmethod
     def render_preset(name):
         # this function stands to print preset arts, and not accidentally trying to access a file.
-        from . import builtinrender as bt
+        from .builtinrender import Image as bt
         from .lister import ColorList
         import random
         
@@ -96,5 +92,21 @@ class MediaData:
             return
         result = text2art(text)
         print(f"{Fore.CYAN}{result}{Style.RESET_ALL}")
+        
+    @staticmethod
+    def renderbanner(descript):
+        from .builtinrender import TextToImage as tti
+        from .lister import ColorList
+        import random
+        
+        rancolor = random.choice(ColorList.colors)
+        ranfore = getattr(Fore, rancolor)
+        attr_name = f"{descript.lower()}Text"
+        logo = getattr(tti, attr_name, None)
+        if logo:
+            print(f"{ranfore}{logo}{Style.RESET_ALL}")
+        else:
+            print(f"{Fore.RED}Preset text image '{descript}' not found")
+        
         
 # holy useless code

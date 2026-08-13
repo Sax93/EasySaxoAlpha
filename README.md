@@ -18,13 +18,14 @@ so I am grateful to those who report any bug found in my software :)
 
 Also, do not treat this software as something serious, but more as a really uncomfortable multi-terminal.
 
+# Run EasySaxo
+
+If you are using Windows, execute `run.bat` file, and it should open a terminal running EasySaxo
+If you are using a Linux software, execute `run.sh` file, and it should open a terminal running EasySaxo
+
 # Alternate between ES commands and System commands
 
 If you want to make static changes, you can use `set cmdmatch sys` to use commands from your system shell. As well you can use `set cmdmatch es` to use ES commands.
 IF you want to make instant changes, you can type the command you want followed by " -s" or " -e" [System or EasySaxo].
-
-# Alternate between User mode and Path mode
-
-Use `set` command to toggle Path mode, using: `set pathmode on` to enable, `set pathmode off` to disable.
 
 sxf.
