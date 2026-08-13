@@ -8,8 +8,10 @@ import time
 def whats_new():
     print(
         f"\n===== {Fore.CYAN}What's New!{Style.RESET_ALL} ({Fore.YELLOW}{easysaxo.name} v{easysaxo.ver}{Style.RESET_ALL}) =====\n"
-        f"1. Added built-in songs in {Fore.BLUE}PK Mode{Style.RESET_ALL}.\n"
-        f"2. Fixed {Fore.LIGHTGREEN_EX}code & miscellaneous{Style.RESET_ALL} bugs.\n"
+        f"1. Added commands: {Fore.BLUE}'pkm', 'cd'{Style.RESET_ALL}.\n"
+        f"2. Added built-in songs in {Fore.BLUE}PK Mode{Style.RESET_ALL}.\n"
+        f"3. Fixed {Fore.LIGHTGREEN_EX}code & miscellaneous{Style.RESET_ALL} bugs.\n"
+        f"4. Command {Fore.BLUE}'filewrt'{Style.RESET_ALL} rewritten, added interactive mode for command.\n"
     )
 
 # Talking

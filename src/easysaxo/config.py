@@ -5,7 +5,7 @@ class App:
         self.ver = ver
         self.dev = "SXF"
         self.problem = "in the chair" 
-easysaxo = App("EasySaxo", "Alpha 1.042") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.05") # yes im that lazy to write this ever again
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}

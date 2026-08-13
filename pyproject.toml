@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "easysaxo"
-version = "1.0.42"
+version = "1.0.5"
 description = "EasySaxo Alpha Edition, mini-shell CLI that works with your system commands as well!"
 readme = "README.md"
 requires-python = ">=3.13"

@@ -85,6 +85,7 @@ class CommandList:
         f"{Fore.BLUE}filewrt{Style.RESET_ALL}     : Writes over a {Fore.RED}file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}fileopn{Style.RESET_ALL}     : Opens a {Fore.RED}file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}filecls{Style.RESET_ALL}     : Closes a {Fore.RED}file{Style.RESET_ALL}.\n"
+        f"{Fore.BLUE}filesort{Style.RESET_ALL}    : Sorts and dumps {Fore.RED}files{Style.RESET_ALL} in a directory by extension.\n"
         f"{Fore.BLUE}jsonrd{Style.RESET_ALL}      : Reads a {Fore.RED}JSON file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}regex{Style.RESET_ALL}       : Looks for {Fore.GREEN}patterns{Style.RESET_ALL} in a text or textfile.\n"
         f"{Fore.BLUE}playaudio{Style.RESET_ALL}   : Plays an {Fore.RED}audio file{Style.RESET_ALL} (specify the route).\n"
@@ -106,6 +107,16 @@ class CommandList:
         "WINDOWS",
         "GITHUB",
     ]
+    
+    FWRTlist = (
+        f"{Fore.YELLOW}Commands:{Style.RESET_ALL}\n"
+        f"  {Fore.GREEN}:l{Style.RESET_ALL} -> List buffer with line numbers\n"
+        f"  {Fore.GREEN}:d <line_num>{Style.RESET_ALL} -> Delete a line\n"
+        f"  {Fore.GREEN}:i <line_num> <text>{Style.RESET_ALL} -> Insert text at line number\n"
+        f"  {Fore.GREEN}:c{Style.RESET_ALL} -> Clear buffer entirely\n"
+        f"  {Fore.GREEN}:w{Style.RESET_ALL} or {Fore.GREEN}:x{Style.RESET_ALL} or {Fore.GREEN}EOF{Style.RESET_ALL} -> Save & Exit\n"
+        f"  {Fore.GREEN}:q{Style.RESET_ALL} -> Quit without saving\n"
+    )
 
 # file list ===============================================================================
 
@@ -176,6 +187,12 @@ class MathList:
         ast.USub: operator.neg,
         ast.UAdd: operator.pos,
     }
+    
+    math_funcslist = (
+        f"{Fore.BLUE}MathSet{Style.RESET_ALL}:\n"
+        f"{Fore.CYAN}sqrt, sin, cos, tan, log, log10, pi, e, fact, gamma{Style.RESET_ALL}.\n"
+        f"You can use {Fore.GREEN}help <mathset>{Style.RESET_ALL} to dive deeper in MathSet usage."
+    )
 
 # misc lists ======================================================================================
 
@@ -572,6 +589,170 @@ class SongSet:
             {"key": "y", "duration": 0.25}, {"key": "t", "duration": 0.25},
             {"key": "y", "duration": 1.5}, {"key": "t", "duration": 0.5},
             {"key": "t", "duration": 1.0},
+        ],
+        
+        "Nokia Ringtone": [ # q = 0.3
+            {"key": "p", "duration": 0.15}, {"key": "o", "duration": 0.15},
+            {"key": "5", "duration": 0.3}, {"key": "6", "duration": 0.3},
+            {"key": "9", "duration": 0.15}, {"key": "u", "duration": 0.15},
+            {"key": "w", "duration": 0.3}, {"key": "e", "duration": 0.3},
+            {"key": "u", "duration": 0.15}, {"key": "y", "duration": 0.15},
+            {"key": "2", "duration": 0.3}, {"key": "e", "duration": 0.3},
+            {"key": "y", "duration": 0.3},
+        ],
+        
+        "Whiplash": [ # q = 0.28
+            # brass 1
+            {"key": "x", "duration": 0.28},
+            {"key": "x", "duration": 0.14}, {"key": "x", "duration": 0.14},
+            {"key": "x", "duration": 0.28},
+            {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
+            {"key": "x", "duration": 0.14},
+            {"key": "x", "duration": 0.14}, {"key": "z", "duration": 0.14},
+            {"key": "x", "duration": 0.28},
+            # piano bass 2
+            {"key": "i", "duration": 0.28},
+            {"key": "7", "duration": 0.14}, {"key": "6", "duration": 0.14},
+            {"key": "t", "duration": 0.28},
+            {"key": "q", "duration": 0.14}, {"key": "5", "duration": 0.28},
+            {"key": "r", "duration": 0.28},
+            {"key": "q", "duration": 0.14}, {"key": "3", "duration": 0.28},
+            # brass 2
+            {"key": "x", "duration": 0.28},
+            {"key": "x", "duration": 0.14}, {"key": "x", "duration": 0.14},
+            {"key": "x", "duration": 0.28},
+            {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
+            {"key": "f", "duration": 0.14},
+            {"key": "x", "duration": 0.56},
+            # piano bass 2
+            {"key": "q", "duration": 0.28},
+            {"key": "q", "duration": 0.14}, {"key": "w", "duration": 0.14},
+            {"key": "3", "duration": 0.28},
+            {"key": "r", "duration": 0.14}, {"key": "5", "duration": 0.28},
+            {"key": "r", "duration": 0.28},
+            {"key": "3", "duration": 0.14}, {"key": "q", "duration": 0.28},
+            # brass 3
+            {"key": "x", "duration": 0.28},
+            {"key": "x", "duration": 0.14}, {"key": "x", "duration": 0.14},
+            {"key": "x", "duration": 0.28},
+            {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
+            {"key": "x", "duration": 0.14},
+            {"key": "x", "duration": 0.14}, {"key": "z", "duration": 0.14},
+            {"key": "x", "duration": 0.28},
+            # piano bass 3
+            {"key": "i", "duration": 0.28},
+            {"key": "7", "duration": 0.14}, {"key": "6", "duration": 0.14},
+            {"key": "t", "duration": 0.28},
+            {"key": "q", "duration": 0.14}, {"key": "5", "duration": 0.28},
+            {"key": "r", "duration": 0.28},
+            {"key": "q", "duration": 0.14}, {"key": "3", "duration": 0.28},
+            # brass 4 outro
+            {"key": "x", "duration": 0.28},
+            {"key": "x", "duration": 0.14}, {"key": "x", "duration": 0.14},
+            {"key": "x", "duration": 0.28},
+            {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
+            {"key": "f", "duration": 0.14},
+            {"key": "x", "duration": 1.12},
+            {"key": "z", "duration": 0.14}, {"key": "x", "duration": 0.14},
+            {"key": "x", "duration": 0.14}, {"key": "z", "duration": 0.14},
+            {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
+            {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
+            {"key": "x", "duration": 1.12},
+        ],
+        
+        "Megalovania": [  # q = 0.24
+            {"key": "w", "duration": 0.12}, {"key": "w", "duration": 0.12},
+            {"key": "o", "duration": 0.24},
+            {"key": "y", "duration": 0.36},
+            {"key": "6", "duration": 0.24}, {"key": "t", "duration": 0.24},
+            {"key": "r", "duration": 0.24}, {"key": "w", "duration": 0.12},
+            {"key": "r", "duration": 0.12}, {"key": "t", "duration": 0.12},
+            {"key": "q", "duration": 0.12}, {"key": "q", "duration": 0.12},
+            {"key": "o", "duration": 0.24},
+            {"key": "y", "duration": 0.36},
+            {"key": "6", "duration": 0.24}, {"key": "t", "duration": 0.24},
+            {"key": "r", "duration": 0.24}, {"key": "w", "duration": 0.12},
+            {"key": "r", "duration": 0.12}, {"key": "t", "duration": 0.12},
+            {"key": "u", "duration": 0.12}, {"key": "u", "duration": 0.12},
+            {"key": "o", "duration": 0.24},
+            {"key": "y", "duration": 0.36},
+            {"key": "6", "duration": 0.24}, {"key": "t", "duration": 0.24},
+            {"key": "r", "duration": 0.24}, {"key": "w", "duration": 0.12},
+            {"key": "r", "duration": 0.12}, {"key": "t", "duration": 0.12},
+            {"key": "7", "duration": 0.12}, {"key": "7", "duration": 0.12},
+            {"key": "o", "duration": 0.24},
+            {"key": "y", "duration": 0.36},
+            {"key": "6", "duration": 0.24}, {"key": "t", "duration": 0.24},
+            {"key": "r", "duration": 0.24}, {"key": "w", "duration": 0.12},
+            {"key": "r", "duration": 0.12}, {"key": "t", "duration": 0.12},
+        ],
+        
+        "Tetris Korobeiniki": [ # q = 0.4
+            {"key": "p", "duration": 0.4},
+            {"key": "u", "duration": 0.2}, {"key": "i", "duration": 0.2},
+            {"key": "o", "duration": 0.4},
+            {"key": "i", "duration": 0.2}, {"key": "u", "duration": 0.2},
+            {"key": "y", "duration": 0.4},
+            {"key": "y", "duration": 0.2}, {"key": "i", "duration": 0.2},
+            {"key": "p", "duration": 0.4},
+            {"key": "o", "duration": 0.2}, {"key": "i", "duration": 0.2},
+            {"key": "u", "duration": 0.4},
+            {"key": "u", "duration": 0.2}, {"key": "i", "duration": 0.2},
+            {"key": "o", "duration": 0.4}, {"key": "p", "duration": 0.4},
+            {"key": "i", "duration": 0.4}, {"key": "y", "duration": 0.4},
+            {"key": "y", "duration": 1.0},
+            
+            {"key": "o", "duration": 0.4}, {"key": "z", "duration": 0.2},
+            {"key": "c", "duration": 0.4},
+            {"key": "x", "duration": 0.2}, {"key": "z", "duration": 0.2},
+            {"key": "p", "duration": 0.6}, {"key": "i", "duration": 0.2},
+            {"key": "p", "duration": 0.4},
+            {"key": "o", "duration": 0.2}, {"key": "i", "duration": 0.2},
+            {"key": "u", "duration": 0.4},
+            {"key": "u", "duration": 0.2}, {"key": "i", "duration": 0.2},
+            {"key": "o", "duration": 0.4}, {"key": "p", "duration": 0.4},
+            {"key": "i", "duration": 0.4}, {"key": "y", "duration": 0.4},
+            {"key": "y", "duration": 1.0},
+        ],
+        
+        "Nokia Arabic": [ # q = 0.75
+            {"key": "x", "duration": 0.5625},
+            {"key": "i", "duration": 0.09375}, {"key": "i", "duration": 0.09375},
+            {"key": "i", "duration": 0.1875}, {"key": "7", "duration": 0.1875},
+            {"key": "i", "duration": 0.375},
+            # lmfao
+            {"key": "e", "duration": 0.375},
+            {"key": "t", "duration": 0.1875}, {"key": "r", "duration": 0.1875},
+            {"key": "t", "duration": 0.75},
+            {"key": "e", "duration": 0.375},
+            {"key": "e", "duration": 0.1875}, {"key": "r", "duration": 0.1875},
+            {"key": "t", "duration": 0.1875}, {"key": "y", "duration": 0.1875},
+            {"key": "t", "duration": 0.1875}, {"key": "r", "duration": 0.1875},
+            {"key": "e", "duration": 0.375},
+            {"key": "o", "duration": 0.1875}, {"key": "p", "duration": 0.1875},
+            
+            {"key": "e", "duration": 0.375},
+            {"key": "t", "duration": 0.1875}, {"key": "r", "duration": 0.1875},
+            {"key": "t", "duration": 0.75},
+            {"key": "e", "duration": 0.375},
+            {"key": "e", "duration": 0.1875}, {"key": "r", "duration": 0.1875},
+            {"key": "t", "duration": 0.1875}, {"key": "y", "duration": 0.1875},
+            {"key": "t", "duration": 0.1875}, {"key": "r", "duration": 0.1875},
+            {"key": "e", "duration": 0.375},
+            {"key": "i", "duration": 0.1875}, {"key": "o", "duration": 0.1875},
+            
+            {"key": "w", "duration": 0.375},
+            {"key": "r", "duration": 0.1875}, {"key": "e", "duration": 0.1875},
+            {"key": "r", "duration": 0.75},
+            {"key": "e", "duration": 0.375},
+            {"key": "e", "duration": 0.1875}, {"key": "r", "duration": 0.1875},
+            {"key": "t", "duration": 0.1875}, {"key": "y", "duration": 0.1875},
+            {"key": "t", "duration": 0.1875}, {"key": "r", "duration": 0.1875},
+            {"key": "e", "duration": 0.375}, {"key": "e", "duration": 0.75},
+            {"key": "r", "duration": 0.1875}, {"key": "w", "duration": 0.1875},
+            {"key": "e", "duration": 0.5625}, {"key": "p", "duration": 0.1875},
+            {"key": "z", "duration": 0.1875}, {"key": "p", "duration": 0.1875},
+            {"key": "o", "duration": 0.1875}, {"key": "i", "duration": 0.1875},
         ]
     }
     
@@ -590,4 +771,3 @@ class SongSet:
     @classmethod
     def add_song(cls, name: str, notes: list):
         cls.songs[name.lower()] = notes
-#

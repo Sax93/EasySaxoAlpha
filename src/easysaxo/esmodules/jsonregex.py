@@ -24,23 +24,26 @@ class JsonData:
 import re
 class RegexData:
     @staticmethod
-    def match_pattern(pattern, text):
+    def match_pattern(pattern, text, ignore_case=False):
         try:
-            matches = re.findall(pattern, text)
+            flags = re.IGNORECASE if ignore_case else 0
+            compiled = re.compile(pattern, flags)
+            matches = compiled.findall(text)
+            mode = "case-insensitive" if ignore_case else "case-sensitive"
             if matches: 
-                print(f"Found {Fore.GREEN}{len(matches)}{Style.RESET_ALL} matches of '{pattern}'.")
+                print(f"Found {Fore.GREEN}{len(matches)}{Style.RESET_ALL} matches of '{pattern}' ({mode}).")
             else: 
-                print(f"{Fore.YELLOW}No matches found for pattern '{pattern}'.{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}No matches found for pattern '{pattern}' ({mode}).{Style.RESET_ALL}")
         except Exception as e: 
             print(f"{Fore.RED}Regex matching error: {e}{Style.RESET_ALL}")
 
     @staticmethod
-    def match_file(pattern, filepath):
+    def match_file(pattern, filepath, ignore_case=False):
         try:
             if os.path.exists(filepath):
                 with open(filepath, "r", encoding="utf-8") as f:
                     content = f.read()
-                RegexData.match_pattern(pattern, content)
+                RegexData.match_pattern(pattern, content, ignore_case=ignore_case)
             else:
                 print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
         except Exception as e:

@@ -12,6 +12,27 @@ dir_forcreate = os.path.join(base_dir, "esmodules", "filecreation")
 
 class DirLocation:
     @staticmethod
+    def cd(path=None):
+        global base_dir
+        if not path:
+            print(f"Current directory: {Fore.MAGENTA}{base_dir}{Style.RESET_ALL}")
+            return
+            
+        clean_path = path.strip()
+        if clean_path.lower().startswith("/d "):
+            clean_path = clean_path[3:].strip()
+            print(f"{Fore.LIGHTBLACK_EX}'/d' in this command is automated, you do not need to type it!{Style.RESET_ALL}")
+            
+        target = DirLocation._resolve_path(clean_path)
+        
+        if os.path.exists(target) and os.path.isdir(target):
+            os.chdir(target)
+            base_dir = os.getcwd()
+            print(f"Directory changed to {Fore.MAGENTA}{base_dir}{Style.RESET_ALL}")
+        else:
+            print(f"{Fore.RED}Directory '{clean_path}' does not exist.{Style.RESET_ALL}")
+    
+    @staticmethod
     def runloc():
         print(f"Running in {Fore.MAGENTA}{base_dir}{Style.RESET_ALL}.")
     
@@ -149,7 +170,8 @@ class DirLocation:
     @staticmethod
     def dircrt(filepath):
         try:
-            full_path = DirLocation._resolve_path(filepath)
+            # Resolve target path relative to current working directory
+            full_path = os.path.abspath(os.path.join(base_dir, filepath)) if not os.path.isabs(filepath) else filepath
             if os.path.exists(full_path):
                 print(f"Directory or path {Fore.YELLOW}{filepath}{Style.RESET_ALL} already exists.")
             else:
@@ -191,11 +213,109 @@ class DirLocation:
         except Exception as e: print(f"{Fore.RED}Error deleting file: {e}{Style.RESET_ALL}")
 
     @staticmethod
-    def filewrt(filepath, content):
+    def filewrt(filepath, content=None):
+        from .lister import CommandList
         try:
             full_path = DirLocation._resolve_path(filepath)
+            
+            if content is None:
+                print(f"{Fore.CYAN}--- Interactive Line Editor for '{filepath}' ---{Style.RESET_ALL}")
+                print(CommandList.FWRTlist)
+                
+                lines = [] # preload file content if it already exists
+                if os.path.exists(full_path): 
+                    try:
+                        with open(full_path, "r", encoding="utf-8") as f: lines = f.read().splitlines()
+                        if lines: print(f"{Fore.LIGHTBLACK_EX}Loaded existing file content ({len(lines)} lines).{Style.RESET_ALL}")
+                    except Exception: pass
+
+                while True:
+                    try:
+                        line = input()
+                        cmd = line.strip()
+
+                        if cmd in [":w", ":x", ":save", "EOF", ":EOF", "END"]: break    # save and exit
+
+                        elif cmd == ":q": # quit no save
+                            print(f"{Fore.YELLOW}Changes discarded.{Style.RESET_ALL}")
+                            return
+
+                        elif cmd in [":l", ":list"]: # list current code
+                            print(f"\n{Fore.CYAN}--- Buffer Preview ---{Style.RESET_ALL}")
+                            for idx, l in enumerate(lines, 1): print(f"{Fore.YELLOW}{idx:3d} |{Style.RESET_ALL} {l}")
+                            print(f"{Fore.CYAN}-----------------------{Style.RESET_ALL}\n")
+  
+                        elif cmd == ":c": # clear all code
+                            lines.clear()
+                            print(f"{Fore.RED}Buffer cleared.{Style.RESET_ALL}")
+
+                        elif cmd.startswith(":d"): # delete a line: :d <codeline>
+                            parts = cmd.split(maxsplit=1)
+                            if len(parts) == 2 and parts[1].isdigit():
+                                idx = int(parts[1]) - 1
+                                if 0 <= idx < len(lines):
+                                    removed = lines.pop(idx)
+                                    print(f"{Fore.RED}Removed line {idx+1}: {Style.RESET_ALL}{removed}")
+                                else: 
+                                    print(f"{Fore.RED}Invalid line number.{Style.RESET_ALL}")
+                            else: 
+                                print(f"{Fore.RED}Usage: :d <line_number>{Style.RESET_ALL}")
+
+                        elif cmd.startswith(":i"): # insert line: :i <codeline> <text>
+                            parts = cmd.split(maxsplit=2)
+                            if len(parts) >= 3 and parts[1].isdigit():
+                                idx = int(parts[1]) - 1
+                                new_text = parts[2]
+                                if 0 <= idx <= len(lines):
+                                    lines.insert(idx, new_text)
+                                    print(f"{Fore.GREEN}Inserted line {idx+1}.{Style.RESET_ALL}")
+                                else: print(f"{Fore.RED}Line number out of range.{Style.RESET_ALL}")
+                            else: print(f"{Fore.RED}Usage: :i <line_number> <text>{Style.RESET_ALL}")
+                        
+                        elif cmd in [":h", ":help"]: print(CommandList.FWRTlist)
+
+                        else: lines.append(line) # normal txt entry
+                        
+                    except KeyboardInterrupt:
+                        print(f"\n{Fore.RED}Write operation cancelled.{Style.RESET_ALL}")
+                        return
+                content = "\n".join(lines)
+
             with open(full_path, "w", encoding="utf-8") as f: f.write(content)
             print(f"Content written to {Fore.GREEN}{filepath}{Style.RESET_ALL} successfully.")
-        except Exception as e: print(f"{Fore.RED}Error writing to file: {e}{Style.RESET_ALL}")
+        except Exception as e:
+            print(f"{Fore.RED}Error writing to file: {e}{Style.RESET_ALL}")
+        
+    @staticmethod
+    def filesort(dirpath, file_ext, dirdest):
+        try:
+            import shutil
+            source_dir = DirLocation._resolve_path(dirpath)
+            dest_dir = DirLocation._resolve_path(dirdest)
+            
+            if not os.path.exists(source_dir) or not os.path.isdir(source_dir):
+                print(f"{Fore.RED}Source directory '{dirpath}' does not exist or is not a directory.{Style.RESET_ALL}")
+                return
+            
+            os.makedirs(dest_dir, exist_ok=True)
+            if not file_ext.startswith("."):
+                file_ext = f".{file_ext}"
+            file_ext = file_ext.lower()
+            
+            moved_count = 0
+            for item in os.listdir(source_dir):
+                src_file_path = os.path.join(source_dir, item)
+
+                if os.path.isdir(src_file_path):
+                    continue
+
+                if item.lower().endswith(file_ext):
+                    dest_file_path = os.path.join(dest_dir, item)
+                    shutil.move(src_file_path, dest_file_path)
+                    moved_count += 1
+
+            print(f"{Fore.GREEN}Successfully moved {moved_count} file(s) with extension '{file_ext}' to '{dirdest}'.{Style.RESET_ALL}")
+        except Exception as e:
+            print(f"{Fore.RED}Error moving files into destination '{dirdest}': {e}{Style.RESET_ALL}")
 
 # do not move, its sensitive and it may do nothing

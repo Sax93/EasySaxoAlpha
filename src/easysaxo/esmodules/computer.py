@@ -6,7 +6,7 @@
 
 # dark magic, only watching
 
-import os, sys, platform, subprocess, getpass, socket, locale
+import os, sys, platform, subprocess, psutil
 from colorama import Fore, Style
 
 try:
@@ -20,7 +20,6 @@ except ImportError:
 class ComputerData:
     @staticmethod
     def getcpu():
-        import psutil
         try: import cpuinfo
         except ImportError: cpuinfo = None
 
@@ -32,14 +31,16 @@ class ComputerData:
                 print(f"Architecture: {Fore.CYAN}{info.get('arch', 'N/A')}{Style.RESET_ALL}")
                 print(f"L2 Cache: {Fore.CYAN}{info.get('l2_cache_size', 'N/A')}{Style.RESET_ALL}")
                 print(f"L3 Cache: {Fore.CYAN}{info.get('l3_cache_size', 'N/A')}{Style.RESET_ALL}")
-            except Exception as e: return e
+            except Exception as e:
+                return e
 
         print(f"Cores: {Fore.BLUE}{psutil.cpu_count(logical=False)} Physical | {psutil.cpu_count(logical=True)} Logical{Style.RESET_ALL}")
         try:
             freq = psutil.cpu_freq()
             if freq:
                 print(f"Speed: {Fore.BLUE}{freq.current:.2f} MHz (Min: {freq.min:.2f} MHz, Max: {freq.max:.2f} MHz){Style.RESET_ALL}")
-        except Exception as e: return e
+        except Exception as e:
+            return e
 
         print(f"Total CPU Usage: {Fore.BLUE}{psutil.cpu_percent(interval=0.0)}{Style.RESET_ALL}%")
         print(f"Core Usage: {Fore.BLUE}{psutil.cpu_percent(interval=0.2, percpu=True)}{Style.RESET_ALL}%")
@@ -51,7 +52,6 @@ class ComputerData:
 
     @staticmethod
     def getram():
-        import psutil
         mem = psutil.virtual_memory()
         print(f"Total RAM: {Fore.GREEN}{mem.total / (1024**3):.2f} GB{Style.RESET_ALL}")
         print(f"Available RAM: {Fore.GREEN}{mem.available / (1024**3):.2f} GB{Style.RESET_ALL}")
@@ -78,11 +78,15 @@ class ComputerData:
                         print(f"  VRAM Used: {Fore.RED}{gpu.memoryUsed} MB ({gpu.memoryUtil*100:.1f}%){Style.RESET_ALL}")
                         print(f"  Temperature: {Fore.RED}{gpu.temperature} °C{Style.RESET_ALL}")
                     return
-            except Exception as e: return e
+            except Exception as e:
+                return e
         
         try:
             if os.name == "nt":
-                result = subprocess.run(["powershell", "-Command", "Get-CimInstance Win32_VideoController | Select-Object Name, AdapterRAM, DriverVersion"], capture_output=True, text=True, timeout=5)
+                result = subprocess.run(
+                    ["powershell", "-Command", "Get-CimInstance Win32_VideoController | Select-Object Name, AdapterRAM, DriverVersion"],
+                    capture_output=True, text=True, timeout=5
+                    )
                 output = result.stdout.strip()
                 if output: print(f"GPU Details:\n{Fore.RED}{output}{Style.RESET_ALL}")
                 else: print(f"GPU: {Fore.RED}No GPU detected{Style.RESET_ALL}")
@@ -110,7 +114,6 @@ class ComputerData:
 
     @staticmethod
     def getdisk():
-        import psutil
         partitions = psutil.disk_partitions()
         
         if RICH_AVAILABLE:
@@ -145,7 +148,6 @@ class ComputerData:
 
     @staticmethod
     def getbattery():
-        import psutil
         try:
             battery = psutil.sensors_battery()
             if battery:
@@ -168,6 +170,7 @@ class ComputerData:
 
     @staticmethod
     def getpythoninfo():
+        import locale
         print(f"Python Version: {Fore.GREEN}{platform.python_version()} ({platform.python_compiler()}){Style.RESET_ALL}")
         print(f"Executable Path: {Fore.GREEN}{sys.executable}{Style.RESET_ALL}")
         print(f"Virtual Environment: {Fore.GREEN}{'Active' if sys.prefix != sys.base_prefix else 'Inactive'}{Style.RESET_ALL}")
@@ -176,6 +179,7 @@ class ComputerData:
 
     @staticmethod
     def getuserinfo():
+        import socket, getpass
         print(f"Logged User: {Fore.CYAN}{getpass.getuser()}{Style.RESET_ALL}")
         print(f"Device Name (Hostname): {Fore.CYAN}{socket.gethostname()}{Style.RESET_ALL}")
 
@@ -196,9 +200,10 @@ class ComputerData:
 
     @staticmethod
     def getprocesses():
-        import psutil
-        processes = sorted(psutil.process_iter(["pid", "name", "cpu_percent", "memory_percent"]), 
-                           key=lambda p: p.info["cpu_percent"] or 0, reverse=True)[:5]
+        processes = sorted(psutil.process_iter(
+            ["pid", "name", "cpu_percent", "memory_percent"]),
+                key=lambda p: p.info["cpu_percent"] or 0,
+                reverse=True)[:5]
         
         if RICH_AVAILABLE:
             table = Table(title="Top 5 CPU Processes")

@@ -22,6 +22,7 @@ class ThreadData:
     current_user = "User"
     current_pswd = None
     target_mode = "auto"
+    path_display = False
     # why storing this here? to make ezsaxo less comprehensible
 
     @staticmethod
@@ -59,7 +60,8 @@ class SessionManager:
                 json.dump({
                     "user_name": uname, 
                     "variables": user_vars, 
-                    "password": ThreadData.current_pswd
+                    "password": ThreadData.current_pswd,
+                    "path_display": ThreadData.path_display
                 }, f, indent=4)
             SessionManager.active_session_file = target
             print(f"{Fore.GREEN}Session saved successfully to '{os.path.basename(target)}'.{Style.RESET_ALL}")
@@ -73,7 +75,7 @@ class SessionManager:
             return default_data
 
         try:
-            # check if file is empty (0 bytes) before attempting json.load
+            # check if file is empty before attempting json.load
             if os.path.getsize(target) == 0:
                 return default_data
 
@@ -90,14 +92,17 @@ class SessionManager:
 
             SessionManager.active_session_file = target
             print(f"{Fore.CYAN}Loaded '{os.path.basename(target)}' for user '{user_name}'.{Style.RESET_ALL}")
-        
-            return {"user_name": user_name, "password": password}
+            
+            return {
+                "user_name": user_name, 
+                "password": password,
+                "pathdisplay": data.get("pathdisplay", False),
+                "target_mode": data.get("target_mode", "auto")
+            }
         
         except (json.JSONDecodeError, Exception) as e:
             print(f"{Fore.RED}Failed to load session: {e}{Style.RESET_ALL}")
             return default_data
-        
-# 100 lines? there u go
 
 # set command
 
@@ -114,7 +119,8 @@ def set_stat(arg):
         # edit/add variable
         elif parts[0].lower() in ["var", "variable"] and len(parts) == 3:
             from .mathf import MathFunc
-            MathFunc.set_var(parts[1], parts[2]); SessionManager.save_session(ThreadData.current_user)
+            MathFunc.set_var(parts[1], parts[2])
+            SessionManager.save_session(ThreadData.current_user)
         
         # set new password
         elif parts[0].lower() in ["password", "key", "pswd"] and len(parts) >= 2:
@@ -138,5 +144,18 @@ def set_stat(arg):
                 ThreadData.target_mode = "auto"
                 print(f"{Fore.LIGHTYELLOW_EX}Default execution mode set to: Auto (EasySaxo -> System){Style.RESET_ALL}")
                 print(f"You can either use {Fore.CYAN}'-e'{Style.RESET_ALL} to force app command, or {Fore.CYAN}'-s'{Style.RESET_ALL} to force system command!")
+            
+        # set name <-> path display
+        elif parts[0].lower() in ["pathmode", "pathdisplay"] and len(parts) >= 2:
+            path_arg = parts[1].lower()
+            if path_arg in ["on", "enable"]:
+                ThreadData.path_display = True
+                print(f"{Fore.LIGHTGREEN_EX}Path mode enabled.{Style.RESET_ALL}")
+            elif path_arg in ["off", "disable"]:
+                ThreadData.path_display = False
+                print(f"{Fore.LIGHTRED_EX}Path mode disabled{Style.RESET_ALL}")
+            else:
+                print(f"{Fore.RED}Unknown/malformed subcommand.{Style.RESET_ALL}")
+            SessionManager.save_session(ThreadData.current_user)
                 
         else: print(f"{Fore.RED}Unknown/malformed set subcommand.{Style.RESET_ALL}")

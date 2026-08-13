@@ -12,7 +12,7 @@ class MusicIns:
         t = np.linspace(0, duration, int(sample_rate * duration), False)
         wave = np.sin(2 * np.pi * frequency * t)
         
-        fade = int(sample_rate * 0.05)
+        fade = min(int(sample_rate * 0.05), len(wave) // 2)
         env = np.ones(len(wave))
         env[-fade:] = np.linspace(1.0, 0.0, fade)
         
@@ -30,7 +30,8 @@ def play_song(song_name: str) -> bool:
         print(f"{Fore.RED}Song '{song_name}' not found.{Style.RESET_ALL}")
         return False
     
-    print(f"{Fore.CYAN}Playing: {song_name}{Style.RESET_ALL}")
+    draw_piano()
+    print(f"Playing: {Fore.CYAN}{song_name}{Style.RESET_ALL}")
     for note in song:
         key = note.get("key", "").lower()
         duration = note.get("duration", 0.4)

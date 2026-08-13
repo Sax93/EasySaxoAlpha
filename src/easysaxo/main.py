@@ -19,25 +19,18 @@ from pathlib import Path
 from colorama import Fore, Style, just_fix_windows_console
 just_fix_windows_console()
 
-# Rich support
-try:
-    from rich.console import Console
-    from rich.table import Table
-    console = Console()
-    RICH_AVAILABLE = True
-except ImportError: RICH_AVAILABLE = False
-
 # Prompt_Toolkit support
 try:
     from prompt_toolkit import PromptSession
     from prompt_toolkit.completion import WordCompleter
     from prompt_toolkit.patch_stdout import patch_stdout
+    from prompt_toolkit.formatted_text import ANSI
     PROMPT_TOOLKIT_AVAILABLE = True
 except ImportError: PROMPT_TOOLKIT_AVAILABLE = False
 
 # Project imports
 from . import commands
-from .esmodules.dirloct import base_dir
+from .esmodules import dirloct
 from .config import easysaxo, COMMAND_REGISTRY, clr
 from .esmodules.heavyholder import ThreadData, SessionManager
 
@@ -71,7 +64,7 @@ def Core(session_info=None):
         ThreadData.current_pswd = session_info.get("password")
     else: ThreadData.current_user = session_info
     
-    print(f"{Fore.LIGHTBLACK_EX}Default path: {base_dir}{Style.RESET_ALL}")
+    print(f"{Fore.LIGHTBLACK_EX}Default path: {dirloct.base_dir}{Style.RESET_ALL}")
     print(f"Welcome to {Fore.CYAN}{easysaxo.name}{Style.RESET_ALL}! Insert commands down below.")
 
     all_commands = list(COMMAND_REGISTRY.keys()) + list(translations.keys())
@@ -94,10 +87,16 @@ def Core(session_info=None):
     while True:
         try:
             print()
-            prompt_str = Fore.BLACK + Style.BRIGHT + f"{ThreadData.current_user} > " + Style.RESET_ALL
+            if ThreadData.path_display:
+                raw_prompt = Fore.BLACK + Style.BRIGHT + f"{dirloct.base_dir} > " + Style.RESET_ALL
+            else:
+                raw_prompt = Fore.BLACK + Style.BRIGHT + f"{ThreadData.current_user} > " + Style.RESET_ALL
+
             if PROMPT_TOOLKIT_AVAILABLE:
-                with patch_stdout(): usit = session.prompt(f"{ThreadData.current_user} > ").strip()
-            else: usit = input(prompt_str).strip()
+                with patch_stdout():
+                    usit = session.prompt(ANSI(raw_prompt)).strip()
+            else:
+                usit = input(raw_prompt).strip()
         except KeyboardInterrupt:
             try:
                 extoken = input(f"\n{Fore.LIGHTBLACK_EX}Want to exit? (Y/N): {Style.RESET_ALL}").lower()
@@ -179,6 +178,8 @@ def run():
     if isinstance(session_data, dict):
         ThreadData.current_user = session_data.get("user_name", "User")
         ThreadData.current_pswd = session_data.get("password")
+        ThreadData.path_display = session_data.get("pathdisplay", False)
+        ThreadData.target_mode = session_data.get("target_mode", "auto")
     else: ThreadData.current_user = session_data
     
     try:

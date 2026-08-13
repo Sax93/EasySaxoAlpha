@@ -191,6 +191,8 @@ def c_load(arg):
         if isinstance(session_info, dict):
             ThreadData.current_user = session_info.get("user_name", "User")
             ThreadData.current_pswd = session_info.get("password")
+            ThreadData.path_display = session_info.get("pathdisplay", False)
+            ThreadData.target_mode = session_info.get("target_mode", "auto")
         else: ThreadData.current_user = session_info
     else: print(f"{Fore.RED}Usage: load <filepath.json>{Style.RESET_ALL}")
         
@@ -228,6 +230,9 @@ def c_dircrt(arg): DirLocation.dircrt(arg) if arg else print(f"{Fore.RED}Missing
 @register_command("dirdel", aliases=(["ddelete", "rm-r", "rmdir"]), help_text="dirdel <dirname> - Deletes a directory.")
 def c_dirdel(arg): DirLocation.dirdel(arg) if arg else print(f"{Fore.RED}Missing directory path.{Style.RESET_ALL}")
 
+@register_command("cd", aliases=["chdir"], help_text="cd <path> - Changes current working directory.")
+def c_cd(arg): DirLocation.cd(arg)
+
 @register_command("filelst", aliases=["ls", "dir", "lsdir", "dirls", "listdir", "dirlist"], help_text="filelst [path] - Lists files and subdirectories in the specified or current directory.")
 def c_filelst(arg): DirLocation.ls(arg)
 
@@ -253,33 +258,66 @@ def c_filerd(arg): DirLocation.filerd(arg) if arg else print(f"{Fore.RED}Missing
 @register_command("filedel", aliases=["deletef", "rm"], help_text="filedel <filepath> - Permanently removes a file from disk.")
 def c_filedel(arg): DirLocation.filedel(arg) if arg else print(f"{Fore.RED}Missing filepath.{Style.RESET_ALL}")
 
-@register_command("filewrt", aliases=["writef"], help_text="filewrt <filepath> <content> - [ONE LINE] Overwrites target file with text content.")
+@register_command("filewrt", aliases=["writef"], help_text="filewrt <filepath> [content] - Overwrites file. Omit content to start interactive multiline editor.")
 def c_filewrt(arg):
     from .esmodules.lister import FileList
     parts = arg.split(maxsplit=1) if arg else []
-    if not parts: print(f"{Fore.RED}Usage: filewrt <filepath> <content>{Style.RESET_ALL}")
-    target_file = parts[0][:-3] if parts[0].endswith(".py") else parts[0]
-    if parts[0] in FileList._allow or target_file in FileList._allow:
+    if not parts:
+        print(f"{Fore.RED}Usage: filewrt <filepath> [content]{Style.RESET_ALL}")
+        return
+        
+    filepath = parts[0]
+    content = parts[1] if len(parts) == 2 else None
+    
+    target_file = filepath[:-3] if filepath.endswith(".py") else filepath
+    if filepath in FileList._allow or target_file in FileList._allow:
         print(f"{Fore.LIGHTRED_EX}Hey, hey, no touching there.{Style.RESET_ALL}")
         return
-    elif len(parts) == 2: DirLocation.filewrt(parts[0], parts[1])
-    else: print(f"{Fore.RED}Usage: filewrt <filepath> <content>{Style.RESET_ALL}")
+        
+    DirLocation.filewrt(filepath, content)
+    
+@register_command("filesort", aliases=["sortf"], help_text="filesort <source_dir> <ext> <dest_dir> - Moves files matching extension from source to destination directory.")
+def c_filesort(arg):
+    parts = arg.split() if arg else []
+    if len(parts) < 3:
+        print(f"{Fore.RED}Usage: filesort <source_dir> <file_ext> <dest_dir>{Style.RESET_ALL}")
+        return
+    source_dir = parts[0]
+    file_ext = parts[1]
+    dest_dir = parts[2]
+    DirLocation.filesort(source_dir, file_ext, dest_dir)
 
 @register_command("jsonrd", help_text="jsonrd <filepath> - Parses and pretty-prints JSON file contents.")
 def c_jsonrd(arg): JsonData.jsonrd(arg) if arg else print(f"{Fore.RED}Missing filepath.{Style.RESET_ALL}")
 
-@register_command("regex", help_text="regex <pattern> <text/file> [-f]- Evaluates regex pattern against input text string.")
+@register_command("regex", help_text="regex <pattern> <text> [-f] [-a] - Evaluates regex pattern (-f for file, -a for case-insensitive).")
 def c_regex(arg):
     parts = arg.split() if arg else []
-    if len(parts) == 3 and parts[2] == "-f":
-        textfile_path = DirLocation._resolve_path(parts[1])
-        RegexData.match_file(parts[0], textfile_path)
-    elif len(parts) >= 2:
-        pattern = parts[0]
-        text = " ".join(parts[1:]) # rejoin remaining parts in case text contains spaces
-        RegexData.match_pattern(pattern, text)
-    else: 
-        print(f"{Fore.RED}Usage: regex <pattern> <text/file> [-f]{Style.RESET_ALL}")
+    if not parts:
+        print(f"{Fore.RED}Usage: regex <pattern> <text/file> [-f] [-a]{Style.RESET_ALL}")
+        return
+    
+    # farse flags
+    flags = [p for p in parts if p.startswith("-")]
+    has_file = "-f" in flags
+    has_ignorecase = "-a" in flags
+    
+    # filter out flags from parts to get pattern and text/file
+    non_flags = [p for p in parts if not p.startswith("-")]
+    
+    if len(non_flags) < 2:
+        print(f"{Fore.RED}Usage: regex <pattern> <text/file> [-f] [-a]{Style.RESET_ALL}")
+        return
+    
+    pattern = non_flags[0]
+    target = non_flags[1]
+    
+    if has_file:
+        textfile_path = DirLocation._resolve_path(target)
+        RegexData.match_file(pattern, textfile_path, ignore_case=has_ignorecase)
+    else:
+        text = " ".join(non_flags[1:])  # rejoin remaining parts in case text contains spaces
+        RegexData.match_pattern(pattern, text, ignore_case=has_ignorecase)
 
 @register_command("playaudio", aliases=["playa"],help_text="playaudio <filepath> - Plays an audio file asynchronously.")
 def c_playaudio(arg): MediaData.playaudio(arg) if arg else print(f"{Fore.RED}Missing filepath.{Style.RESET_ALL}")
@@ -357,7 +395,7 @@ def c_rand(arg):
 def c_mathhelp(arg): # useless though
     if not arg:
         print(f"{Fore.RED}Usage: mathhelp <attribute>{Style.RESET_ALL}")
-        print(f"Available attributes: {Fore.CYAN}{', '.join(mathset.keys())}{Style.RESET_ALL}")
+        print(f"Available attributes: {Fore.CYAN}{', '.join(MathList.mathset.keys())}{Style.RESET_ALL}")
     else: MathFunc.help_attribute(arg)
     
 @register_command("time", aliases=["date"], help_text="time - Displays current system date and time.")
