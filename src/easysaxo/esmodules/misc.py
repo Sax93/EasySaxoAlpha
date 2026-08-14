@@ -42,20 +42,6 @@ StHd = StatusHandler(label_width=20)
 def module_importing(modlist):
     StHd.check_imports(modlist)
     print()
-    
-# In boot, this chunk down below takes priority over main.py
-# to check if the app can run properly.
-# Module importing might throw ERROR over GPutil and CPUinfo
-# for actually no reason..
-
-def bootcheck():
-    from .lister import MiscList
-    from .dirloct import DirLocation
-    clr()
-    print(f"{Fore.LIGHTYELLOW_EX}This might take a few seconds...{Style.RESET_ALL}")
-    module_importing(MiscList.required_modules)
-    DirLocation.allowance()
-    clr()
 
 # Uninstaller
 def uninstaller():

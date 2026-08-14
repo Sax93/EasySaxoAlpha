@@ -127,18 +127,102 @@ class DirLocation:
             print(f"{Fore.RED}Error listing directory: {e}{Style.RESET_ALL}")
 
     @staticmethod
+    def filetree(filepath=None, max_depth=4):
+        try:
+            target_dir = DirLocation._resolve_path(filepath) if filepath else base_dir
+            if not os.path.exists(target_dir):
+                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                return
+            if not os.path.isdir(target_dir):
+                print(f"{Fore.RED}{filepath}{Style.RESET_ALL} is not a directory.")
+                return
+
+            print(f"\n{Fore.CYAN} Directory Tree: {target_dir}{Style.RESET_ALL}\n")
+
+            def _build_tree(dir_path, prefix="", current_depth=0):
+                if current_depth > max_depth:
+                    print(f"{prefix}{Fore.LIGHTBLACK_EX}... (max depth reached){Style.RESET_ALL}")
+                    return
+
+                try:
+                    entries = sorted(os.listdir(dir_path))
+                except PermissionError:
+                    print(f"{prefix}{Fore.RED}[Permission Denied]{Style.RESET_ALL}")
+                    return
+                
+                dirs = [e for e in entries if os.path.isdir(os.path.join(dir_path, e))]
+                files = [e for e in entries if not os.path.isdir(os.path.join(dir_path, e))]
+                
+                all_items = dirs + files
+                total_items = len(all_items)
+
+                for index, item in enumerate(all_items):
+                    is_last = (index == total_items - 1)
+                    connector = "└── " if is_last else "├── "
+                    child_prefix = "    " if is_last else "│   "
+                    
+                    item_path = os.path.join(dir_path, item)
+
+                    if os.path.isdir(item_path):
+                        print(f"{prefix}{connector}{Fore.BLUE}{Style.BRIGHT}{item}/{Style.RESET_ALL}")
+                        _build_tree(item_path, prefix + child_prefix, current_depth + 1)
+                    else:
+                        from .lister import FileList
+                        # color coding based on file extension
+                        _, ext = os.path.splitext(item)
+                        ext_color = FileList.EXTENSION_COLORS.get(ext.lower(), Fore.GREEN)
+                        
+                        print(f"{prefix}{connector}{ext_color}{item}{Style.RESET_ALL}")
+
+            _build_tree(target_dir)
+            print(f"\n{Fore.CYAN}--- End of Directory Tree ---{Style.RESET_ALL}\n")
+
+        except Exception as e:
+            print(f"{Fore.RED}Error rendering directory tree: {e}{Style.RESET_ALL}")
+    
+    @staticmethod
     def fileopn(filepath):
+        import sys
         try:
             full_path = DirLocation._resolve_path(filepath)
             if not os.path.exists(full_path):
                 print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
-                return
-            print(f"Opening {Fore.GREEN}{filepath}{Style.RESET_ALL}...")
-            if os.name == "nt": os.startfile(full_path)
-            elif platform.system() == "Darwin": subprocess.run(["open", full_path])
-            else: subprocess.run(["xdg-open", full_path])
+                return None
+
+            # first, check if it's a python script
+            if filepath.endswith(".py"):
+                print(f"Executing {Fore.GREEN}{filepath}{Style.RESET_ALL}...")
+                
+                # run the python script
+                result = subprocess.run(
+                    [sys.executable, full_path],
+                    capture_output=True,
+                    text=True
+                )
+
+                # check if execution threw an error to show in shell
+                if result.returncode != 0:
+                    traceback_str = result.stderr
+                    print(f"{Fore.MAGENTA}Execution returns an exception:{Style.RESET_ALL}\n{traceback_str}")
+                    return traceback_str
+                else:
+                    if result.stdout:
+                        print(result.stdout, end="")
+                    print(f"{Fore.GREEN}Process finished with exit code {Fore.CYAN}{result.returncode}{Style.RESET_ALL}")
+                    return None
+            else:
+                print(f"Opening {Fore.GREEN}{filepath}{Style.RESET_ALL}...")
+                if os.name == "nt": 
+                    os.startfile(full_path)
+                elif platform.system() == "Darwin": 
+                    subprocess.run(["open", full_path])
+                else: 
+                    subprocess.run(["xdg-open", full_path])
+                return None
+
         except Exception as e:
             print(f"{Fore.RED}Error opening file: {e}{Style.RESET_ALL}")
+            return str(e)
 
     @staticmethod
     def filecls(process_name_or_file):

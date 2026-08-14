@@ -31,7 +31,7 @@ except ImportError: PROMPT_TOOLKIT_AVAILABLE = False
 # Project imports
 from . import commands
 from .esmodules import dirloct
-from .config import easysaxo, COMMAND_REGISTRY, clr
+from .config import easysaxo, COMMAND_REGISTRY
 from .esmodules.heavyholder import ThreadData, SessionManager
 
 #=================================================
@@ -165,6 +165,7 @@ def Core(session_info=None):
             else: print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
 
 import bcrypt
+from .config import clr
 
 def run():
     clr()

@@ -20,9 +20,8 @@ Also, do not treat this software as something serious, but more as a really unco
 
 # Run EasySaxo
 
-If you are using Windows, execute `run.bat` file, and it should open a terminal running EasySaxo.
-
-If you are using a Linux software, execute `run.sh` file, and it should open a terminal running EasySaxo.
+If you are using Windows, execute `run.bat` file, and it should open a terminal running EasySaxo
+If you are using a Linux software, execute `run.sh` file, and it should open a terminal running EasySaxo
 
 # Alternate between ES commands and System commands
 

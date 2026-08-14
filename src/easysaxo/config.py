@@ -5,7 +5,7 @@ class App:
         self.ver = ver
         self.dev = "SXF"
         self.problem = "in the chair" 
-easysaxo = App("EasySaxo", "Alpha 1.051") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.052") # yes im that lazy to write this ever again
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
@@ -23,18 +23,31 @@ def register_command(name, aliases=None, help_text=None, registry=COMMAND_REGIST
         return func
     return decorator
 
-# changelog
+from colorama import Fore, Style
+import re
+
+class Changelog:
+    header = f"===== {Fore.CYAN}Changelog!{Style.RESET_ALL} ({Fore.YELLOW}{easysaxo.name} v{easysaxo.ver}{Style.RESET_ALL}) ====="
+    entries = [
+        f"Bugfixes in {Fore.MAGENTA}misc{Style.RESET_ALL}, {Fore.LIGHTBLUE_EX}'bootcheck' removed{Style.RESET_ALL}.",
+        f"Minor bugfixes in {Fore.MAGENTA}misc{Style.RESET_ALL}.",
+    ]
+    _visible_header = re.sub(r'\x1b\[[0-9;]*m', '', header) # hide color cmds in terminal, so
+    footer = "=" * len(_visible_header)                     # len(footer) matches len(header)
+    
+    def entry_x(self):
+        for i, entry in enumerate(self.entries, 1):
+            print(f"  {i}. {entry}")
+            
+Nw = Changelog()
+            
 def whats_new():
-    from colorama import Fore, Style
-    print(
-        f"\n===== {Fore.CYAN}Changelog!{Style.RESET_ALL} ({Fore.YELLOW}{easysaxo.name} v{easysaxo.ver}{Style.RESET_ALL}) =====\n"
-        f"1. Added subcommand for {Fore.BLUE}'banner'{Style.RESET_ALL}: {Fore.LIGHTBLUE_EX}'render <doodle>'{Style.RESET_ALL}.\n"
-        f"2. Minor bugfixes in {Fore.MAGENTA}commands, config, misc{Style.RESET_ALL}.\n"
-        f"3. Changed name: {Fore.BLUE}'changelog'{Style.RESET_ALL}."
-    )
+    print(Nw.header)
+    Nw.entry_x()
+    print(Nw.footer)
     
 def clr(): # clear screen
     import os
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# its beautiful to be the 38th codeline in a config script.
+# its AWFUL to be the 53th codeline in a config script.

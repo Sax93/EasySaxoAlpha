@@ -6,7 +6,7 @@ from .esmodules.computer import ComputerData
 from .esmodules.telemetry import TelemetryData
 from .esmodules.dirloct import DirLocation, base_dir
 from .esmodules.mathf import MathFunc
-from .esmodules.misc import hrs, StatusHandler, module_importing, StHd, bootcheck
+from .esmodules.misc import hrs, StatusHandler, module_importing, StHd
 from .esmodules.jsonregex import JsonData, RegexData
 from .esmodules.medi import MediaData
 from .esmodules.heavyholder import ThreadData, SessionManager
@@ -235,8 +235,11 @@ def c_dirdel(arg): DirLocation.dirdel(arg) if arg else print(f"{Fore.RED}Missing
 @register_command("cd", aliases=["chdir"], help_text="cd <path> - Changes current working directory.")
 def c_cd(arg): DirLocation.cd(arg)
 
-@register_command("filelst", aliases=["ls", "dir", "lsdir", "dirls", "listdir", "dirlist"], help_text="filelst [path] - Lists files and subdirectories in the specified or current directory.")
+@register_command("filelst", aliases=["ls", "dir", "lsdir", "dirls", "listdir", "dirlist"], help_text="filelst <path> - Lists files and subdirectories in the specified or current directory.")
 def c_filelst(arg): DirLocation.ls(arg)
+
+@register_command("tree", aliases=["filetree", "dirtree"], help_text="tree <dir> - Renders directory as a tree.")
+def c_treedir(arg): DirLocation.filetree(arg)
 
 @register_command("fileopn", aliases=["openf", "opn"], help_text="fileopn <filepath> - Opens a file with the default system application.")
 def c_fileopn(arg): DirLocation.fileopn(arg) if arg else print(f"{Fore.RED}Missing filepath.{Style.RESET_ALL}")

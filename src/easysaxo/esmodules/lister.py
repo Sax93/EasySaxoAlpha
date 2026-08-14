@@ -78,7 +78,8 @@ class CommandList:
         f"{Fore.BLUE}delvar{Style.RESET_ALL}      : Deletes a specified {Fore.YELLOW}variable{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}runloc{Style.RESET_ALL}      : Shows the {Fore.MAGENTA}current location{Style.RESET_ALL} of the script operations.\n"
         f"{Fore.BLUE}check{Style.RESET_ALL}       : Checks if required {Fore.MAGENTA}script files{Style.RESET_ALL} exist where they shall be.\n"
-        f"{Fore.BLUE}filelst{Style.RESET_ALL}     : Lists files and folders in a directory.\n"
+        f"{Fore.BLUE}filelst{Style.RESET_ALL}     : Lists {Fore.RED}files{Style.RESET_ALL} and {Fore.RED}folders{Style.RESET_ALL} in a directory.\n"
+        f"{Fore.BLUE}tree{Style.RESET_ALL}        : Renders {Fore.RED}directory{Style.RESET_ALL} as a tree.\n"
         f"{Fore.BLUE}filecrt{Style.RESET_ALL}     : Creates a {Fore.RED}file{Style.RESET_ALL} with specified extension.\n"
         f"{Fore.BLUE}filerd{Style.RESET_ALL}      : Reads and displays the content of a {Fore.RED}file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}filedel{Style.RESET_ALL}     : Deletes a {Fore.RED}file{Style.RESET_ALL}.\n"
@@ -148,6 +149,32 @@ class FileList:
         "config.py", "session.json", "translations.json", 
         "main.py", "commands.py"
     ]
+    
+    EXTENSION_COLORS = {
+        # scripts
+        ".py": Fore.LIGHTYELLOW_EX,
+        ".js": Fore.YELLOW,
+        ".html": Fore.LIGHTRED_EX,
+        ".css": Fore.LIGHTBLUE_EX,
+        ".json": Fore.LIGHTGREEN_EX,
+        ".xml": Fore.LIGHTGREEN_EX,
+        # docs
+        ".md": Fore.CYAN,
+        ".txt": Fore.WHITE,
+        ".pdf": Fore.RED,
+        # media
+        ".png": Fore.MAGENTA,
+        ".jpg": Fore.MAGENTA,
+        ".jpeg": Fore.MAGENTA,
+        ".svg": Fore.MAGENTA,
+        ".mp3": Fore.LIGHTMAGENTA_EX,
+        ".wav": Fore.LIGHTMAGENTA_EX,
+        # fls
+        ".zip": Fore.LIGHTRED_EX,
+        ".tar": Fore.LIGHTRED_EX,
+        ".exe": Fore.RED,
+        ".bat": Fore.RED,
+    }
     
 # math lists =====================================================================================
 import math, ast, operator
@@ -257,7 +284,7 @@ class MidiSetList:
     }
 
 class SongSet:
-    # song structure: list of {"key": "<k_binding>", "duration": <secs>}
+    # song structure: list of {"key": ["<k_binding>"], "duration": <secs>}
     songs = {
         "Twinkle Twinkle": { # q = 0.4
             "melody": [ 
@@ -291,44 +318,66 @@ class SongSet:
         "Ode to Joy": { # q = 0.5
             "melody": [   
                 # intro
-                {"key": "e", "duration": 0.5}, {"key": "e", "duration": 0.5},
-                {"key": "r", "duration": 0.5}, {"key": "t", "duration": 0.5},
-                {"key": "t", "duration": 0.5}, {"key": "r", "duration": 0.5},
-                {"key": "e", "duration": 0.5}, {"key": "w", "duration": 0.5},
-                {"key": "q", "duration": 0.5}, {"key": "q", "duration": 0.5},
-                {"key": "w", "duration": 0.5}, {"key": "e", "duration": 0.5},
-                {"key": "e", "duration": 0.75}, {"key": "w", "duration": 0.25},
-                {"key": "w", "duration": 0.25}, {"key": "y", "duration": 0.25},
-                {"key": "t", "duration": 0.25}, {"key": "r", "duration": 0.25},
-                {"key": "e", "duration": 0.5}, {"key": "e", "duration": 0.5},
-                {"key": "r", "duration": 0.5}, {"key": "t", "duration": 0.5},
-                {"key": "t", "duration": 0.5}, {"key": "r", "duration": 0.5},
-                {"key": "e", "duration": 0.5}, {"key": "w", "duration": 0.5},
-                {"key": "q", "duration": 0.5}, {"key": "q", "duration": 0.5},
-                {"key": "w", "duration": 0.5}, {"key": "e", "duration": 0.5},
-                {"key": "w", "duration": 0.75}, {"key": "q", "duration": 0.25},
-                {"key": "q", "duration": 1.0},
+                {"key": "p", "duration": 0.5}, {"key": "p", "duration": 0.5},
+                {"key": "z", "duration": 0.5}, {"key": "x", "duration": 0.5},
+                {"key": "x", "duration": 0.5}, {"key": "z", "duration": 0.5},
+                {"key": "p", "duration": 0.5}, {"key": "o", "duration": 0.5},
+                {"key": "i", "duration": 0.5}, {"key": "i", "duration": 0.5},
+                {"key": "o", "duration": 0.5}, {"key": "p", "duration": 0.5},
+                {"key": "p", "duration": 0.75}, {"key": "o", "duration": 0.25},
+                {"key": "o", "duration": 0.25}, {"key": "c", "duration": 0.25},
+                {"key": "x", "duration": 0.25}, {"key": "z", "duration": 0.25},
+                {"key": "p", "duration": 0.5}, {"key": "p", "duration": 0.5},
+                {"key": "z", "duration": 0.5}, {"key": "x", "duration": 0.5},
+                {"key": "x", "duration": 0.5}, {"key": "z", "duration": 0.5},
+                {"key": "p", "duration": 0.5}, {"key": "o", "duration": 0.5},
+                {"key": "i", "duration": 0.5}, {"key": "i", "duration": 0.5},
+                {"key": "o", "duration": 0.5}, {"key": "p", "duration": 0.5},
+                {"key": "o", "duration": 0.75}, {"key": "i", "duration": 0.25},
+                {"key": "i", "duration": 1.0},
                 # mid
-                {"key": "w", "duration": 1.0},
-                {"key": "e", "duration": 0.5}, {"key": "q", "duration": 0.5},
-                {"key": "w", "duration": 0.5},
-                {"key": "e", "duration": 0.25}, {"key": "r", "duration": 0.25},
-                {"key": "e", "duration": 0.5}, {"key": "q", "duration": 0.5},
-                {"key": "w", "duration": 0.5},
-                {"key": "e", "duration": 0.25}, {"key": "r", "duration": 0.25},
-                {"key": "e", "duration": 0.5}, {"key": "w", "duration": 0.5},
-                {"key": "q", "duration": 0.5}, {"key": "w", "duration": 0.5},
-                {"key": "t", "duration": 0.5}, {"key": "e", "duration": 0.5},
+                {"key": "o", "duration": 1.0},
+                {"key": "p", "duration": 0.5}, {"key": "i", "duration": 0.5},
+                {"key": "o", "duration": 0.5},
+                {"key": "p", "duration": 0.25}, {"key": "z", "duration": 0.25},
+                {"key": "p", "duration": 0.5}, {"key": "i", "duration": 0.5},
+                {"key": "o", "duration": 0.5},
+                {"key": "p", "duration": 0.25}, {"key": "z", "duration": 0.25},
+                {"key": "p", "duration": 0.5}, {"key": "o", "duration": 0.5},
+                {"key": "i", "duration": 0.5}, {"key": "o", "duration": 0.5},
+                {"key": "t", "duration": 0.5}, {"key": "p", "duration": 0.5},
                 # outro
-                {"key": "e", "duration": 0.5}, {"key": "e", "duration": 0.5},
-                {"key": "r", "duration": 0.5}, {"key": "t", "duration": 0.5},
-                {"key": "t", "duration": 0.5}, {"key": "r", "duration": 0.5},
-                {"key": "e", "duration": 0.5}, {"key": "w", "duration": 0.5},
-                {"key": "q", "duration": 0.5}, {"key": "q", "duration": 0.5},
-                {"key": "w", "duration": 0.5}, {"key": "e", "duration": 0.5},
-                {"key": "w", "duration": 0.75}, {"key": "q", "duration": 0.25},
-                {"key": "q", "duration": 1.0},
-                ]
+                {"key": "p", "duration": 0.5}, {"key": "p", "duration": 0.5},
+                {"key": "z", "duration": 0.5}, {"key": "x", "duration": 0.5},
+                {"key": "x", "duration": 0.5}, {"key": "z", "duration": 0.5},
+                {"key": "p", "duration": 0.5}, {"key": "o", "duration": 0.5},
+                {"key": "i", "duration": 0.5}, {"key": "i", "duration": 0.5},
+                {"key": "o", "duration": 0.5}, {"key": "p", "duration": 0.5},
+                {"key": "o", "duration": 0.75}, {"key": "i", "duration": 0.25},
+                {"key": "i", "duration": 1.0},
+                ],
+            "harmony": [
+                # intro
+                {"key": ["q", "e", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
+                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["w", "r", "t"], "duration": 1.0},
+                {"key": ["q", "e", "y"], "duration": 1.0}, {"key": ["q", "e", "y"], "duration": 1.0},
+                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["w", "r", "t"], "duration": 1.0},
+                {"key": ["q", "e", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
+                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["w", "r", "t"], "duration": 1.0},
+                {"key": ["q", "e", "y"], "duration": 1.0}, {"key": ["q", "e", "y"], "duration": 1.0},
+                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
+                # mid
+                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
+                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
+                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["w", "e", "6"], "duration": 1.0},
+                {"key": ["q", "e", "y"], "duration": 0.5}, {"key": ["w", "5", "u"], "duration": 0.5},
+                {"key": ["w", "r", "t"], "duration": 1.0},
+                # outro
+                {"key": ["q", "e", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
+                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["w", "r", "t"], "duration": 1.0},
+                {"key": ["q", "e", "y"], "duration": 1.0}, {"key": ["q", "e", "y"], "duration": 1.0},
+                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
+            ]
         },
         
         "Panamanian Murga": { # q = 0.4
@@ -363,18 +412,18 @@ class SongSet:
                 {"key": "z", "duration": 0.4},
                 {"key": "o", "duration": 0.2}, {"key": "9", "duration": 0.6},
                 {"key": "p", "duration": 0.8},
-                {"key": "x", "duration": 0.2}, {"key": "x", "duration": 0.4},
-                {"key": "x", "duration": 0.4}, {"key": "f", "duration": 0.2},
-                {"key": "x", "duration": 0.4}, {"key": "p", "duration": 0.4},
-                {"key": "z", "duration": 0.8},
+                {"key": ["x", "p"], "duration": 0.2}, {"key": ["x", "p"], "duration": 0.4},
+                {"key": ["x", "p"], "duration": 0.4}, {"key": ["f", "x"], "duration": 0.2},
+                {"key": ["x", "9"], "duration": 0.4}, {"key": ["p", "9"], "duration": 0.4},
+                {"key": ["z", "o"], "duration": 0.8},
                 {"key": "o", "duration": 0.4}, {"key": "z", "duration": 0.4},
                 {"key": "c", "duration": 0.4}, {"key": "c", "duration": 0.4},
                 {"key": "z", "duration": 0.4},
                 {"key": "o", "duration": 0.2}, {"key": "9", "duration": 0.6},
                 {"key": "p", "duration": 0.8},
-                {"key": "x", "duration": 0.2}, {"key": "x", "duration": 0.4},
-                {"key": "x", "duration": 0.4}, {"key": "f", "duration": 0.2},
-                {"key": "x", "duration": 0.4}, {"key": "p", "duration": 0.4},
+                {"key": ["x", "p"], "duration": 0.2}, {"key": ["x", "p"], "duration": 0.4},
+                {"key": ["x", "p"], "duration": 0.4}, {"key": ["f", "x"], "duration": 0.2},
+                {"key": ["x", "9"], "duration": 0.4}, {"key": ["p", "9"], "duration": 0.4},
                 {"key": "o", "duration": 0.8},
                 ]
         },
@@ -489,21 +538,40 @@ class SongSet:
         
         "Happy Birthday": { # q = 0.5
             "melody": [
-                {"key": "q", "duration": 0.33}, {"key": "q", "duration": 0.17},
+                {"key": "i", "duration": 0.33}, {"key": "i", "duration": 0.17},
                 # stranza
-                {"key": "w", "duration": 0.5}, {"key": "q", "duration": 0.5},
-                {"key": "r", "duration": 0.5}, {"key": "e", "duration": 1.0},
-                {"key": "q", "duration": 0.33}, {"key": "q", "duration": 0.17},
-                {"key": "w", "duration": 0.5}, {"key": "q", "duration": 0.5},
-                {"key": "t", "duration": 0.5}, {"key": "r", "duration": 1.0},
-                {"key": "q", "duration": 0.33}, {"key": "q", "duration": 0.17},
-                {"key": "i", "duration": 0.5}, {"key": "y", "duration": 0.5},
-                {"key": "r", "duration": 0.5}, {"key": "e", "duration": 0.5},
+                {"key": "o", "duration": 0.5}, {"key": "i", "duration": 0.5},
+                {"key": "z", "duration": 0.5}, {"key": "p", "duration": 1.0},
+                {"key": "i", "duration": 0.33}, {"key": "i", "duration": 0.17},
+                {"key": "o", "duration": 0.5}, {"key": "i", "duration": 0.5},
+                {"key": "x", "duration": 0.5}, {"key": "z", "duration": 1.0},
+                {"key": "i", "duration": 0.33}, {"key": "i", "duration": 0.17},
+                {"key": "b", "duration": 0.5}, {"key": "c", "duration": 0.5},
+                {"key": "z", "duration": 0.5}, {"key": "p", "duration": 0.5},
+                {"key": "o", "duration": 0.5},
+                {"key": "f", "duration": 0.33}, {"key": "f", "duration": 0.17},
+                {"key": "c", "duration": 0.5}, {"key": "z", "duration": 0.5},
+                {"key": "x", "duration": 0.5}, {"key": "z", "duration": 0.5},
+            ],
+            "harmony": [
+                {"key": "null", "duration": 0.5},
+                # stranza
+                {"key": "q", "duration": 0.5},
+                {"key": ["r", "y"], "duration": 0.5}, {"key": ["r", "y"], "duration": 0.5},
+                {"key": "q", "duration": 0.5},
+                {"key": ["e", "t"], "duration": 0.5}, {"key": ["e", "t"], "duration": 0.5},
+                {"key": "q", "duration": 0.5},
+                {"key": ["e", "t"], "duration": 0.5}, {"key": ["e", "t"], "duration": 0.5},
+                {"key": "q", "duration": 0.5},
+                {"key": ["r", "y"], "duration": 0.5}, {"key": ["r", "y"], "duration": 0.5},
+                {"key": "q", "duration": 0.5},
+                {"key": ["3", "r", "y"], "duration": 0.5}, {"key": ["3", "r", "y"], "duration": 0.5},
                 {"key": "w", "duration": 0.5},
-                {"key": "7", "duration": 0.33}, {"key": "7", "duration": 0.17},
-                {"key": "y", "duration": 0.5}, {"key": "r", "duration": 0.5},
-                {"key": "t", "duration": 0.5}, {"key": "r", "duration": 0.5},
-                {"key": "z", "duration": 0.5},
+                {"key": ["r", "7"], "duration": 0.5}, {"key": ["r", "7"], "duration": 0.5},
+                {"key": "q", "duration": 0.5},
+                {"key": ["r", "y"], "duration": 0.5}, {"key": ["e", "t"], "duration": 0.5},
+                {"key": ["q", "r", "y"], "duration": 1.0}
+                
             ]
         },
         
@@ -618,14 +686,14 @@ class SongSet:
         "Whiplash": { # q = 0.28
             "melody": [    
                 # brass 1
-                {"key": "x", "duration": 0.28},
-                {"key": "x", "duration": 0.14}, {"key": "x", "duration": 0.14},
-                {"key": "x", "duration": 0.28},
-                {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
-                {"key": "x", "duration": 0.14},
-                {"key": "x", "duration": 0.14}, {"key": "z", "duration": 0.14},
-                {"key": "x", "duration": 0.28},
-                # piano bass 2
+                {"key": ["x", "o"], "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["x", "o"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["z", "i"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 0.28},
+                # piano bass 1
                 {"key": "i", "duration": 0.28},
                 {"key": "7", "duration": 0.14}, {"key": "6", "duration": 0.14},
                 {"key": "t", "duration": 0.28},
@@ -633,12 +701,12 @@ class SongSet:
                 {"key": "r", "duration": 0.28},
                 {"key": "q", "duration": 0.14}, {"key": "3", "duration": 0.28},
                 # brass 2
-                {"key": "x", "duration": 0.28},
-                {"key": "x", "duration": 0.14}, {"key": "x", "duration": 0.14},
-                {"key": "x", "duration": 0.28},
-                {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
-                {"key": "f", "duration": 0.14},
-                {"key": "x", "duration": 0.56},
+                {"key": ["x", "o"], "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["x", "o"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
+                {"key": ["f", "z"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 0.56},
                 # piano bass 2
                 {"key": "q", "duration": 0.28},
                 {"key": "q", "duration": 0.14}, {"key": "w", "duration": 0.14},
@@ -647,13 +715,13 @@ class SongSet:
                 {"key": "r", "duration": 0.28},
                 {"key": "3", "duration": 0.14}, {"key": "q", "duration": 0.28},
                 # brass 3
-                {"key": "x", "duration": 0.28},
-                {"key": "x", "duration": 0.14}, {"key": "x", "duration": 0.14},
-                {"key": "x", "duration": 0.28},
-                {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
-                {"key": "x", "duration": 0.14},
-                {"key": "x", "duration": 0.14}, {"key": "z", "duration": 0.14},
-                {"key": "x", "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["x", "o"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["z", "i"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 0.28},
                 # piano bass 3
                 {"key": "i", "duration": 0.28},
                 {"key": "7", "duration": 0.14}, {"key": "6", "duration": 0.14},
@@ -662,17 +730,17 @@ class SongSet:
                 {"key": "r", "duration": 0.28},
                 {"key": "q", "duration": 0.14}, {"key": "3", "duration": 0.28},
                 # brass 4 outro
-                {"key": "x", "duration": 0.28},
-                {"key": "x", "duration": 0.14}, {"key": "x", "duration": 0.14},
-                {"key": "x", "duration": 0.28},
-                {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
-                {"key": "f", "duration": 0.14},
-                {"key": "x", "duration": 1.12},
-                {"key": "z", "duration": 0.14}, {"key": "x", "duration": 0.14},
-                {"key": "x", "duration": 0.14}, {"key": "z", "duration": 0.14},
-                {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
-                {"key": "x", "duration": 0.14}, {"key": "f", "duration": 0.28},
-                {"key": "x", "duration": 1.12},
+                {"key": ["x", "o"], "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["x", "o"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
+                {"key": ["f", "z"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 1.12},
+                {"key": ["z", "i"], "duration": 0.14}, {"key": ["x", "o"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["z", "i"], "duration": 0.14},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
+                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
+                {"key": ["x", "o", "7"], "duration": 1.12},
             ]
         },
         
@@ -770,3 +838,4 @@ class SongSet:
     @classmethod
     def add_song(cls, name: str, notes: list):
         cls.songs[name.lower()] = notes
+
