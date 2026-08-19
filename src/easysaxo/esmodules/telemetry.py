@@ -1,9 +1,14 @@
-# `telemetry.py` ONLY FOR TELEMETRY COMMAND DEFINING
+"""Telemetry Network data getter for EasySaxo"""
 # dont worry, this is only shown to ur terminal and not publicly
 
-import time, socket, uuid, re
+import re
+import socket
+import time
 import urllib.request
+import uuid
+
 from colorama import Fore, Style
+
 
 class TelemetryData:
     @staticmethod
@@ -35,7 +40,7 @@ class TelemetryData:
 
     @staticmethod
     def getmac():
-        mac = ":".join(re.findall("..", "%012x" % uuid.getnode()))
+        mac = ":".join(re.findall("..", f"{uuid.getnode():012x}"))
         print(f"Primary MAC Address: {Fore.BLUE}{mac.upper()}{Style.RESET_ALL}")
 
     @staticmethod
@@ -44,7 +49,7 @@ class TelemetryData:
         try:
             pub_ip = urllib.request.urlopen("https://api.ipify.org", timeout=4).read().decode("utf-8")
             print(f"Public IP Address: {Fore.GREEN}{pub_ip}{Style.RESET_ALL}")
-        except Exception:
+        except PermissionError:
             print(f"Public IP: {Fore.RED}Unable to fetch public IP (Offline or Timeout){Style.RESET_ALL}")
 
     @staticmethod
@@ -66,14 +71,15 @@ class TelemetryData:
                 laddr = f"{conn.laddr.ip}:{conn.laddr.port}" if conn.laddr else "N/A"
                 raddr = f"{conn.raddr.ip}:{conn.raddr.port}" if conn.raddr else "N/A"
                 print(f"Proto: {conn.type.name} | Local: {Fore.GREEN}{laddr:<20}{Style.RESET_ALL} -> Remote: {Fore.CYAN}{raddr:<20}{Style.RESET_ALL} Status: {conn.status}")
-        except Exception as e:
+        except (AttributeError, ValueError) as e:
             print(f"{Fore.RED}Could not fetch active connections: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def speedtest_network():
-        try: import speedtest
+        try:
+            import speedtest
         except ImportError: speedtest = None
-        
+
         if not speedtest:
             print(f"{Fore.YELLOW}Speedtest package not installed.{Style.RESET_ALL}")
             return
@@ -84,7 +90,7 @@ class TelemetryData:
             print(f"Download Speed: {Fore.GREEN}{st.download() / (1024**2):.2f} Mbps{Style.RESET_ALL}")
             print(f"Upload Speed: {Fore.GREEN}{st.upload() / (1024**2):.2f} Mbps{Style.RESET_ALL}")
             print(f"Ping: {Fore.CYAN}{st.results.ping} ms{Style.RESET_ALL}")
-        except Exception as e:
+        except (ValueError, AttributeError) as e:
             print(f"{Fore.RED}Speed test failed: {e}{Style.RESET_ALL}")
-            
+
 # broo chill i aint stealing ur shi

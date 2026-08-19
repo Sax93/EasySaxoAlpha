@@ -1,17 +1,18 @@
 """EasySaxo Alpha Command Input/Registry"""
 # NOTE: `commands.py` is strictly for command creation, not meant to support other than command registering.
 
-from .config import register_command, GET_REGISTRY, HELP_REGISTRY, easysaxo, whats_new
-from .esmodules.computer import ComputerData
-from .esmodules.telemetry import TelemetryData
-from .esmodules.dirloct import DirLocation, base_dir
-from .esmodules.mathf import MathFunc
-from .esmodules.misc import hrs, StatusHandler, module_importing, StHd
-from .esmodules.jsonregex import JsonData, RegexData
-from .esmodules.medi import MediaData
-from .esmodules.heavyholder import ThreadData, SessionManager
-from .esmodules.lister import MathList
 from colorama import Fore, Style
+
+from .config import GET_REGISTRY, HELP_REGISTRY, easysaxo, register_command, whats_new
+from .esmodules.computer import ComputerData, ComputerOper
+from .esmodules.dirloct import DirLocation
+from .esmodules.heavyholder import SessionManager, ThreadData
+from .esmodules.jsonregex import JsonData, RegexData
+from .esmodules.lister import MathList, MiscList
+from .esmodules.mathf import MathFunc
+from .esmodules.medi import MediaData
+from .esmodules.misc import hrs
+from .esmodules.telemetry import TelemetryData
 
 ee4 = True
 
@@ -24,15 +25,15 @@ for math_key, help_str in MathList.MATHSET_HELP.items():
     HELP_REGISTRY[math_key] = help_str
 
 # =========== EASTER EGGS SECTION ============
-from .esmodules import easters
 import random
 
-def e1():
-    easters.eas1()
+from .esmodules import easters
 
-def e2():
-    easters.eas2()
-        
+
+def e1(): easters.eas1()
+
+def e2(): easters.eas2()
+
 def e3():
     from .esmodules.lister import EasterList
     print(f"{Fore.LIGHTYELLOW_EX}{random.choice(EasterList.osaka)} :D{Style.RESET_ALL}")
@@ -43,8 +44,7 @@ def e4():
     ee4 = False
     return ee4
 
-def e5():
-    easters.eas5()
+def e5(): easters.eas5()
 
 # =========== ATTRIBUTES FOR 'GET' ===========
 
@@ -153,7 +153,6 @@ def g_all():
     print(f"\n{Fore.BLUE}== MISC DATA =={Style.RESET_ALL}")
     for func in [g_uname, g_appn, g_appv, g_appd]: func()
 
-
 # =========== CORE COMMANDS + HELP ===========
 
 @register_command("help", aliases=["?", "-h"], help_text="help [command] - Shows command list or syntax details for a target command.")
@@ -195,9 +194,11 @@ def c_load(arg):
             ThreadData.current_pswd = session_info.get("password")
             ThreadData.path_display = session_info.get("pathdisplay", False)
             ThreadData.target_mode = session_info.get("target_mode", "auto")
-        else: ThreadData.current_user = session_info
+        else:
+            ThreadData.current_user = session_info
+            print(f"{Fore.RED}JSON file not found or specified.{Style.RESET_ALL}")
     else: print(f"{Fore.RED}Usage: load <filepath.json>{Style.RESET_ALL}")
-        
+
 @register_command("delvar", help_text="delvar <var_name> - Deletes a user-defined math variable.")
 def c_delvar(arg):
     if arg: MathFunc.del_var(arg); SessionManager.save_session(ThreadData.current_user)
@@ -216,7 +217,7 @@ def c_get(arg):
     elif arg.startswith("module "): # checks specified mod
         mtocheck = arg.split(maxsplit=1)[1]
         for mod in mtocheck.replace(",", " ").split(): module_importing(mod.upper())
-    elif arg == "module": module_importing(required_modules) # checks all modules
+    elif arg == "module": module_importing(MiscList.required_modules) # checks all modules
     elif arg in GET_REGISTRY: GET_REGISTRY[arg]()
     else: MathFunc.getvar(arg)
 
@@ -271,17 +272,17 @@ def c_filewrt(arg):
     if not parts:
         print(f"{Fore.RED}Usage: filewrt <filepath> [content]{Style.RESET_ALL}")
         return
-        
+
     filepath = parts[0]
     content = parts[1] if len(parts) == 2 else None
-    
-    target_file = filepath[:-3] if filepath.endswith(".py") else filepath
+
+    target_file = filepath.removesuffix(".py")
     if filepath in FileList._allow or target_file in FileList._allow:
         print(f"{Fore.LIGHTRED_EX}Hey, hey, no touching there.{Style.RESET_ALL}")
         return
-        
+
     DirLocation.filewrt(filepath, content)
-    
+
 @register_command("filesort", aliases=["sortf"], help_text="filesort <source_dir> <ext> <dest_dir> - Moves files matching extension from source to destination directory.")
 def c_filesort(arg):
     parts = arg.split() if arg else []
@@ -302,22 +303,22 @@ def c_regex(arg):
     if not parts:
         print(f"{Fore.RED}Usage: regex <pattern> <text/file> [-f] [-a]{Style.RESET_ALL}")
         return
-    
+
     # farse flags
     flags = [p for p in parts if p.startswith("-")]
     has_file = "-f" in flags
     has_ignorecase = "-a" in flags
-    
+
     # filter out flags from parts to get pattern and text/file
     non_flags = [p for p in parts if not p.startswith("-")]
-    
+
     if len(non_flags) < 2:
         print(f"{Fore.RED}Usage: regex <pattern> <text/file> [-f] [-a]{Style.RESET_ALL}")
         return
-    
+
     pattern = non_flags[0]
     target = non_flags[1]
-    
+
     if has_file:
         textfile_path = DirLocation._resolve_path(target)
         RegexData.match_file(pattern, textfile_path, ignore_case=has_ignorecase)
@@ -338,25 +339,23 @@ def c_pkm(arg):
 
 @register_command("render", aliases=["asciiart", "art"], help_text="render <imagepath> [columnnum] - Renders an image in ASCII.")
 def c_render(arg):
-    from .esmodules.lister import CommandList
     if not arg:
         print(f"{Fore.RED}Usage: render <imgpath> [colnum]{Style.RESET_ALL}")
         return
     parts = arg.split()
     target = parts[0]
     colnum = parts[1] if len(parts) > 1 else "80"
-    if target.upper() in CommandList.RENlist:
-        MediaData.render_preset(target.lower())
-        return
+    
+    if MediaData.render_preset(target.lower()): return
+        
     MediaData.render(target, colnum)
 
 @register_command("banner", aliases=["tart", "amply"], help_text="banner <text> - Reprints the input text, bigger.")
 def c_banner(arg):
     parts = arg.split()
-    
+
     if parts[0].lower() in ["render", "-r"]:
         from .esmodules.lister import CommandList
-        toggler = parts[0]
         image = parts[1]
         if image.upper() in CommandList.RENlist2:
             MediaData.renderbanner(image)
@@ -364,9 +363,9 @@ def c_banner(arg):
         else:
             print(f"{Fore.RED}No banner image found for '{image}'.{Style.RESET_ALL}")
             return
-            
+
     MediaData.txt2rt(arg) if arg else MediaData.txt2rt('Missing text!')
-    
+
 @register_command("set", help_text="set <varfeature> <val> - Updates session settings or math variables.")
 def c_set(arg): # prob greatest cmd
     from .esmodules.heavyholder import set_stat
@@ -416,7 +415,7 @@ def c_mathhelp(arg): # useless though
         print(f"{Fore.RED}Usage: mathhelp <attribute>{Style.RESET_ALL}")
         print(f"Available attributes: {Fore.CYAN}{', '.join(MathList.mathset.keys())}{Style.RESET_ALL}")
     else: MathFunc.help_attribute(arg)
-    
+
 @register_command("time", aliases=["date"], help_text="time - Displays current system date and time.")
 def c_time(arg): hrs()
 
@@ -427,3 +426,9 @@ def c_whatsnew(arg): whats_new()
 def b_unins(arg=None):
     from .esmodules.misc import unins_guide
     unins_guide()
+
+@register_command("shutdown", aliases=["turnoff", "shut"], help_text="shutdown [time]- Turns the computer off after a defined time.")
+def s_shutdown(arg): ComputerOper.shut_down(arg)
+
+@register_command("requirements", aliases=["reqs", "sysreqs"], help_text="requirements - Shows the app requirements.")
+def s_requirements(arg): ComputerOper.requirements()

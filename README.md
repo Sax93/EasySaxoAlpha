@@ -23,6 +23,8 @@ Also, do not treat this software as something serious, but more as a really unco
 If you are using Windows, execute `run.bat` file, and it should open a terminal running EasySaxo
 If you are using a Linux software, execute `run.sh` file, and it should open a terminal running EasySaxo
 
+Both will automatically create a .venv folder, and install required dependencies in it.
+
 # Alternate between ES commands and System commands
 
 If you want to make static changes, you can use `set cmdmatch sys` to use commands from your system shell. As well you can use `set cmdmatch es` to use ES commands.

@@ -1,13 +1,15 @@
-#=================================================
-# Math functions
-#=================================================
+"""Math Holder for EasySaxo"""
 
 # `mathf.py` ONLY FOR MATH FUNCTIONS COMMAND DEFINING
 # math shii and stuff ig
 
-import ast, random, math, operator
+import ast
+import random
+
 from colorama import Fore, Style
+
 from .lister import MathList
+
 
 class MathFunc:
     @staticmethod
@@ -28,10 +30,10 @@ class MathFunc:
             if isinstance(node.value, (int, float)):
                 return node.value
             raise ValueError("Only numeric constants allowed.")
-        
-        elif hasattr(ast, "Num") and isinstance(node, getattr(ast, "Num")):
+
+        elif hasattr(ast, "Num") and isinstance(node, ast.Num):
             return node.n
-        
+
         elif isinstance(node, ast.Name):
             if node.id in MathList.mathset:
                 val = MathList.mathset[node.id]
@@ -43,13 +45,13 @@ class MathFunc:
             if op_type in MathList._allowed_operators:
                 return MathList._allowed_operators[op_type](MathFunc._eval_ast_node(node.operand))
             raise ValueError(f"Unsupported unary operator: {op_type.__name__}")
-        
+
         elif isinstance(node, ast.BinOp):
             op_type = type(node.op)
             if op_type in MathList._allowed_operators:
                 return MathList._allowed_operators[op_type](MathFunc._eval_ast_node(node.left), MathFunc._eval_ast_node(node.right))
             raise ValueError(f"Unsupported binary operator: {op_type.__name__}")
-        
+
         elif isinstance(node, ast.Call):
             if isinstance(node.func, ast.Name):
                 func_name = node.func.id
@@ -58,7 +60,7 @@ class MathFunc:
                     return MathList.mathset[func_name](*args)
                 raise ValueError(f"Unknown function '{func_name}'")
             raise ValueError("Complex function calls not supported.")
-        
+
         else:
             raise ValueError(f"Unsupported syntax expression: {type(node).__name__}")
 
@@ -66,20 +68,20 @@ class MathFunc:
     def evaluate(expression: str):
         try:
             print(f"Result: {Fore.GREEN}{MathFunc._eval_ast_node(ast.parse(expression, mode='eval').body)}{Style.RESET_ALL}")
-        except Exception as e:
+        except (ValueError, ZeroDivisionError) as e:
             print(f"{Fore.RED}Error evaluating expression: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def getmath(): print(MathList.math_funcslist)
-    
+
     @staticmethod
-    def rtool(start: int = None, end: int = None):
+    def rtool(start: int | None, end: int | None):
         try:
             if start is not None and end is not None: num = random.randint(min(start, end), max(start, end))
             elif start is not None: num = random.randint(1, start)
             else: num = random.randint(1, 1000)
             print(f"Random number: {Fore.GREEN}{num}{Style.RESET_ALL}")
-        except Exception as e:
+        except (ValueError, TypeError) as e:
             print(f"{Fore.RED}Error generating random number: {e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -115,5 +117,5 @@ class MathFunc:
             for k, v in user_vars.items(): print(f"{Fore.CYAN}{k:<15}{Style.RESET_ALL}: {Fore.GREEN}{v}{Style.RESET_ALL}")
         else:
             print(f"{Fore.YELLOW}No custom variables saved yet.{Style.RESET_ALL}")
-        
+
 # love math tho

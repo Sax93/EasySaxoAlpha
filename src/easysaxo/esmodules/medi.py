@@ -1,8 +1,10 @@
 #`medi.py` ONLY FOR MULTIMEDIA FILE HANDLING COMMAND DEFINING
 
 import os
-from ..esmodules.dirloct import DirLocation
+
 from colorama import Fore, Style
+
+from ..esmodules.dirloct import DirLocation
 
 try: # we are trying to import asciiart here to avoid double check in main file
     from ascii_magic import AsciiArt
@@ -28,7 +30,7 @@ class MediaData:
             pygame.mixer.music.load(DirLocation._resolve_path(filepath))
             pygame.mixer.music.play()
             print(f"Playing audio: {Fore.GREEN}{filepath}{Style.RESET_ALL}")
-        except Exception as e: print(f"{Fore.RED}Error playing audio file: {e}{Style.RESET_ALL}")
+        except (FileNotFoundError, PermissionError) as e: print(f"{Fore.RED}Error playing audio file: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def stopaudio():
@@ -38,24 +40,25 @@ class MediaData:
                 pygame.mixer.music.stop()
                 print(f"{Fore.GREEN}Audio stopped.{Style.RESET_ALL}")
             else: print(f"{Fore.YELLOW}No audio is currently playing.{Style.RESET_ALL}")
-        except Exception as e: print(f"{Fore.RED}Error stopping audio: {e}{Style.RESET_ALL}")
+        except ImportError as e: print(f"{Fore.RED}Error stopping audio: {e}{Style.RESET_ALL}")
         
     # render area
     @staticmethod
     def render_preset(name):
-        # this function stands to print preset arts, and not accidentally trying to access a file.
+        import random
         from .builtinrender import Image as bt
         from .lister import ColorList
-        import random
-        
-        rancolor = random.choice(ColorList.colors)
-        ranfore = getattr(Fore, rancolor)
+
         attr_name = f"{name.lower()}Logo"
         logo = getattr(bt, attr_name, None)
+        
         if logo:
+            rancolor = random.choice(ColorList.colors)
+            ranfore = getattr(Fore, rancolor)
             print(f"{ranfore}{logo}{Style.RESET_ALL}")
-        else:
-            print(f"{Fore.RED}Preset logo '{name}' not found")
+            return True
+            
+        return False # fallback to file rendering
 
     @staticmethod
     def render(filepath, colnum=80):
@@ -81,12 +84,13 @@ class MediaData:
             cols = int(colnum) if str(colnum).isdigit() else 80
             ascii_r = AsciiArt.from_image(resolved_path)
             ascii_r.to_terminal(columns=cols)
-        except Exception as e:
+        except (ValueError, FileNotFoundError, PermissionError) as e:
             print(f"{Fore.RED}Could not render: {e}{Style.RESET_ALL}")
     
     @staticmethod
     def txt2rt(text):
-        try: from art import text2art
+        try: 
+            from art import text2art
         except ImportError:
             print(f"{Fore.RED}Art not available.{Style.RESET_ALL}")
             return
@@ -95,9 +99,10 @@ class MediaData:
         
     @staticmethod
     def renderbanner(descript):
+        import random
+
         from .builtinrender import TextToImage as tti
         from .lister import ColorList
-        import random
         
         rancolor = random.choice(ColorList.colors)
         ranfore = getattr(Fore, rancolor)

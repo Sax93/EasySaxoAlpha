@@ -1,15 +1,16 @@
-#=================================================
-# JSON and Regex Processing
-#=================================================
+"""JSON/Regex processing for EasySaxo"""
 
 # `jsonregex.py` ONLY FOR JSON AND REGEX COMMANDS
 # literally the most useless file ever
 
-from ..esmodules.dirloct import DirLocation
+import json
 import os
+
 from colorama import Fore, Style
 
-import json
+from ..esmodules.dirloct import DirLocation
+
+
 class JsonData:
     @staticmethod
     def jsonrd(filepath):
@@ -19,9 +20,11 @@ class JsonData:
                 with open(full_path, "r", encoding="utf-8") as f:
                     print(f"\n--- Formatted JSON ---\n{json.dumps(json.load(f), indent=4)}\n--- End of JSON ---")
             else: print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
-        except Exception as e: print(f"{Fore.RED}Error reading JSON: {e}{Style.RESET_ALL}")
-        
+        except (IsADirectoryError, FileNotFoundError) as e: print(f"{Fore.RED}Error reading JSON: {e}{Style.RESET_ALL}")
+
 import re
+
+
 class RegexData:
     @staticmethod
     def match_pattern(pattern, text, ignore_case=False):
@@ -30,11 +33,11 @@ class RegexData:
             compiled = re.compile(pattern, flags)
             matches = compiled.findall(text)
             mode = "case-insensitive" if ignore_case else "case-sensitive"
-            if matches: 
+            if matches:
                 print(f"Found {Fore.GREEN}{len(matches)}{Style.RESET_ALL} matches of '{pattern}' ({mode}).")
-            else: 
+            else:
                 print(f"{Fore.YELLOW}No matches found for pattern '{pattern}' ({mode}).{Style.RESET_ALL}")
-        except Exception as e: 
+        except (TypeError, ValueError) as e:
             print(f"{Fore.RED}Regex matching error: {e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -46,5 +49,5 @@ class RegexData:
                 RegexData.match_pattern(pattern, content, ignore_case=ignore_case)
             else:
                 print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
-        except Exception as e:
+        except (TypeError, ValueError, IsADirectoryError) as e:
             print(f"{Fore.RED}Error reading file for regex: {e}{Style.RESET_ALL}")

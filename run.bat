@@ -2,10 +2,12 @@
 cd /d "%~dp0"
 
 if not exist ".venv\Scripts\python.exe" (
-    echo [ERROR] No se encontro el ejecutable Python en .venv\Scripts\python.exe
-    echo Por favor, verifica el nombre de tu entorno virtual o crealo con: python -m venv .venv
-    pause
-    exit /b
+    echo Action: Creating .venv directory...
+    python -m venv .venv
+    
+    echo Action: Upgrading pip and installing project dependencies...
+    ".venv\Scripts\python.exe" -m pip install --upgrade pip
+    ".venv\Scripts\python.exe" -m pip install -e .
 )
 
 ".venv\Scripts\python.exe" -m easysaxo.main

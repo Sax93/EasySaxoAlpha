@@ -1,6 +1,14 @@
-import random, os, time
+"""Easter Egg holder for EasySaxo"""
+
+import os
+import random
+import sys
+import time
+
 from colorama import Fore, Style
+
 from .misc import talk
+
 
 def eas1():
     from ..commands import c_set
@@ -22,7 +30,7 @@ def eas1():
             c_set("var tuffvariable2 41")
         case _:
             pass
-        
+
 def eas2():
     case_number = random.randint(1, 4)
 
@@ -47,7 +55,7 @@ def eas2():
 
         case 3:
             from ..commands import easysaxo
-            do_nothing = True if easysaxo.name == "EasySaxo" else False
+            do_nothing = easysaxo.name == "EasySaxo"
             if not do_nothing:
                 print("Don't move my code buddy")
                 easysaxo.name = "EasySaxo"
@@ -56,7 +64,7 @@ def eas2():
 
         case 4:
             from ..commands import easysaxo
-            do_nothing = True if easysaxo.dev == "SXF" else False
+            do_nothing = easysaxo.dev == "SXF"
             if not do_nothing:
                 talk("who am i then", 1)
                 talk("no dont do that", 1)
@@ -68,7 +76,7 @@ def eas2():
                 talk("im watching you bud", 2)
 
         case _: pass
-        
+
 def eas4():
     from .dirloct import DirLocation
     talk("the sauce", 0.4)
@@ -89,7 +97,7 @@ def eas4():
     elif os.name == 'posix':
         DirLocation.ls("/usr/bin")
         DirLocation.ls("/bin")
-        
+
 def eas5():
     from .lister import EasterList
     from .misc import traceback

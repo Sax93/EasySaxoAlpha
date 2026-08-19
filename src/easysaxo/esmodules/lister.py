@@ -1,13 +1,17 @@
-from colorama import Fore, Style
-from ..config import easysaxo
+"""List, tuple and dict holder for EasySaxo"""
+
 import random
+
+from colorama import Fore, Style
+
+from ..config import easysaxo
 
 # add big lists here. remember to use 'from .esmodules.lister import ...'
 
 # easter egg lists ================================================================================
 
 class EasterList:
-    ERRlist = [ # from eas5()
+    ERRlist = [ # from eas5()  # noqa: RUF012
         f"NotAnError{Style.RESET_ALL}: {Fore.MAGENTA}Seemingly, there was no error at all",
         f"ConfidenceError{Style.RESET_ALL}: {Fore.MAGENTA}There was an error, but it was not confident enough to show up",
         f"NonsenseError{Style.RESET_ALL}: {Fore.MAGENTA}There is not an error, against all odds",
@@ -40,21 +44,21 @@ class EasterList:
         f"MusicOutOfPreferenceError{Style.RESET_ALL}: {Fore.MAGENTA}Python does not like the music the closest human is hearing",
         f"EnergyWastingError{Style.RESET_ALL}: {Fore.MAGENTA}Python is pleading to shut off your power supply if you keep this up",
         f"RandomAccessMemoryUsageError{Style.RESET_ALL}: {Fore.MAGENTA}I personally think showing you the error is a waste of RAM",
-        f"MathUselessInformationError{Style.RESET_ALL}: {Fore.MAGENTA}Byte order of the app is not a Mersenne prime number"
+        f"MathUselessInformationError{Style.RESET_ALL}: {Fore.MAGENTA}Byte order of the app is not a Mersenne prime number",
     ]
-    
-    slop = [ # from eas2()
-        "fuck you", 
-        "use command 'filecls python' please", 
+
+    slop = [ # from eas2()  # noqa: RUF012
+        "fuck you",
+        "use command 'filecls python' please",
         "if your reading ts your a dumbahh",
-        "hi", 
-        "type c for fast charging", 
-        "use 'filedel C:\\Windows\\System32' now", 
+        "hi",
+        "type c for fast charging",
+        "use 'filedel C:\\Windows\\System32' now",
         "get back to work kink",
         f"{random.randint(1, 65566)}"
     ]
-    
-    osaka = [ # from e3()
+
+    osaka = [ # from e3()  # noqa: RUF012
         "saataa andaagii", "omaigahh", "amerikaya", "fella what?????",
         "haro everynyan", "get yo ahh to work bud", "haiii"
     ]
@@ -66,6 +70,7 @@ class CommandList:
         f"{Fore.CYAN}COMMAND LIST: {Style.RESET_ALL}\n"
         f"{Fore.BLUE}help{Style.RESET_ALL}        : Shows this {Fore.CYAN}Command List{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}changelog{Style.RESET_ALL}   : Shows the lastest {Fore.CYAN}app updates{Style.RESET_ALL}.\n"
+        f"{Fore.BLUE}clear{Style.RESET_ALL}       : Clears the {Fore.CYAN}terminal{Style.RESET_ALL} screen.\n"
         f"{Fore.BLUE}save{Style.RESET_ALL}        : Creates/rewrites a {Fore.RED}JSON file{Style.RESET_ALL} with {Fore.YELLOW}user{Style.RESET_ALL} data.\n"
         f"{Fore.BLUE}load{Style.RESET_ALL}        : Loads a {Fore.RED}JSON file{Style.RESET_ALL} with {Fore.YELLOW}user{Style.RESET_ALL} data.\n"
         f"{Fore.BLUE}get{Style.RESET_ALL}         : Gets information of a {Fore.YELLOW}variable{Style.RESET_ALL} or an {Fore.BLUE}attribute{Style.RESET_ALL}.\n"
@@ -94,26 +99,17 @@ class CommandList:
         f"{Fore.BLUE}render{Style.RESET_ALL}      : Renders and draws a specified {Fore.RED}image file{Style.RESET_ALL} (specify route).\n"
         f"{Fore.BLUE}banner{Style.RESET_ALL}      : Renders and prints inputted {Fore.GREEN}text{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}pkm{Style.RESET_ALL}         : Enters the {Fore.CYAN}Piano Keyboard Mode{Style.RESET_ALL} (experimental).\n"
+        f"{Fore.BLUE}shutdown{Style.RESET_ALL}    : Shuts the {Fore.LIGHTCYAN_EX}system{Style.RESET_ALL} down (CANNOT CANCEL DIRECTLY).\n"
         f"{Fore.BLUE}unins{Style.RESET_ALL}       : Guides to uninstall {Fore.LIGHTRED_EX}{easysaxo.name}{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}exit{Style.RESET_ALL}        : Exit {Fore.CYAN}{easysaxo.name}{Style.RESET_ALL}.\n"
         f"\nRemember you can search for command's syntax and usage by using {Fore.GREEN}help <cmd/attr>{Style.RESET_ALL} :)"
     )
-    
-    RENlist = [ # render list
-        "SXF",
-        "EASYSAXO",
-        "PYTHON",
-        "LINUX", "TUX",
-        "LOSS",
-        "WINDOWS",
-        "GITHUB",
-    ]
-    
-    RENlist2 = [ # render text to imag
+
+    RENlist2 = [ # render text to imag  # noqa: RUF012
         "CAT", "NEKO",
         "NOTE", "MUSIC",
     ]
-    
+
     FWRTlist = (
         f"{Fore.YELLOW}Commands:{Style.RESET_ALL}\n"
         f"  {Fore.GREEN}:l{Style.RESET_ALL} -> List buffer with line numbers\n"
@@ -122,12 +118,13 @@ class CommandList:
         f"  {Fore.GREEN}:c{Style.RESET_ALL} -> Clear buffer entirely\n"
         f"  {Fore.GREEN}:w{Style.RESET_ALL} or {Fore.GREEN}:x{Style.RESET_ALL} or {Fore.GREEN}EOF{Style.RESET_ALL} -> Save & Exit\n"
         f"  {Fore.GREEN}:q{Style.RESET_ALL} -> Quit without saving\n"
+        f"  {Fore.GREEN}:lt{Style.RESET_ALL} -> Lint current.\n"
     )
 
 # file list ===============================================================================
 
-class FileList:   
-    _allow = [
+class FileList:
+    _allow = [  # noqa: RUF012
         "main",
         "config",
         "commands",
@@ -144,13 +141,13 @@ class FileList:
         "esmodules/easters",
         "esmodules/mamidi"
     ]
-    
-    _delete = [
-        "config.py", "session.json", "translations.json", 
+
+    _delete = [  # noqa: RUF012
+        "config.py", "session.json", "translations.json",
         "main.py", "commands.py"
     ]
-    
-    EXTENSION_COLORS = {
+
+    EXTENSION_COLORS = {  # noqa: RUF012
         # scripts
         ".py": Fore.LIGHTYELLOW_EX,
         ".js": Fore.YELLOW,
@@ -175,12 +172,15 @@ class FileList:
         ".exe": Fore.RED,
         ".bat": Fore.RED,
     }
-    
+
 # math lists =====================================================================================
-import math, ast, operator
+import ast
+import math
+import operator
+
 
 class MathList:
-    MATHSET_HELP = {
+    MATHSET_HELP = {  # noqa: RUF012
         "sqrt": "sqrt(x) - Returns the square root of x.",
         "sin": "sin(x) - Returns the sine of x in radians.",
         "cos": "cos(x) - Returns the cosine of x in radians.",
@@ -194,21 +194,21 @@ class MathList:
         "gamma": "gamma(x) - Returns the factorial approximation of x (for variables and floats)."
     }
 
-    mathset = {
-        "sqrt": math.sqrt, "sin": math.sin, "cos": math.cos, 
-        "tan": math.tan, "log": math.log, "log10": math.log10, 
+    mathset = {  # noqa: RUF012
+        "sqrt": math.sqrt, "sin": math.sin, "cos": math.cos,
+        "tan": math.tan, "log": math.log, "log10": math.log10,
         "abs": abs, "pi": math.pi, "e": math.e, "fact": math.factorial,
         "gamma": math.gamma,
     }
 
-    _reserved = {
+    _reserved = {  # noqa: RUF012
         "sqrt", "sin", "cos",
         "tan", "log", "log10",
         "abs", "pi", "e", "fact",
         "gamma"
     }
 
-    _allowed_operators = {
+    _allowed_operators = {  # noqa: RUF012
         ast.Add: operator.add,
         ast.Sub: operator.sub,
         ast.Mult: operator.mul,
@@ -219,7 +219,7 @@ class MathList:
         ast.USub: operator.neg,
         ast.UAdd: operator.pos,
     }
-    
+
     math_funcslist = (
         f"{Fore.BLUE}MathSet{Style.RESET_ALL}:\n"
         f"{Fore.CYAN}sqrt, sin, cos, tan, log, log10, pi, e, fact, gamma{Style.RESET_ALL}.\n"
@@ -229,7 +229,7 @@ class MathList:
 # misc lists ======================================================================================
 
 class MiscList:
-    required_modules = [
+    required_modules = [  # noqa: RUF012
         "os", "sys", "re", "time", "subprocess", "platform", "random", "locale",
         "psutil", "json", "math", "pygame", "threading", "socket", "colorama", "rich", "prompt_toolkit",
         "cpuinfo", "importlib", "ascii_magic"
@@ -238,7 +238,7 @@ class MiscList:
 # colorama color list ==============================================================================
 
 class ColorList:
-    colors = [
+    colors = [  # noqa: RUF012
         "RED", "BLUE", "GREEN", "BLACK", "MAGENTA", "YELLOW", "CYAN", "WHITE",
         "LIGHTRED_EX", "LIGHTBLUE_EX", "LIGHTGREEN_EX", "LIGHTBLACK_EX",
         "LIGHTMAGENTA_EX", "LIGHTYELLOW_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX"
@@ -247,7 +247,7 @@ class ColorList:
 # mamidi ============================================================================================
 
 class MidiSetList:
-    note_freqs = {
+    note_freqs = {  # noqa: RUF012
         'C4': 261.63, 'C#4': 277.18,
         'D4': 293.66, 'D#4': 311.13,
         'E4': 329.63,
@@ -262,10 +262,10 @@ class MidiSetList:
         'G5': 783.99, 'G#5': 830.61,
         'A5': 880.00, 'A#5': 932.33,
         'B5': 987.77,
-        'C6': 1046.50 
+        'C6': 1046.50
     }
-    
-    note_k_bindings = {
+
+    note_k_bindings = {  # noqa: RUF012
         'q': ('C', note_freqs['C4']), '2': ('C#4', note_freqs['C#4']),
         'w': ('D', note_freqs['D4']), '3': ('D#4', note_freqs['D#4']),
         'e': ('E', note_freqs['E4']),
@@ -285,9 +285,9 @@ class MidiSetList:
 
 class SongSet:
     # song structure: list of {"key": ["<k_binding>"], "duration": <secs>}
-    songs = {
+    songs = {  # noqa: RUF012
         "Twinkle Twinkle": { # q = 0.4
-            "melody": [ 
+            "melody": [
                 {"key": "q", "duration": 0.4}, {"key": "q", "duration": 0.4},
                 {"key": "t", "duration": 0.4}, {"key": "t", "duration": 0.4},
                 {"key": "y", "duration": 0.4}, {"key": "y", "duration": 0.4},
@@ -314,9 +314,9 @@ class SongSet:
                 {"key": "q", "duration": 0.8},
             ],
         },
-        
+
         "Ode to Joy": { # q = 0.5
-            "melody": [   
+            "melody": [
                 # intro
                 {"key": "p", "duration": 0.5}, {"key": "p", "duration": 0.5},
                 {"key": "z", "duration": 0.5}, {"key": "x", "duration": 0.5},
@@ -379,9 +379,9 @@ class SongSet:
                 {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
             ]
         },
-        
+
         "Panamanian Murga": { # q = 0.4
-            "melody": [  
+            "melody": [
                 # Intro
                 {"key": "o", "duration": 0.2}, {"key": "z", "duration": 0.4},
                 {"key": "c", "duration": 0.6}, {"key": "y", "duration": 2.0},
@@ -427,7 +427,7 @@ class SongSet:
                 {"key": "o", "duration": 0.8},
                 ]
         },
-        
+
         "The Entertainer": { # q = 0.4
             "melody": [
                 # intro
@@ -453,7 +453,7 @@ class SongSet:
                 {"key": "i", "duration": 0.2}, {"key": "o", "duration": 0.2},
                 {"key": "p", "duration": 0.4}, {"key": "u", "duration": 0.2},
                 {"key": "o", "duration": 0.4}, {"key": "i", "duration": 1.2},
-                
+
                 {"key": "w", "duration": 0.2}, {"key": "3", "duration": 0.2},
                 {"key": "e", "duration": 0.2}, {"key": "i", "duration": 0.4},
                 {"key": "e", "duration": 0.2}, {"key": "i", "duration": 0.4},
@@ -463,7 +463,7 @@ class SongSet:
                 {"key": "i", "duration": 0.2}, {"key": "p", "duration": 0.4},
                 {"key": "o", "duration": 0.2}, {"key": "i", "duration": 0.2},
                 {"key": "y", "duration": 0.2}, {"key": "o", "duration": 1.2},
-                
+
                 {"key": "w", "duration": 0.2}, {"key": "3", "duration": 0.2},
                 {"key": "e", "duration": 0.2}, {"key": "i", "duration": 0.4},
                 {"key": "e", "duration": 0.2}, {"key": "i", "duration": 0.4},
@@ -474,7 +474,7 @@ class SongSet:
                 {"key": "i", "duration": 0.2}, {"key": "o", "duration": 0.2},
                 {"key": "p", "duration": 0.4}, {"key": "u", "duration": 0.2},
                 {"key": "o", "duration": 0.4}, {"key": "i", "duration": 1.2},
-                
+
                 {"key": "i", "duration": 0.2}, {"key": "o", "duration": 0.2},
                 {"key": "p", "duration": 0.2},
                 {"key": "i", "duration": 0.2}, {"key": "o", "duration": 0.2},
@@ -488,9 +488,9 @@ class SongSet:
                 {"key": "i", "duration": 0.2}, {"key": "o", "duration": 0.2},
                 {"key": "p", "duration": 0.4}, {"key": "u", "duration": 0.2},
                 {"key": "o", "duration": 0.4}, {"key": "i", "duration": 1.2},
-            ]
+            ],
         },
-        
+
         "Birdhunting Chant": [ # q = 0.5
             # intro
             {"key": "o", "duration": 0.25}, {"key": "p", "duration": 0.25},
@@ -522,7 +522,7 @@ class SongSet:
             {"key": "5", "duration": 0.25}, {"key": "i", "duration": 0.25},
             {"key": "u", "duration": 0.5}, {"key": "t", "duration": 0.5},
             {"key": "o", "duration": 0.5},
-            
+
             {"key": "q", "duration": 0.5},
             {"key": "p", "duration": 0.25}, {"key": "i", "duration": 0.25},
             {"key": "t", "duration": 0.25}, {"key": "p", "duration": 0.25},
@@ -535,7 +535,7 @@ class SongSet:
             {"key": "u", "duration": 0.5}, {"key": "t", "duration": 1.0},
             {"key": "x", "duration": 0.5},
         ],
-        
+
         "Happy Birthday": { # q = 0.5
             "melody": [
                 {"key": "i", "duration": 0.33}, {"key": "i", "duration": 0.17},
@@ -571,10 +571,10 @@ class SongSet:
                 {"key": "q", "duration": 0.5},
                 {"key": ["r", "y"], "duration": 0.5}, {"key": ["e", "t"], "duration": 0.5},
                 {"key": ["q", "r", "y"], "duration": 1.0}
-                
+
             ]
         },
-        
+
         "The Girl from Ipanema": { # q = 0.6
             "melody": [
                 # Chorus
@@ -594,7 +594,7 @@ class SongSet:
                 {"key": "i", "duration": 0.6},
                 {"key": "i", "duration": 0.3}, {"key": "7", "duration": 0.6},
                 {"key": "i", "duration": 4.8},
-                
+
                 {"key": "t", "duration": 0.9}, {"key": "e", "duration": 0.3},
                 {"key": "e", "duration": 0.6}, {"key": "w", "duration": 0.3},
                 {"key": "t", "duration": 0.9}, {"key": "e", "duration": 0.3},
@@ -613,9 +613,9 @@ class SongSet:
                 {"key": "i", "duration": 4.8},
             ]
         },
-        
+
         "Vivaldi's Winter": { # q = 1
-            "melody": [ 
+            "melody": [
                 {"key": "i", "duration": 0.5},
                 {"key": "x", "duration": 0.25}, {"key": "z", "duration": 0.25},
                 {"key": "p", "duration": 0.5},
@@ -627,39 +627,39 @@ class SongSet:
                 {"key": "u", "duration": 0.5}, {"key": "z", "duration": 0.5},
                 {"key": "z", "duration": 0.5}, {"key": "p", "duration": 1.0},
                 {"key": "p", "duration": 0.5},
-                
+
                 {"key": "o", "duration": 0.5},
                 {"key": "p", "duration": 0.25}, {"key": "z", "duration": 0.25},
                 {"key": "x", "duration": 0.5},
                 {"key": "c", "duration": 0.25}, {"key": "v", "duration": 0.25},
-                
+
                 {"key": "i", "duration": 0.5},
                 {"key": "o", "duration": 0.25}, {"key": "p", "duration": 0.25},
                 {"key": "z", "duration": 0.5},
                 {"key": "x", "duration": 0.25}, {"key": "c", "duration": 0.25},
-                
+
                 {"key": "u", "duration": 0.5},
                 {"key": "i", "duration": 0.25}, {"key": "o", "duration": 0.25},
                 {"key": "p", "duration": 0.5},
                 {"key": "z", "duration": 0.25}, {"key": "x", "duration": 0.25},
-                
+
                 {"key": "y", "duration": 0.5},
                 {"key": "u", "duration": 0.25}, {"key": "i", "duration": 0.25},
                 {"key": "o", "duration": 0.5},
                 {"key": "p", "duration": 0.25}, {"key": "i", "duration": 0.25},
-                
+
                 {"key": "u", "duration": 1.25}, {"key": "t", "duration": 0.25},
                 {"key": "5", "duration": 0.25}, {"key": "t", "duration": 0.25},
-                
+
                 {"key": "o", "duration": 1.25}, {"key": "t", "duration": 0.25},
                 {"key": "5", "duration": 0.25}, {"key": "t", "duration": 0.25},
-                
+
                 {"key": "p", "duration": 1.25}, {"key": "t", "duration": 0.25},
                 {"key": "5", "duration": 0.25}, {"key": "t", "duration": 0.25},
-                
+
                 {"key": "s", "duration": 1.25}, {"key": "o", "duration": 0.25},
                 {"key": "i", "duration": 0.25}, {"key": "o", "duration": 0.25},
-                
+
                 {"key": "x", "duration": 0.5}, {"key": "t", "duration": 1.0},
                 {"key": "x", "duration": 0.5},
                 {"key": "x", "duration": 0.25}, {"key": "s", "duration": 0.25},
@@ -670,7 +670,7 @@ class SongSet:
                 {"key": "t", "duration": 1.0},
             ],
         },
-        
+
         "Nokia Ringtone": { # q = 0.3
             "melody": [
                 {"key": "p", "duration": 0.15}, {"key": "o", "duration": 0.15},
@@ -682,9 +682,9 @@ class SongSet:
                 {"key": "y", "duration": 0.3},
             ]
         },
-        
+
         "Whiplash": { # q = 0.28
-            "melody": [    
+            "melody": [
                 # brass 1
                 {"key": ["x", "o"], "duration": 0.28},
                 {"key": ["x", "o"], "duration": 0.14}, {"key": ["x", "o"], "duration": 0.14},
@@ -743,7 +743,7 @@ class SongSet:
                 {"key": ["x", "o", "7"], "duration": 1.12},
             ]
         },
-        
+
         "Megalovania": {  # q = 0.24
             "melody": [
                 {"key": "w", "duration": 0.12}, {"key": "w", "duration": 0.12},
@@ -772,7 +772,7 @@ class SongSet:
                 {"key": "r", "duration": 0.12}, {"key": "t", "duration": 0.12},
             ]
         },
-        
+
         "Tetris Korobeiniki": {
             "melody": [ # q = 0.4
                 {"key": "p", "duration": 0.4},
@@ -788,7 +788,7 @@ class SongSet:
                 {"key": "o", "duration": 0.4}, {"key": "p", "duration": 0.4},
                 {"key": "i", "duration": 0.4}, {"key": "y", "duration": 0.4},
                 {"key": "y", "duration": 1.0},
-                
+
                 {"key": "o", "duration": 0.4}, {"key": "z", "duration": 0.2},
                 {"key": "c", "duration": 0.4},
                 {"key": "x", "duration": 0.2}, {"key": "z", "duration": 0.2},
@@ -822,11 +822,11 @@ class SongSet:
             ]
         },
     }
-    
+
     @classmethod
     def list_songs(cls) -> list:
         return list(cls.songs.keys())
-    
+
     @classmethod
     def get_song(cls, name: str) -> list | None:
         name_lower = name.lower()
@@ -834,8 +834,26 @@ class SongSet:
             if key.lower() == name_lower:
                 return cls.songs[key]
         return None
-    
+
     @classmethod
     def add_song(cls, name: str, notes: list):
         cls.songs[name.lower()] = notes
 
+# reqs
+
+class SystemList:
+    min_req = (
+        f"{Fore.BLUE}OS{Style.RESET_ALL}        : {Fore.LIGHTBLUE_EX}Windows 10 / Linux (kernel 4.19+){Style.RESET_ALL}\n"
+        f"{Fore.BLUE}CPU{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}Single-Core 1.2 GHz (x86-64 or ARM64){Style.RESET_ALL}\n"
+        f"{Fore.BLUE}RAM{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}128MB free memory{Style.RESET_ALL}\n"
+        f"{Fore.BLUE}Storage{Style.RESET_ALL}   : {Fore.LIGHTBLUE_EX}150MB free space (including dependencies){Style.RESET_ALL}\n"
+        f"{Fore.BLUE}Python{Style.RESET_ALL}    : {Fore.LIGHTBLUE_EX}3.10+ Python version{Style.RESET_ALL}\n"
+    )
+
+    rec_req = (
+        f"{Fore.BLUE}OS{Style.RESET_ALL}        : {Fore.LIGHTBLUE_EX}Windows 10 / Linux (kernel 4.19+){Style.RESET_ALL}\n"
+        f"{Fore.BLUE}CPU{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}Dual-Core 2.0 GHz (Intel 6th Gen){Style.RESET_ALL}\n"
+        f"{Fore.BLUE}RAM{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}256MB free memory{Style.RESET_ALL}\n"
+        f"{Fore.BLUE}Storage{Style.RESET_ALL}   : {Fore.LIGHTBLUE_EX}300MB free space{Style.RESET_ALL}\n"
+        f"{Fore.BLUE}Python{Style.RESET_ALL}    : {Fore.LIGHTBLUE_EX}3.13 Python version{Style.RESET_ALL}\n"
+    )

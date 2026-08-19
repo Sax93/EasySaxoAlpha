@@ -1,8 +1,13 @@
-# `computer.py` ONLY FOR COMPUTER COMMAND DEFINING
+"""Computer data getter for EasySaxo"""
 
 # dark magic, only watching
 
-import os, sys, platform, subprocess, psutil
+import os
+import platform
+import subprocess
+import sys
+
+import psutil
 from colorama import Fore, Style
 
 try:
@@ -16,7 +21,8 @@ except ImportError:
 class ComputerData:
     @staticmethod
     def getcpu():
-        try: import cpuinfo
+        try:
+            import cpuinfo
         except ImportError: cpuinfo = None
 
         print(f"Processor Model: {Fore.BLUE}{platform.processor() or 'Unknown'}{Style.RESET_ALL}")
@@ -27,7 +33,7 @@ class ComputerData:
                 print(f"Architecture: {Fore.CYAN}{info.get('arch', 'N/A')}{Style.RESET_ALL}")
                 print(f"L2 Cache: {Fore.CYAN}{info.get('l2_cache_size', 'N/A')}{Style.RESET_ALL}")
                 print(f"L3 Cache: {Fore.CYAN}{info.get('l3_cache_size', 'N/A')}{Style.RESET_ALL}")
-            except Exception as e:
+            except (AttributeError, TypeError, ValueError) as e:
                 return e
 
         print(f"Cores: {Fore.BLUE}{psutil.cpu_count(logical=False)} Physical | {psutil.cpu_count(logical=True)} Logical{Style.RESET_ALL}")
@@ -35,7 +41,7 @@ class ComputerData:
             freq = psutil.cpu_freq()
             if freq:
                 print(f"Speed: {Fore.BLUE}{freq.current:.2f} MHz (Min: {freq.min:.2f} MHz, Max: {freq.max:.2f} MHz){Style.RESET_ALL}")
-        except Exception as e:
+        except (AttributeError, TypeError, ValueError) as e:
             return e
 
         print(f"Total CPU Usage: {Fore.BLUE}{psutil.cpu_percent(interval=0.0)}{Style.RESET_ALL}%")
@@ -61,7 +67,8 @@ class ComputerData:
 
     @staticmethod
     def getgpu():
-        try: import GPUtil
+        try:
+            import GPUtil
         except ImportError: GPUtil = None
 
         if GPUtil:
@@ -74,44 +81,47 @@ class ComputerData:
                         print(f"  VRAM Used: {Fore.RED}{gpu.memoryUsed} MB ({gpu.memoryUtil*100:.1f}%){Style.RESET_ALL}")
                         print(f"  Temperature: {Fore.RED}{gpu.temperature} °C{Style.RESET_ALL}")
                     return
-            except Exception as e:
+            except (ImportError, ValueError, AttributeError) as e:
                 return e
-        
+
         try:
             if os.name == "nt":
                 result = subprocess.run(
                     ["powershell", "-Command", "Get-CimInstance Win32_VideoController | Select-Object Name, AdapterRAM, DriverVersion"],
-                    capture_output=True, text=True, timeout=5
+                    capture_output=True, text=True, timeout=5, check=True
                     )
                 output = result.stdout.strip()
-                if output: print(f"GPU Details:\n{Fore.RED}{output}{Style.RESET_ALL}")
+                if output: print(f"\nGPU Details:\n{Fore.RED}{output}{Style.RESET_ALL}\n")
                 else: print(f"GPU: {Fore.RED}No GPU detected{Style.RESET_ALL}")
             else:
-                result = subprocess.run(["lspci", "-v", "-mm"], capture_output=True, text=True, timeout=5)
+                result = subprocess.run(["lspci", "-v", "-mm"], capture_output=True, text=True, timeout=5,check=True)
                 for line in result.stdout.split("\n"):
                     if "VGA" in line or "Display" in line:
                         print(f"GPU: {Fore.RED}{Style.BRIGHT}{line.strip()}{Style.RESET_ALL}")
                         break
                 else:
                     print(f"GPU: {Fore.RED}No GPU detected{Style.RESET_ALL}")
-        except Exception:
+        except PermissionError:
             print(f"GPU: {Fore.RED}Unable to detect GPU{Style.RESET_ALL}")
 
     @staticmethod
     def getmotherboard():
         try:
             if os.name == "nt":
-                result = subprocess.run(["powershell", "-Command", "Get-CimInstance Win32_BaseBoard | Select-Object Manufacturer, Product, SerialNumber"], capture_output=True, text=True, timeout=5)
-                print(f"Motherboard Info:\n{Fore.CYAN}{result.stdout.strip()}{Style.RESET_ALL}")
+                result = subprocess.run(
+                    ["powershell", "-Command", "Get-CimInstance Win32_BaseBoard | Select-Object Manufacturer, Product, SerialNumber"],
+                    capture_output=True, text=True, timeout=5, check=True)
+                print(f"\nMotherboard Info:\n"
+                      f"{Fore.CYAN}{result.stdout.strip()}{Style.RESET_ALL}\n")
             else:
-                print(f"Motherboard: {Fore.CYAN}Requires root permissions (dmidecode) on Linux/Unix{Style.RESET_ALL}")
-        except Exception as e:
+                print(f"Motherboard: {Fore.CYAN}Requires root permissions (dmidecode) on Linux/Unix{Style.RESET_ALL}\n")
+        except (PermissionError, AttributeError) as e:
             print(f"Motherboard: {Fore.RED}Error fetching motherboard data: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def getdisk():
         partitions = psutil.disk_partitions()
-        
+
         if RICH_AVAILABLE:
             table = Table(title="Disk Partitions & Usage")
             table.add_column("Drive", style="yellow")
@@ -119,7 +129,7 @@ class ComputerData:
             table.add_column("Total", style="green")
             table.add_column("Free", style="green")
             table.add_column("Usage", style="magenta")
-            
+
             for p in partitions: #what do u call 2 partitions in math? a pp hahalol
                 try:
                     u = psutil.disk_usage(p.mountpoint)
@@ -140,7 +150,8 @@ class ComputerData:
             io = psutil.disk_io_counters()
             if io:
                 print(f"\n--- Disk I/O Metrics ---\nRead: {Fore.YELLOW}{io.read_bytes / (1024**2):.2f} MB{Style.RESET_ALL} | Written: {Fore.YELLOW}{io.write_bytes / (1024**2):.2f} MB{Style.RESET_ALL}")
-        except Exception: pass
+        except (AttributeError, TypeError, ValueError, PermissionError):
+            print(f"{Fore.RED}Could not fetch disk data.{Style.RESET_ALL}")
 
     @staticmethod
     def getbattery():
@@ -154,7 +165,7 @@ class ComputerData:
                     print(f"Time Remaining: {Fore.CYAN}{mins // 60}h {mins % 60}m{Style.RESET_ALL}")
             else:
                 print(f"Battery: {Fore.CYAN}No battery detected{Style.RESET_ALL}")
-        except Exception:
+        except (ValueError, AttributeError):
             print(f"Battery: {Fore.RED}Unable to detect battery status{Style.RESET_ALL}") # poor
 
     @staticmethod
@@ -175,7 +186,8 @@ class ComputerData:
 
     @staticmethod
     def getuserinfo():
-        import socket, getpass
+        import getpass
+        import socket
         print(f"Logged User: {Fore.CYAN}{getpass.getuser()}{Style.RESET_ALL}")
         print(f"Device Name (Hostname): {Fore.CYAN}{socket.gethostname()}{Style.RESET_ALL}")
 
@@ -191,7 +203,7 @@ class ComputerData:
         try:
             reqs = subprocess.check_output([sys.executable, "-m", "pip", "list"])
             print(f"\n--- Installed Pip Packages ---\n{reqs.decode('utf-8')}")
-        except Exception as e:
+        except (PermissionError, AttributeError, ValueError) as e:
             print(f"{Fore.RED}Error retrieving installed packages: {e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -200,7 +212,7 @@ class ComputerData:
             ["pid", "name", "cpu_percent", "memory_percent"]),
                 key=lambda p: p.info["cpu_percent"] or 0,
                 reverse=True)[:5]
-        
+
         if RICH_AVAILABLE:
             table = Table(title="Top 5 CPU Processes")
             table.add_column("PID", style="magenta")
@@ -215,4 +227,26 @@ class ComputerData:
             for p in processes:
                 print(f"  PID: {p.info['pid']} | Name: {Fore.CYAN}{p.info['name']}{Style.RESET_ALL} | CPU: {p.info['cpu_percent']}% | RAM: {p.info['memory_percent']:.2f}%")
 
+class ComputerOper:
+    @staticmethod
+    def shut_down(waittime: int | None):
+        try:
+            if os.name == 'nt':
+                print("Shutting down the system...")
+                os.system(f"shutdown /s /t {waittime if waittime is not None else 0}")
+            else:
+                time_arg = f"+{waittime}" if waittime else "now"
+                os.system(f"sudo shutdown -h {time_arg}")
+        except (PermissionError, ValueError) as e:
+            print(f"An error occurred: {e}")
+
+    @staticmethod
+    def requirements():
+        from ..config import easysaxo
+        from .lister import SystemList
+        print(f"{Fore.CYAN}{easysaxo.name} {easysaxo.ver} Requirements:{Style.RESET_ALL}\n")
+        print(f"Minimum requirements:\n{SystemList.min_req}\n")
+        print(f"Reccomended requirements:\n{SystemList.rec_req}")
+                
+                
 # note: 8 out of 10 intel celeron inside cpus crash here
