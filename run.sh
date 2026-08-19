@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 cd "$(dirname "$0")"
 
-# Verificar si no existe el ejecutable dentro de .venv
 if [ ! -f ".venv/bin/python" ]; then
     echo "Action: Creating .venv directory..."
     python3 -m venv .venv

@@ -149,7 +149,7 @@ def set_stat(arg):
             else: # auto
                 ThreadData.target_mode = "auto"
                 print(f"{Fore.LIGHTYELLOW_EX}Default execution mode set to: Auto (EasySaxo -> System){Style.RESET_ALL}")
-                print(f"You can either use {Fore.CYAN}'-e'{Style.RESET_ALL} to force app command, or {Fore.CYAN}'-s'{Style.RESET_ALL} to force system command!")
+                print(f"Use {Fore.CYAN}'-e'{Style.RESET_ALL} to force app command, or {Fore.CYAN}'-s'{Style.RESET_ALL} to force system command.")
 
         # set name <-> path display
         elif parts[0].lower() in ["pathmode", "pathdisplay"] and len(parts) >= 2:
@@ -160,8 +160,7 @@ def set_stat(arg):
             elif path_arg in ["off", "disable"]:
                 ThreadData.path_display = False
                 print(f"{Fore.LIGHTRED_EX}Path mode disabled{Style.RESET_ALL}")
-            else:
-                print(f"{Fore.RED}Unknown/malformed subcommand.{Style.RESET_ALL}")
+            else: print(f"{Fore.RED}Unknown/malformed subcommand.{Style.RESET_ALL}")
             SessionManager.save_session(ThreadData.current_user)
 
         else: print(f"{Fore.RED}Unknown/malformed set subcommand.{Style.RESET_ALL}")

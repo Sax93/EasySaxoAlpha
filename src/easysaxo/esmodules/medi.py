@@ -46,6 +46,7 @@ class MediaData:
     @staticmethod
     def render_preset(name):
         import random
+
         from .builtinrender import Image as bt
         from .lister import ColorList
 
@@ -108,10 +109,8 @@ class MediaData:
         ranfore = getattr(Fore, rancolor)
         attr_name = f"{descript.lower()}Text"
         logo = getattr(tti, attr_name, None)
-        if logo:
-            print(f"{ranfore}{logo}{Style.RESET_ALL}")
-        else:
-            print(f"{Fore.RED}Preset text image '{descript}' not found")
+        if logo: print(f"{ranfore}{logo}{Style.RESET_ALL}")
+        else: print(f"{Fore.RED}Preset text image '{descript}' not found")
         
         
 # holy useless code

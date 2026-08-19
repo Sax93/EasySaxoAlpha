@@ -1,4 +1,4 @@
-"""Directory / File manager for EasySaxo"""
+"""Directory / File manager for EasySaxo."""
 
 # `dirloct.py` ONLY FOR FILE-RELATED COMMAND DEFINING
 
@@ -145,8 +145,7 @@ class DirLocation:
                     print(f"{prefix}{Fore.LIGHTBLACK_EX}... (max depth reached){Style.RESET_ALL}")
                     return
 
-                try:
-                    entries = sorted(os.listdir(dir_path))
+                try: entries = sorted(os.listdir(dir_path))
                 except PermissionError:
                     print(f"{prefix}{Fore.RED}[Permission Denied]{Style.RESET_ALL}")
                     return
@@ -205,23 +204,22 @@ class DirLocation:
                 # check if execution threw an error to show in shell
                 if result.returncode != 0:
                     traceback_str = result.stderr
-                    print(f"{Fore.MAGENTA}Execution returns an exception:{Style.RESET_ALL}\n{traceback_str}")
+                    print(f"{Fore.MAGENTA}Program returns an exception:{Style.RESET_ALL}\n{traceback_str}")
                     return traceback_str
                 else:
-                    if result.stdout:
-                        print(result.stdout, end="")
-                    print(f"{Fore.GREEN}Process finished with exit code {Fore.CYAN}{result.returncode}{Style.RESET_ALL}")
+                    if result.stdout: print(result.stdout, end="")
+                    print(f"{Fore.GREEN}Program finished with exit code {Fore.CYAN}{result.returncode}{Style.RESET_ALL}")
                     return None
             else:
                 print(f"Opening {Fore.GREEN}{filepath}{Style.RESET_ALL}...")
-                if os.name == "nt":
-                    os.startfile(full_path)
-                elif platform.system() == "Darwin":
-                    subprocess.run(["open", full_path], check=True)
-                else:
-                    subprocess.run(["xdg-open", full_path], check=True)
+                if os.name == "nt": os.startfile(full_path)
+                elif platform.system() == "Darwin": subprocess.run(["open", full_path], check=True)
+                else: subprocess.run(["xdg-open", full_path], check=True)
                 return None
 
+        except subprocess.CalledProcessError as e:
+            print(f"\nProgram '{Fore.RED}{full_path}{Style.RESET_ALL}' returned exit code {Fore.LIGHTBLUE_EX + str(e.returncode) + Style.RESET_ALL}:\n"
+                  f"{Fore.LIGHTMAGENTA_EX}{e}{Style.RESET_ALL}")
         except (PermissionError, FileNotFoundError) as e:
             print(f"{Fore.RED}Error opening file: {e}{Style.RESET_ALL}")
             return str(e)
@@ -263,8 +261,7 @@ class DirLocation:
             else:
                 os.makedirs(full_path, exist_ok=True)
                 print(f"Directory {Fore.GREEN}{filepath}{Style.RESET_ALL} created successfully.")
-        except PermissionError as e:
-            print(f"{Fore.RED}Error creating directory: {e}{Style.RESET_ALL}")
+        except PermissionError as e: print(f"{Fore.RED}Error creating directory: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def dirdel(filepath):
@@ -305,16 +302,15 @@ class DirLocation:
         from .lister import CommandList
 
         class QuickLinter(ast.NodeVisitor):
-            """AST Visitor that checks for warnings beyond syntax errors."""
             def __init__(self):
                 self.warnings = []
 
             def visit_FunctionDef(self, node):
-                # 1. Snake_case check for function names
+                # snake_case check for function names
                 if any(c.isupper() for c in node.name):
                     self.warnings.append(f"Line {node.lineno}: Function '{node.name}' should use snake_case.")
 
-                # 2. Check for unused arguments
+                # check for unused arguments
                 args = [a.arg for a in node.args.args if a.arg != "self"]
                 used_vars = {child.id for child in ast.walk(node) if isinstance(child, ast.Name)}
                 for arg in args:
@@ -324,27 +320,24 @@ class DirLocation:
                 self.generic_visit(node)
 
             def visit_ClassDef(self, node):
-                # 3. PascalCase check for class names
+                # PascalCase check for class names
                 if not node.name[0].isupper() or "_" in node.name:
                     self.warnings.append(f"Line {node.lineno}: Class '{node.name}' should use PascalCase/CamelCase.")
                 self.generic_visit(node)
 
             def visit_Import(self, node):
-                # 4. Discourage wildcard or bad import practices
+                # discourage wildcard or bad import practices
                 for alias in node.names:
-                    if alias.name == "sys" or alias.name == "os":
-                        # Example: check or flag global usages
-                        pass
+                    if alias.name == "sys" or alias.name == "os": pass
                 self.generic_visit(node)
 
             def visit_Call(self, node):
-                # 5. Flag dangerous functions like eval() or exec()
+                # flag dangerous functions like eval() or exec()
                 if isinstance(node.func, ast.Name) and node.func.id in ("eval", "exec"):
                     self.warnings.append(f"Line {node.lineno}: Use of unsafe function '{node.func.id}()'.")
                 self.generic_visit(node)
 
         def _run_linter(code_str):
-            """Parses code and runs AST checks, returning formatted warning strings."""
             try:
                 tree = ast.parse(code_str)
                 linter = QuickLinter()
@@ -377,18 +370,16 @@ class DirLocation:
                         line = input()
                         cmd = line.strip()
 
-                        if cmd in [":w", ":x", ":save", "EOF", ":EOF", "END"]:
+                        if cmd in [":w", ":x", ":save", "EOF", ":EOF", "END", "exit"]:
                             if filepath.endswith(".py"):
                                 warnings, syntax_err = _run_linter("\n".join(lines))
                                 if syntax_err:
                                     print(f"{Fore.RED}[Linter] {syntax_err}{Style.RESET_ALL}")
                                     confirm = input(f"{Fore.YELLOW}Save with syntax error? (y/N): {Style.RESET_ALL}").strip().lower()
-                                    if confirm != 'y':
-                                        continue
+                                    if confirm != 'y': continue
                                 elif warnings:
                                     print(f"{Fore.YELLOW}[Linter Warnings]:{Style.RESET_ALL}")
-                                    for w in warnings:
-                                        print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
+                                    for w in warnings: print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
                             break
 
                         elif cmd == ":q":
@@ -397,12 +388,10 @@ class DirLocation:
 
                         elif cmd in [":lint", ":check", ":lt"]:
                             warnings, syntax_err = _run_linter("\n".join(lines))
-                            if syntax_err:
-                                print(f"{Fore.RED}[Linter] {syntax_err}{Style.RESET_ALL}")
+                            if syntax_err: print(f"{Fore.RED}[Linter] {syntax_err}{Style.RESET_ALL}")
                             elif warnings:
                                 print(f"{Fore.YELLOW}[Linter Found {len(warnings)} Warning(s)]:{Style.RESET_ALL}")
-                                for w in warnings:
-                                    print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
+                                for w in warnings: print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
                             else:
                                 print(f"{Fore.GREEN}[Linter] Check return no errors.{Style.RESET_ALL}")
 
@@ -423,10 +412,8 @@ class DirLocation:
                                 if 0 <= idx < len(lines):
                                     removed = lines.pop(idx)
                                     print(f"{Fore.RED}Removed line {idx+1}: {Style.RESET_ALL}{removed}")
-                                else:
-                                    print(f"{Fore.RED}Invalid line number.{Style.RESET_ALL}")
-                            else:
-                                print(f"{Fore.RED}Usage: :d <line_number>{Style.RESET_ALL}")
+                                else: print(f"{Fore.RED}Invalid line number.{Style.RESET_ALL}")
+                            else: print(f"{Fore.RED}Usage: :d <line_number>{Style.RESET_ALL}")
 
                         elif cmd.startswith(":i"):
                             parts = cmd.split(maxsplit=2)
@@ -436,16 +423,12 @@ class DirLocation:
                                 if 0 <= idx <= len(lines):
                                     lines.insert(idx, new_text)
                                     print(f"{Fore.GREEN}Inserted line {idx+1}.{Style.RESET_ALL}")
-                                else:
-                                    print(f"{Fore.RED}Line number out of range.{Style.RESET_ALL}")
-                            else:
-                                print(f"{Fore.RED}Usage: :i <line_number> <text>{Style.RESET_ALL}")
+                                else: print(f"{Fore.RED}Line number out of range.{Style.RESET_ALL}")
+                            else: print(f"{Fore.RED}Usage: :i <line_number> <text>{Style.RESET_ALL}")
 
-                        elif cmd in [":h", ":help"]:
-                            print(CommandList.FWRTlist)
+                        elif cmd in [":h", ":help"]: print(CommandList.FWRTlist)
 
-                        else:
-                            lines.append(line)
+                        else: lines.append(line)
 
                     except KeyboardInterrupt:
                         print(f"\n{Fore.RED}Write operation cancelled.{Style.RESET_ALL}")

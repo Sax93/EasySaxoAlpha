@@ -5,7 +5,7 @@ class Image:
   def get_presets(cls):
     """Returns a list of valid preset names without 'Logo' suffix."""
     return [
-      attr[:-4].upper() 
+      attr[:-4].lower()
         for attr in dir(cls) 
         if attr.endswith("Logo") and not attr.startswith("__")
     ]
@@ -141,8 +141,6 @@ class Image:
               **++*+++=====++*##                      @##***++++****              
                     ******###                          ##########                
   """
-
-  linuxLogo = tuxLogo
 
   windowsLogo = r"""
                                                                            .--:---
@@ -335,22 +333,26 @@ class Image:
                                                                                                   ..:...=%%%%%%%%%%%%%%%%%.                                                                                                                
   """
 
-  cotnLogo = nazunaLogo
-  mywifeLogo = nazunaLogo
-
 class TextToImage:
+  @classmethod
+  def get_presets(cls):
+    """Returns a list of valid preset names without 'Text' suffix."""
+    return [
+      attr[:-4].lower()
+        for attr in dir(cls) 
+        if attr.endswith("Text") and not attr.startswith("__")
+    ]
+  
   catText = r"""
      /\_/\
     ( o.o )
      > ^ <
   """
-  
   nekoText = catText
   
   noteText = r"""
-        | _ | (_)
-        || || ||
-       (@)(@) ||
+      | _ | (_)
+      || || ||
+     (@)(@) ||
   """
-  
   musicText = noteText

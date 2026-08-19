@@ -1,4 +1,9 @@
-"""======================= Main ======================="""
+"""======================= Main =======================
+EasySaxo main file for execution.
+
+Author: SXF
+Description: App that holds EasySaxo main menu
+"""
 # NOTE: `main.py` is the file that has to be debugged/executed for the program to fully work.
 # Runs main processes like command input and user data processing
 # Ironically, it is not the most dangerous file to modify
@@ -13,6 +18,7 @@ os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0" # tensorflow hide msgs
 # =================================================
 # Import section
 # =================================================
+
 # Standard library imports
 import json
 import shutil
@@ -29,7 +35,7 @@ just_fix_windows_console()
 # Prompt_Toolkit support
 try:
     from prompt_toolkit import PromptSession
-    from prompt_toolkit.completion import WordCompleter
+    from prompt_toolkit.completion import NestedCompleter
     from prompt_toolkit.formatted_text import ANSI
     from prompt_toolkit.patch_stdout import patch_stdout
     PROMPT_TOOLKIT_AVAILABLE = True
@@ -37,7 +43,7 @@ except ImportError: PROMPT_TOOLKIT_AVAILABLE = False
 
 # Project imports
 from . import commands
-from .config import COMMAND_REGISTRY, easysaxo
+from .config import COMMAND_REGISTRY, build_completion_dict, easysaxo
 from .esmodules import dirloct
 from .esmodules.heavyholder import SessionManager, ThreadData
 
@@ -77,6 +83,10 @@ def eesh(cmd: str):
         else: print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
     elif cmd in ["traceback", "error", "locateerror", "errorloc"]: commands.e5()
     else: print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
+    
+def inp_display(identifier):
+    raw_prompt = Fore.BLACK + Style.BRIGHT + f"{identifier} > " + Style.RESET_ALL
+    return raw_prompt
 
 # 2
 
@@ -90,6 +100,14 @@ def trslt(translations):
             for key, val in raw_data.items():
                 if isinstance(val, dict): translations.update(val)
                 else: translations[key] = val
+
+def kb_inter_holder():
+    try:
+        extoken = input(f"\n{Fore.LIGHTBLACK_EX}Want to exit? (Y/N): {Style.RESET_ALL}").lower()
+        if extoken == "y":
+            SessionManager.save_session(ThreadData.current_user)
+            return sys.exit(0)
+    except (KeyboardInterrupt, EOFError): sys.exit("\nExiting.") # aka subtle exit
 
 #=================================================
 # Core main loop
@@ -109,7 +127,8 @@ def Core(session_info=None):
     all_commands = list(COMMAND_REGISTRY.keys()) + list(translations.keys())
 
     if PROMPT_TOOLKIT_AVAILABLE:
-        completer = WordCompleter(all_commands, ignore_case=True)
+        completion_dict = build_completion_dict(translations)
+        completer = NestedCompleter.from_nested_dict(completion_dict)
         session = PromptSession(completer=completer)
     else:
         try:
@@ -126,22 +145,14 @@ def Core(session_info=None):
     while True:
         try:
             print()
-            if ThreadData.path_display:
-                raw_prompt = Fore.BLACK + Style.BRIGHT + f"{dirloct.base_dir} > " + Style.RESET_ALL
-            else:
-                raw_prompt = Fore.BLACK + Style.BRIGHT + f"{ThreadData.current_user} > " + Style.RESET_ALL
+            if ThreadData.path_display: raw_prompt = inp_display(dirloct.base_dir)
+            else: raw_prompt = inp_display(ThreadData.current_user)
 
             if PROMPT_TOOLKIT_AVAILABLE:
-                with patch_stdout(): usit = session.prompt(ANSI(raw_prompt)).strip()
+                with patch_stdout():
+                    usit = session.prompt(ANSI(raw_prompt)).strip()
             else: usit = input(raw_prompt).strip()
-        except KeyboardInterrupt:
-            try:
-                extoken = input(f"\n{Fore.LIGHTBLACK_EX}Want to exit? (Y/N): {Style.RESET_ALL}").lower()
-                if extoken == "y":
-                    SessionManager.save_session(ThreadData.current_user)
-                    break
-                else: continue
-            except (KeyboardInterrupt, EOFError): sys.exit("\nExiting.") # aka subtle exit
+        except KeyboardInterrupt: kb_inter_holder()
         except EOFError: break
 
         if not usit: continue

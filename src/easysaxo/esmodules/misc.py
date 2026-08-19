@@ -1,4 +1,4 @@
-"""Miscellaneous function holder for EasySaxo"""
+"""Miscellaneous function holder for EasySaxo."""
 
 import time
 
@@ -18,35 +18,6 @@ def hrs():
     print(f"Time: {Fore.LIGHTYELLOW_EX}{time.strftime('%H:%M:%S')}{Style.RESET_ALL}")
     print(f"Date: {Fore.LIGHTRED_EX}{time.strftime('%Y-%m-%d')}{Style.RESET_ALL}")
 
-# Status Handler for modules
-class StatusHandler:
-    def __init__(self, label_width=25):
-        self.ok = f"{Fore.GREEN}OK{Style.RESET_ALL}"
-        self.er = f"{Fore.RED}ERROR{Style.RESET_ALL}"
-        self.label_width = label_width
-
-    def print_status(self, label: str, success: bool, extra_info: str = ""):
-        status = self.ok if success else self.er
-        print(f"{label:<{self.label_width}}: [{status}] {extra_info}".strip())
-
-    def check_imports(self, modules: list[str]):
-        import importlib
-        all_success = True
-        for mod in modules:
-            try:
-                importlib.import_module(mod)
-                self.print_status(f"Module {Fore.BLUE}{mod.upper()}{Style.RESET_ALL}", success=True)
-            except ImportError as e:
-                self.print_status(f"Module {Fore.BLUE}{mod.upper()}{Style.RESET_ALL}", success=False, extra_info=str(e))
-                all_success = False
-        return all_success
-
-StHd = StatusHandler(label_width=20)
-
-def module_importing(modlist):
-    StHd.check_imports(modlist)
-    print()
-
 # Uninstaller
 def uninstaller():
     import os
@@ -63,7 +34,7 @@ def uninstaller():
         if os.name == 'nt': os.startfile(note_path)
         elif sys.platform == 'darwin': subprocess.Popen(["open", note_path])
         else: subprocess.Popen(["xdg-open", note_path])
-    except (PermissionError, FileNotFoundError): pass
+    except (PermissionError, FileNotFoundError, subprocess.CalledProcessError): pass
 
     for folder in ["esmodules", "__pycache__", ".vscode"]: # delete app folders
         folder_path = os.path.join(base_dir, folder)
@@ -81,16 +52,16 @@ def uninstaller():
     sys.exit(0) # Force exit
 
 def unins_guide():
-    print(f"{Fore.LIGHTRED_EX}WARNING! This will delete all EasySaxo files and info.{Style.RESET_ALL}")
+    print(f"{Fore.LIGHTRED_EX}WARNING! This will delete all {easysaxo.name} files and info.{Style.RESET_ALL}")
     con = input(f"{Fore.LIGHTCYAN_EX}Do you still want to proceed? (Y/N): {Style.RESET_ALL}").strip().lower() # please do not
 
     if con in ["y", "yes"]:
-        print(f"Uninstalling EasySaxo {easysaxo.ver}...")
+        print(f"Uninstalling {easysaxo.name} {easysaxo.ver}...")
         time.sleep(0.5)
         uninstaller()
     else: print("Uninstall canceled.")
 
-# Fake traceback
+# Fake traceback cuz y not
 
 def traceback(err):
     from .dirloct import base_dir

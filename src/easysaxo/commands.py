@@ -1,4 +1,5 @@
-"""EasySaxo Alpha Command Input/Registry"""
+"""EasySaxo Alpha Command Input/Registry.
+Full to all GET and base commands/subcommands"""
 # NOTE: `commands.py` is strictly for command creation, not meant to support other than command registering.
 
 from colorama import Fore, Style
@@ -8,7 +9,7 @@ from .esmodules.computer import ComputerData, ComputerOper
 from .esmodules.dirloct import DirLocation
 from .esmodules.heavyholder import SessionManager, ThreadData
 from .esmodules.jsonregex import JsonData, RegexData
-from .esmodules.lister import MathList, MiscList
+from .esmodules.lister import MathList
 from .esmodules.mathf import MathFunc
 from .esmodules.medi import MediaData
 from .esmodules.misc import hrs
@@ -145,7 +146,7 @@ def g_pswd(): print(f"{Fore.RED}You cannot get password due to security protocol
 @register_command("attr", aliases=["attribute", "all"], registry=GET_REGISTRY, help_text="get attr - Fetches all telemetry and system specs.")
 def g_all():
     print(f"{Fore.BLUE}== COMPUTER DATA =={Style.RESET_ALL}")
-    for func in [g_cpu, g_arch, g_os, g_mboard, g_ram, g_gpu, g_disk, g_batt, g_user, g_py]: func()
+    for func in [g_cpu, g_arch, g_os, g_mboard, g_ram, g_gpu, g_disk, g_batt, g_user, g_py, g_proc]: func()
     print(f"\n{Fore.BLUE}== TELEMETRY DATA =={Style.RESET_ALL}")
     for func in [g_net, g_upt, g_ip, g_mac, g_pubip, g_netstat]: func()
     print(f"\n{Fore.BLUE}== THREADING/MATH DATA =={Style.RESET_ALL}")
@@ -164,14 +165,14 @@ def c_help(arg):
         target = arg.lower().strip()
         if target in HELP_REGISTRY:
             print(f"\n{Fore.GREEN}=== Usage for '{target}' ==={Style.RESET_ALL}")
-            print(f"{Fore.YELLOW}{HELP_REGISTRY[target]}{Style.RESET_ALL}\n")
+            print(f"{Fore.YELLOW}{HELP_REGISTRY[target]}{Style.RESET_ALL}")
         elif target in GET_REGISTRY and target in HELP_REGISTRY:
             print(f"\n{Fore.GREEN}=== Usage for 'get {target}' ==={Style.RESET_ALL}")
-            print(f"{Fore.YELLOW}{HELP_REGISTRY[target]}{Style.RESET_ALL}\n")
+            print(f"{Fore.YELLOW}{HELP_REGISTRY[target]}{Style.RESET_ALL}")
         else:
             print(f"{Fore.RED}No usage details found for '{arg}'. Type 'help' for options.{Style.RESET_ALL}")
 
-@register_command("exit", aliases=["quit", "kill", "-q"], help_text="exit - Save session state and exit app.")
+@register_command("exit", aliases=["quit", "kill"], help_text="exit - Save session state and exit app.")
 def c_exit(arg):
     import sys
     SessionManager.save_session(ThreadData.current_user)
@@ -212,12 +213,7 @@ def c_del(arg):
 
 @register_command("get", help_text="get <attribute|subcommand> - Fetches system metrics, variables, or specs.")
 def c_get(arg):
-    from .esmodules.misc import module_importing
     if not arg: print(f"{Fore.RED}Missing argument for 'get'. Type 'help' for options.{Style.RESET_ALL}")
-    elif arg.startswith("module "): # checks specified mod
-        mtocheck = arg.split(maxsplit=1)[1]
-        for mod in mtocheck.replace(",", " ").split(): module_importing(mod.upper())
-    elif arg == "module": module_importing(MiscList.required_modules) # checks all modules
     elif arg in GET_REGISTRY: GET_REGISTRY[arg]()
     else: MathFunc.getvar(arg)
 
@@ -294,6 +290,9 @@ def c_filesort(arg):
     dest_dir = parts[2]
     DirLocation.filesort(source_dir, file_ext, dest_dir)
 
+@register_command("filesz", aliases=["sizef", "sizeof"], help_text="filesz <file> - Shows size of a file.")
+def c_filesz(arg): DirLocation.filesz(arg) if arg else print(f"{Fore.RED}Missing filepath.{Style.RESET_ALL}")
+
 @register_command("jsonrd", help_text="jsonrd <filepath> - Parses and pretty-prints JSON file contents.")
 def c_jsonrd(arg): JsonData.jsonrd(arg) if arg else print(f"{Fore.RED}Missing filepath.{Style.RESET_ALL}")
 
@@ -352,19 +351,16 @@ def c_render(arg):
 
 @register_command("banner", aliases=["tart", "amply"], help_text="banner <text> - Reprints the input text, bigger.")
 def c_banner(arg):
+    if not arg:
+        MediaData.txt2rt('Missing text!')
+        return
     parts = arg.split()
 
     if parts[0].lower() in ["render", "-r"]:
-        from .esmodules.lister import CommandList
-        image = parts[1]
-        if image.upper() in CommandList.RENlist2:
-            MediaData.renderbanner(image)
-            return
-        else:
-            print(f"{Fore.RED}No banner image found for '{image}'.{Style.RESET_ALL}")
-            return
+        MediaData.renderbanner(parts[1].lower())
+        return
 
-    MediaData.txt2rt(arg) if arg else MediaData.txt2rt('Missing text!')
+    MediaData.txt2rt(arg)
 
 @register_command("set", help_text="set <varfeature> <val> - Updates session settings or math variables.")
 def c_set(arg): # prob greatest cmd

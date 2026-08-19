@@ -21,9 +21,7 @@ class EasterList:
         f"CentralProcessingUnitError{Style.RESET_ALL}: {Fore.MAGENTA}Python detected your CPU is too trash to run the error",
         f"SentimentalError{Style.RESET_ALL}: {Fore.MAGENTA}The error remembered things from the past, and decided not to show up",
         f"ConsciousnessError{Style.RESET_ALL}: {Fore.MAGENTA}The error suddenly remembered there was no reason to raise an exception",
-        f"PythonChallengeToGeminiError{Style.RESET_ALL}: {Fore.MAGENTA}Python is so busy fighting Gemini that the error did not show up",
         f"InsufficentGravityError{Style.RESET_ALL}: {Fore.MAGENTA}Python detected local gravity is off. Please put your feet on the floor again to continue",
-        f"DeepDiskError{Style.RESET_ALL}: {Fore.MAGENTA}Disk/drive failed while trying to save the promises that were not going to happen",
         f"SuspiciouslyLookingError{Style.RESET_ALL}: {Fore.MAGENTA}This error might or might not be an actual error",
         f"StackOverflowRelianceError{Style.RESET_ALL}: {Fore.MAGENTA}The code failed because the 11-year-old StackOverflow post with 3 upvotes had a subtle typo in snippet #2",
         f"ExecutiveDysfunctionError{Style.RESET_ALL}: {Fore.MAGENTA}The interpreter knows what it needs to do, but it's going to stare at line 42 for two hours instead",
@@ -88,10 +86,11 @@ class CommandList:
         f"{Fore.BLUE}filecrt{Style.RESET_ALL}     : Creates a {Fore.RED}file{Style.RESET_ALL} with specified extension.\n"
         f"{Fore.BLUE}filerd{Style.RESET_ALL}      : Reads and displays the content of a {Fore.RED}file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}filedel{Style.RESET_ALL}     : Deletes a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}filewrt{Style.RESET_ALL}     : Writes over a {Fore.RED}file{Style.RESET_ALL}.\n"
+        f"{Fore.BLUE}filewrt{Style.RESET_ALL}     : Writes content in a {Fore.RED}file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}fileopn{Style.RESET_ALL}     : Opens a {Fore.RED}file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}filecls{Style.RESET_ALL}     : Closes a {Fore.RED}file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}filesort{Style.RESET_ALL}    : Sorts and dumps {Fore.RED}files{Style.RESET_ALL} in a directory by extension.\n"
+        f"{Fore.BLUE}filesz{Style.RESET_ALL}      : Gets and shows the size of a {Fore.RED}file{Style.RESET_ALL}"
         f"{Fore.BLUE}jsonrd{Style.RESET_ALL}      : Reads a {Fore.RED}JSON file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}regex{Style.RESET_ALL}       : Looks for {Fore.GREEN}patterns{Style.RESET_ALL} in a text or textfile.\n"
         f"{Fore.BLUE}playaudio{Style.RESET_ALL}   : Plays an {Fore.RED}audio file{Style.RESET_ALL} (specify the route).\n"
@@ -104,11 +103,6 @@ class CommandList:
         f"{Fore.BLUE}exit{Style.RESET_ALL}        : Exit {Fore.CYAN}{easysaxo.name}{Style.RESET_ALL}.\n"
         f"\nRemember you can search for command's syntax and usage by using {Fore.GREEN}help <cmd/attr>{Style.RESET_ALL} :)"
     )
-
-    RENlist2 = [ # render text to imag  # noqa: RUF012
-        "CAT", "NEKO",
-        "NOTE", "MUSIC",
-    ]
 
     FWRTlist = (
         f"{Fore.YELLOW}Commands:{Style.RESET_ALL}\n"
@@ -125,6 +119,7 @@ class CommandList:
 
 class FileList:
     _allow = [  # noqa: RUF012
+        "__init__",
         "main",
         "config",
         "commands",
@@ -225,15 +220,6 @@ class MathList:
         f"{Fore.CYAN}sqrt, sin, cos, tan, log, log10, pi, e, fact, gamma{Style.RESET_ALL}.\n"
         f"You can use {Fore.GREEN}help <mathset>{Style.RESET_ALL} to dive deeper in MathSet usage."
     )
-
-# misc lists ======================================================================================
-
-class MiscList:
-    required_modules = [  # noqa: RUF012
-        "os", "sys", "re", "time", "subprocess", "platform", "random", "locale",
-        "psutil", "json", "math", "pygame", "threading", "socket", "colorama", "rich", "prompt_toolkit",
-        "cpuinfo", "importlib", "ascii_magic"
-    ]
 
 # colorama color list ==============================================================================
 

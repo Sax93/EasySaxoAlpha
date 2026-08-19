@@ -101,7 +101,7 @@ class ComputerData:
                         break
                 else:
                     print(f"GPU: {Fore.RED}No GPU detected{Style.RESET_ALL}")
-        except PermissionError:
+        except (PermissionError, subprocess.CalledProcessError):
             print(f"GPU: {Fore.RED}Unable to detect GPU{Style.RESET_ALL}")
 
     @staticmethod
@@ -115,8 +115,8 @@ class ComputerData:
                       f"{Fore.CYAN}{result.stdout.strip()}{Style.RESET_ALL}\n")
             else:
                 print(f"Motherboard: {Fore.CYAN}Requires root permissions (dmidecode) on Linux/Unix{Style.RESET_ALL}\n")
-        except (PermissionError, AttributeError) as e:
-            print(f"Motherboard: {Fore.RED}Error fetching motherboard data: {e}{Style.RESET_ALL}")
+        except (PermissionError, AttributeError, subprocess.CalledProcessError) as e:
+            print(f"Motherboard: {Fore.RED}Error fetching motherboard data:\n{e}{Style.RESET_ALL}")
 
     @staticmethod
     def getdisk():
@@ -201,10 +201,10 @@ class ComputerData:
     @staticmethod
     def getinstalledpackages():
         try:
-            reqs = subprocess.check_output([sys.executable, "-m", "pip", "list"])
-            print(f"\n--- Installed Pip Packages ---\n{reqs.decode('utf-8')}")
-        except (PermissionError, AttributeError, ValueError) as e:
-            print(f"{Fore.RED}Error retrieving installed packages: {e}{Style.RESET_ALL}")
+            reqs = subprocess.check_output([sys.executable, "-m", "uv", "pip", "list"])
+            print(f"\n{Fore.CYAN}--- Installed Pip Packages ---{Style.RESET_ALL}\n{reqs.decode('utf-8')}")
+        except (PermissionError, AttributeError, subprocess.CalledProcessError) as e:
+            print(f"{Fore.RED}Error retrieving installed packages:\n{e}{Style.RESET_ALL}")
 
     @staticmethod
     def getprocesses():
@@ -214,6 +214,7 @@ class ComputerData:
                 reverse=True)[:5]
 
         if RICH_AVAILABLE:
+            print()
             table = Table(title="Top 5 CPU Processes")
             table.add_column("PID", style="magenta")
             table.add_column("Name", style="cyan")

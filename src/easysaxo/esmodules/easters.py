@@ -28,8 +28,7 @@ def eas1():
             c_set("name tuffguy")
             c_set("var tuffvariable 67")
             c_set("var tuffvariable2 41")
-        case _:
-            pass
+        case _: pass
 
 def eas2():
     case_number = random.randint(1, 4)
@@ -59,8 +58,7 @@ def eas2():
             if not do_nothing:
                 print("Don't move my code buddy")
                 easysaxo.name = "EasySaxo"
-            else:
-                print(f"you a nice one actually {Fore.GREEN}:){Style.RESET_ALL}")
+            else: print(f"you a nice one actually {Fore.GREEN}:){Style.RESET_ALL}")
 
         case 4:
             from ..commands import easysaxo
@@ -72,8 +70,7 @@ def eas2():
                 talk("waait")
                 talk("noo", 0.3)
                 sys.exit()
-            else:
-                talk("im watching you bud", 2)
+            else: talk("im watching you bud", 2)
 
         case _: pass
 
