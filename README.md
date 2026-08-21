@@ -7,6 +7,7 @@ It is meant to operate just as your system powershell, but allowing other tiny f
 math evaluations, software/hardware info and so on.
 
 Despite its "useful" functions, EasySaxo Alpha also shows a certain humour and informal language usage to be more unique and straightforward.
+Changelog: [View full CHANGELOG](CHANGELOG.md)
 
 # What does it do?
 
