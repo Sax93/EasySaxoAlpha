@@ -61,8 +61,11 @@ class EasterList:
         "haro everynyan", "get yo ahh to work bud", "haiii"
     ]
     
-    l_is_are = [ # noqa: RUF012
-        "Yes", "No", "Maybe", "Sorta", "HELL NAHH",
+    
+    yes_no_kw = ["is", "am", "are", "really", "can", "will", "would", "could", "shall", "should", "may", "does"]  # ruff: ignore[mutable-class-default]
+    
+    l_yes_no = [ # noqa: RUF012
+        "Yes", "No", "Maybe", "HELL NAHH",
         "I'on know", "OF COURSE BRO HOWS THAT EVEN A QUESTION",
         "Nah def not"
         ]
@@ -88,47 +91,58 @@ class EasterList:
         "With the power of friendship", "Dark magic ig", "Do you think I know?",
         "Out of thin air", "With some ramen", "Pure Flex Tape bro", "You don't want to know"
     ]
+    
+    l_when = [  # ruff: ignore[mutable-class-default]
+        "Yesterday", "Maybe in a few days", "God knows", "Soon, trust",
+        "February 30th bro", "A few days ago", "As if I knew that"
+    ]
 
 # command list ===================================================================================
 
 class CommandList:
     CMDlist = (
-        f"{Fore.CYAN}COMMAND LIST: {Style.RESET_ALL}\n"
-        f"{Fore.BLUE}help{Style.RESET_ALL}        : Shows this {Fore.CYAN}Command List{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}changelog{Style.RESET_ALL}   : Shows the lastest {Fore.CYAN}app updates{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}clear{Style.RESET_ALL}       : Clears the {Fore.CYAN}terminal{Style.RESET_ALL} screen.\n"
-        f"{Fore.BLUE}save{Style.RESET_ALL}        : Creates/rewrites a {Fore.RED}JSON file{Style.RESET_ALL} with {Fore.YELLOW}user{Style.RESET_ALL} data.\n"
-        f"{Fore.BLUE}load{Style.RESET_ALL}        : Loads a {Fore.RED}JSON file{Style.RESET_ALL} with {Fore.YELLOW}user{Style.RESET_ALL} data.\n"
-        f"{Fore.BLUE}get{Style.RESET_ALL}         : Gets information of a {Fore.YELLOW}variable{Style.RESET_ALL} or an {Fore.BLUE}attribute{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}set{Style.RESET_ALL}         : Sets storable information like {Fore.YELLOW}user name{Style.RESET_ALL} and {Fore.YELLOW}variables{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}reset{Style.RESET_ALL}       : Resets {Fore.YELLOW}user data{Style.RESET_ALL} (either {Fore.YELLOW}user name{Style.RESET_ALL} or {Fore.YELLOW}password{Style.RESET_ALL}).\n"
-        f"{Fore.BLUE}math{Style.RESET_ALL}        : Allows mathematical equations (Use {Fore.CYAN}get mathset{Style.RESET_ALL} to get complex operators)\n"
+        f"{Fore.CYAN}|======= COMMAND LIST: =======|{Style.RESET_ALL}\n\n"
+        f"{Fore.CYAN}help{Style.RESET_ALL}        : Shows this {Fore.CYAN}Command List{Style.RESET_ALL}.\n"
+        f"{Fore.CYAN}changelog{Style.RESET_ALL}   : Shows the lastest {Fore.CYAN}app updates{Style.RESET_ALL}.\n"
+        f"{Fore.CYAN}clear{Style.RESET_ALL}       : Clears the {Fore.CYAN}terminal{Style.RESET_ALL} screen.\n"
+        f"{Fore.CYAN}save{Style.RESET_ALL}        : Creates/rewrites a {Fore.RED}JSON file{Style.RESET_ALL} with {Fore.YELLOW}user{Style.RESET_ALL} data.\n"
+        f"{Fore.CYAN}load{Style.RESET_ALL}        : Loads a {Fore.RED}JSON file{Style.RESET_ALL} with {Fore.YELLOW}user{Style.RESET_ALL} data.\n"
+        "\n"
+        f"{Fore.CYAN}get{Style.RESET_ALL}         : Gets information of a {Fore.YELLOW}variable{Style.RESET_ALL} or an {Fore.BLUE}attribute{Style.RESET_ALL}.\n"
+        f"{Fore.CYAN}set{Style.RESET_ALL}         : Sets storable information like {Fore.YELLOW}user name{Style.RESET_ALL} and {Fore.YELLOW}variables{Style.RESET_ALL}.\n"
+        f"{Fore.CYAN}reset{Style.RESET_ALL}       : Resets {Fore.YELLOW}user data{Style.RESET_ALL} (either {Fore.YELLOW}user name{Style.RESET_ALL} or {Fore.YELLOW}password{Style.RESET_ALL}).\n"
+        "\n"
+        f"{Fore.BLUE}math{Style.RESET_ALL}        : Allows mathematical equations\n"
+        f"{Fore.BLUE}mathhelp{Style.RESET_ALL}    : Displays information about math-related functions"
+        f"{Fore.BLUE}random{Style.RESET_ALL}      : Shows a random {Fore.YELLOW}number{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}time{Style.RESET_ALL}        : Displays {Fore.YELLOW}hour{Style.RESET_ALL} and {Fore.YELLOW}date{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}timer{Style.RESET_ALL}       : Sets a timer in {Fore.GREEN}seconds{Style.RESET_ALL} before showing up a {Fore.CYAN}message{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}random{Style.RESET_ALL}      : Shows a random {Fore.YELLOW}number{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}delvar{Style.RESET_ALL}      : Deletes a specified {Fore.YELLOW}variable{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}runloc{Style.RESET_ALL}      : Shows the {Fore.MAGENTA}current location{Style.RESET_ALL} of the script operations.\n"
-        f"{Fore.BLUE}check{Style.RESET_ALL}       : Checks if required {Fore.MAGENTA}script files{Style.RESET_ALL} exist where they shall be.\n"
-        f"{Fore.BLUE}filelst{Style.RESET_ALL}     : Lists {Fore.RED}files{Style.RESET_ALL} and {Fore.RED}folders{Style.RESET_ALL} in a directory.\n"
-        f"{Fore.BLUE}tree{Style.RESET_ALL}        : Renders {Fore.RED}directory{Style.RESET_ALL} as a tree.\n"
-        f"{Fore.BLUE}filecrt{Style.RESET_ALL}     : Creates a {Fore.RED}file{Style.RESET_ALL} with specified extension.\n"
-        f"{Fore.BLUE}filerd{Style.RESET_ALL}      : Reads and displays the content of a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}filedel{Style.RESET_ALL}     : Deletes a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}filewrt{Style.RESET_ALL}     : Writes content in a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}fileopn{Style.RESET_ALL}     : Opens a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}filecls{Style.RESET_ALL}     : Closes a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}filesort{Style.RESET_ALL}    : Sorts and dumps {Fore.RED}files{Style.RESET_ALL} in a directory by extension.\n"
-        f"{Fore.BLUE}filesz{Style.RESET_ALL}      : Gets and shows the size of a {Fore.RED}file{Style.RESET_ALL}\n"
-        f"{Fore.BLUE}jsonrd{Style.RESET_ALL}      : Reads a {Fore.RED}JSON file{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}regex{Style.RESET_ALL}       : Looks for {Fore.GREEN}patterns{Style.RESET_ALL} in a text or textfile.\n"
-        f"{Fore.BLUE}playaudio{Style.RESET_ALL}   : Plays an {Fore.RED}audio file{Style.RESET_ALL} (specify the route).\n"
-        f"{Fore.BLUE}stopaudio{Style.RESET_ALL}   : Stops the current {Fore.RED}audio file{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}render{Style.RESET_ALL}      : Renders and draws a specified {Fore.RED}image file{Style.RESET_ALL} (specify route).\n"
-        f"{Fore.BLUE}banner{Style.RESET_ALL}      : Renders and prints inputted {Fore.GREEN}text{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}pkm{Style.RESET_ALL}         : Enters the {Fore.CYAN}Piano Keyboard Mode{Style.RESET_ALL} (experimental).\n"
-        f"{Fore.BLUE}shutdown{Style.RESET_ALL}    : Shuts the {Fore.LIGHTCYAN_EX}system{Style.RESET_ALL} down (CANNOT CANCEL DIRECTLY).\n"
-        f"{Fore.BLUE}unins{Style.RESET_ALL}       : Guides to uninstall {Fore.LIGHTRED_EX}{easysaxo.name}{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}exit{Style.RESET_ALL}        : Exit {Fore.CYAN}{easysaxo.name}{Style.RESET_ALL}.\n"
+        "\n"
+        f"{Fore.RED}cd{Style.RESET_ALL}          : Shows the {Fore.MAGENTA}current path location{Style.RESET_ALL} and allows {Fore.MAGENTA}directory navigation{Style.RESET_ALL}.\n"
+        f"{Fore.RED}check{Style.RESET_ALL}       : Checks if required {Fore.MAGENTA}script files{Style.RESET_ALL} exist where they shall be.\n"
+        f"{Fore.RED}filelst{Style.RESET_ALL}     : Lists {Fore.RED}files{Style.RESET_ALL} and {Fore.RED}folders{Style.RESET_ALL} in a directory.\n"
+        f"{Fore.RED}tree{Style.RESET_ALL}        : Renders {Fore.RED}directory{Style.RESET_ALL} as a tree.\n"
+        f"{Fore.RED}filecrt{Style.RESET_ALL}     : Creates a {Fore.RED}file{Style.RESET_ALL} with specified extension.\n"
+        f"{Fore.RED}filerd{Style.RESET_ALL}      : Reads and displays the content of a {Fore.RED}file{Style.RESET_ALL}.\n"
+        f"{Fore.RED}filedel{Style.RESET_ALL}     : Deletes a {Fore.RED}file{Style.RESET_ALL}.\n"
+        f"{Fore.RED}filewrt{Style.RESET_ALL}     : Writes content in a {Fore.RED}file{Style.RESET_ALL}.\n"
+        f"{Fore.RED}fileopn{Style.RESET_ALL}     : Opens a {Fore.RED}file{Style.RESET_ALL}.\n"
+        f"{Fore.RED}filecls{Style.RESET_ALL}     : Closes a {Fore.RED}file{Style.RESET_ALL}.\n"
+        f"{Fore.RED}filesort{Style.RESET_ALL}    : Sorts and dumps {Fore.RED}files{Style.RESET_ALL} in a directory by extension.\n"
+        f"{Fore.RED}filesz{Style.RESET_ALL}      : Gets and shows the size of a {Fore.RED}file{Style.RESET_ALL}\n"
+        f"{Fore.RED}jsonrd{Style.RESET_ALL}      : Reads a {Fore.RED}JSON file{Style.RESET_ALL}.\n"
+        f"{Fore.RED}regex{Style.RESET_ALL}       : Looks for {Fore.GREEN}patterns{Style.RESET_ALL} in a text or textfile.\n" 
+        f"{Fore.RED}playaudio{Style.RESET_ALL}   : Plays an {Fore.RED}audio file{Style.RESET_ALL} (specify the route).\n"
+        f"{Fore.RED}stopaudio{Style.RESET_ALL}   : Stops the current {Fore.RED}audio file{Style.RESET_ALL}.\n"
+        "\n"
+        f"{Fore.WHITE}render{Style.RESET_ALL}      : Renders and draws a specified {Fore.RED}image file{Style.RESET_ALL} (specify route).\n"
+        f"{Fore.WHITE}banner{Style.RESET_ALL}      : Renders and prints inputted {Fore.GREEN}text{Style.RESET_ALL}.\n"
+        f"{Fore.WHITE}pkm{Style.RESET_ALL}         : Enters the {Fore.CYAN}Piano Keyboard Mode{Style.RESET_ALL} (experimental).\n"
+        "\n"
+        f"{Fore.LIGHTBLACK_EX}shutdown{Style.RESET_ALL}    : Shuts the {Fore.LIGHTCYAN_EX}system{Style.RESET_ALL} down (CANNOT CANCEL DIRECTLY).\n"
+        f"{Fore.LIGHTBLACK_EX}unins{Style.RESET_ALL}       : Guides to uninstall {Fore.LIGHTRED_EX}{easysaxo.name}{Style.RESET_ALL}.\n"
+        f"{Fore.LIGHTBLACK_EX}exit{Style.RESET_ALL}        : Exit {Fore.CYAN}{easysaxo.name}{Style.RESET_ALL}.\n"
         f"\nRemember you can search for command's syntax and usage by using {Fore.GREEN}help <cmd/attr>{Style.RESET_ALL} :)"
     )
 
@@ -174,26 +188,44 @@ class FileList:
         # scripts
         ".py": Fore.LIGHTYELLOW_EX,
         ".js": Fore.YELLOW,
+        ".jar": Fore.RED,
         ".html": Fore.LIGHTRED_EX,
         ".css": Fore.LIGHTBLUE_EX,
         ".json": Fore.LIGHTGREEN_EX,
         ".xml": Fore.LIGHTGREEN_EX,
+        ".c": Fore.CYAN,
+        ".toml": Fore.BLUE,
         # docs
         ".md": Fore.CYAN,
         ".txt": Fore.WHITE,
+        ".doc": Fore.BLUE,
+        ".docx": Fore.BLUE,
+        ".xls": Fore.GREEN,
+        ".xlsx": Fore.GREEN,
         ".pdf": Fore.RED,
+        ".pptx": Fore.RED,
         # media
         ".png": Fore.MAGENTA,
         ".jpg": Fore.MAGENTA,
         ".jpeg": Fore.MAGENTA,
         ".svg": Fore.MAGENTA,
+        ".webp": Fore.MAGENTA,
         ".mp3": Fore.LIGHTMAGENTA_EX,
+        ".flac": Fore.LIGHTMAGENTA_EX,
+        ".ogg": Fore.LIGHTMAGENTA_EX,
         ".wav": Fore.LIGHTMAGENTA_EX,
+        ".mid": Fore.LIGHTMAGENTA_EX,
+        ".mp4": Fore.LIGHTCYAN_EX,
+        ".gif": Fore.LIGHTCYAN_EX,
         # fls
         ".zip": Fore.LIGHTRED_EX,
-        ".tar": Fore.LIGHTRED_EX,
+        ".rar": Fore.LIGHTRED_EX,
         ".exe": Fore.RED,
+        ".ini": Fore.LIGHTBLACK_EX,
         ".bat": Fore.RED,
+        ".dll": Fore.LIGHTBLACK_EX,
+        ".bin": Fore.LIGHTBLACK_EX,
+        ".sh": Fore.RED,
     }
 
 # math lists =====================================================================================
@@ -250,7 +282,7 @@ class MathList:
     math_funcslist = (
         f"{Fore.BLUE}MathSet{Style.RESET_ALL}:\n"
         f"{Fore.CYAN}sqrt, sin, cos, tan, log, log10, pi, e, fact, gamma{Style.RESET_ALL}.\n"
-        f"You can use {Fore.GREEN}help <mathset>{Style.RESET_ALL} to dive deeper in MathSet usage."
+        f"You can use {Fore.GREEN}mathhelp <mathset>{Style.RESET_ALL} to dive deeper in MathSet usage."
     )
 
 # colorama color list ==============================================================================

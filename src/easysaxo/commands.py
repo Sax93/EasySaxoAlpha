@@ -147,14 +147,16 @@ def g_pswd(): print(f"{Fore.RED}You cannot get password due to security protocol
 
 @register_command("attr", aliases=["attribute", "all"], registry=GET_REGISTRY, help_text="get attr - Fetches all telemetry and system specs.")
 def g_all():
-    print(f"{Fore.BLUE}== COMPUTER DATA =={Style.RESET_ALL}")
-    for func in [g_cpu, g_arch, g_os, g_mboard, g_ram, g_gpu, g_disk, g_batt, g_user, g_py, g_proc]: func()
-    print(f"\n{Fore.BLUE}== TELEMETRY DATA =={Style.RESET_ALL}")
-    for func in [g_net, g_upt, g_ip, g_mac, g_pubip, g_netstat]: func()
-    print(f"\n{Fore.BLUE}== THREADING/MATH DATA =={Style.RESET_ALL}")
-    for func in [g_th, g_mset, g_vars]: func()
-    print(f"\n{Fore.BLUE}== MISC DATA =={Style.RESET_ALL}")
-    for func in [g_uname, g_appn, g_appv, g_appd]: func()
+    try:
+        print(f"{Fore.BLUE}== COMPUTER DATA =={Style.RESET_ALL}")
+        for func in [g_cpu, g_arch, g_os, g_mboard, g_ram, g_gpu, g_disk, g_batt, g_user, g_py, g_proc]: func()
+        print(f"\n{Fore.BLUE}== TELEMETRY DATA =={Style.RESET_ALL}")
+        for func in [g_net, g_upt, g_ip, g_mac, g_pubip, g_netstat]: func()
+        print(f"\n{Fore.BLUE}== THREADING/MATH DATA =={Style.RESET_ALL}\n")
+        for func in [g_th, g_mset, g_vars]: func()
+        print(f"\n{Fore.BLUE}== MISC DATA =={Style.RESET_ALL}\n")
+        for func in [g_uname, g_appn, g_appv, g_appd]: func()
+    except KeyboardInterrupt: return
 
 # =========== CORE COMMANDS + HELP ===========
 
@@ -218,9 +220,6 @@ def c_get(arg):
     if not arg: print(f"{Fore.RED}Missing argument for 'get'. Type 'help' for options.{Style.RESET_ALL}")
     elif arg in GET_REGISTRY: GET_REGISTRY[arg]()
     else: MathFunc.getvar(arg)
-
-@register_command("runloc", aliases=["path", "location", "currentdir", "pwd"], help_text="runloc - Prints the current working directory path.")
-def c_runloc(arg): DirLocation.runloc()
 
 @register_command("check", aliases=["allowance", "checkf", "filechk"], help_text="check - Checks if all script files exist and are available.")
 def c_check(arg): DirLocation.allowance()

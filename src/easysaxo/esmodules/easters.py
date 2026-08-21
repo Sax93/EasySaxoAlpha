@@ -102,36 +102,39 @@ def eas5():
     traceback(ranerror)
 
 def eas6(question):
-    def anser(txt):
-        print(f"{Fore.CYAN}{txt}{Style.RESET_ALL}")
-    
-    import random
+    try:
+        def anser(txt):
+            print(f"{Fore.CYAN}{txt}{Style.RESET_ALL}")
 
-    from .lister import EasterList as Ans
+        from .lister import EasterList as Ans
 
-    if not question:
-        anser("I dont know bru")
-        return
-    
-    if isinstance(question, list):
-        question = " ".join(question)
-    
-    parts = question.strip().split(maxsplit=1)
-    first_word = parts[0].lower()
-    
-    if first_word in ["is", "am", "are", "really"]:
-        response = random.choice(Ans.l_is_are)
-        anser(response)
-    elif first_word == "why":
-        response = random.choice(Ans.l_why)
-        anser(f"Because {response}")
-    elif first_word == "who":
-        response = random.choice(Ans.l_who)
-        anser(response)
-    elif first_word == "what":
-        response = random.choice(Ans.l_what)
-        anser(response)
-    elif first_word == "how":
-        response = random.choice(Ans.l_how)
-        anser(response)
-    else: anser("I dont know bru")
+        if not question:
+            anser("I dont know bru")
+            return
+
+        if isinstance(question, list):
+            question = " ".join(question)
+
+        parts = question.strip().split(maxsplit=2)
+        first_word = parts[1].lower() if parts[0].lower() in ["so", "then", "and"] else parts[0].lower()
+        
+        if first_word in Ans.yes_no_kw:
+            response = random.choice(Ans.l_yes_no)
+            anser(response)
+        elif first_word == "why":
+            response = random.choice(Ans.l_why)
+            anser(f"Because {response}")
+        elif first_word == "who":
+            response = random.choice(Ans.l_who)
+            anser(response)
+        elif first_word == "what":
+            response = random.choice(Ans.l_what)
+            anser(response)
+        elif first_word == "how":
+            response = random.choice(Ans.l_how)
+            anser(response)
+        elif first_word == "when":
+            response = random.choice(Ans.l_when)
+            anser(response)
+        else: anser("Dont know bro")
+    except (KeyboardInterrupt, ImportError): return

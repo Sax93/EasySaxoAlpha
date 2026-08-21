@@ -8,7 +8,9 @@ import subprocess
 
 from colorama import Fore, Style
 
-base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+
+base_dir = PROJECT_ROOT
 dir_forcreate = os.path.join(base_dir, "esmodules", "filecreation")
 
 class DirLocation:
@@ -34,43 +36,46 @@ class DirLocation:
             print(f"{Fore.RED}Directory '{clean_path}' does not exist.{Style.RESET_ALL}")
 
     @staticmethod
-    def runloc():
-        print(f"Running in {Fore.MAGENTA}{base_dir}{Style.RESET_ALL}.")
-
-    @staticmethod
     def _resolve_path(filepath: str) -> str:
         if os.path.isabs(filepath): return filepath
 
-        # check direct path relative to project root
-        root_path = os.path.join(base_dir, filepath)
+        # check relative to current working directory
+        cwd_path = os.path.join(base_dir, filepath)
+        if os.path.exists(cwd_path):
+            return cwd_path
+
+        # check relative to fixed project root (mainly `check func)
+        root_path = os.path.join(PROJECT_ROOT, filepath)
         if os.path.exists(root_path): return root_path
 
-        # check inside esmodules
-        es_path = os.path.join(base_dir, "esmodules", filepath)
+        # check inside esmodules under project root
+        es_path = os.path.join(PROJECT_ROOT, "esmodules", filepath)
         if os.path.exists(es_path): return es_path
 
-        # fallback to filecreation
+        # fallback for file creation
         os.makedirs(dir_forcreate, exist_ok=True)
         return os.path.join(dir_forcreate, filepath)
 
     @staticmethod
     def allowance():
-        from .lister import FileList
+        try:
+            from .lister import FileList
 
-        FileList._allow = [f"{file}.py" for file in FileList._allow]
+            FileList._allow = [f"{file}.py" for file in FileList._allow] if base_dir is PROJECT_ROOT else [file for file in FileList._allow]
 
-        for file in FileList._allow:
-            resolved_path = DirLocation._resolve_path(file)
+            for file in FileList._allow:
+                resolved_path = DirLocation._resolve_path(file) if base_dir is PROJECT_ROOT else PROJECT_ROOT
 
-            if not os.path.exists(resolved_path):
-                print(f"Missing: {Fore.RED}{file}{Style.RESET_ALL}")
-                continue
+                if not os.path.exists(resolved_path):
+                    print(f"{Fore.RED}Missing: {Fore.YELLOW}{file}{Style.RESET_ALL}")
+                    continue
 
-            is_init = file.endswith("__init__.py")
-            is_valid_size = is_init or os.path.getsize(resolved_path) > 0
+                is_init = file.endswith("__init__.py")
+                is_valid_size = is_init or os.path.getsize(resolved_path) > 0
 
-            if is_valid_size: print(f"Checked: {Fore.GREEN}{file}{Style.RESET_ALL}")
-            else: print(f"Empty (expected non-empty): {Fore.YELLOW}{file}{Style.RESET_ALL}")
+                if is_valid_size: print(f"{Fore.GREEN}Checked: {Fore.YELLOW}{file}{Style.RESET_ALL}")
+                else: print(f"{Fore.CYAN}Empty (expected non-empty): {Fore.YELLOW}{file}{Style.RESET_ALL}")
+        except (ImportError, KeyboardInterrupt): return
 
     @staticmethod
     def filesz(filepath):
@@ -170,14 +175,14 @@ class DirLocation:
                         from .lister import FileList
                         # color coding based on file extension
                         _, ext = os.path.splitext(item)
-                        ext_color = FileList.EXTENSION_COLORS.get(ext.lower(), Fore.GREEN)
+                        ext_color = FileList.EXTENSION_COLORS.get(ext.lower())
 
                         print(f"{prefix}{connector}{ext_color}{item}{Style.RESET_ALL}")
 
             _build_tree(target_dir)
             print(f"\n{Fore.CYAN}--- End of Directory Tree ---{Style.RESET_ALL}\n")
 
-        except (PermissionError, FileNotFoundError) as e:
+        except (PermissionError, FileNotFoundError, KeyboardInterrupt) as e:
             print(f"{Fore.RED}Error rendering directory tree: {e}{Style.RESET_ALL}")
 
     @staticmethod

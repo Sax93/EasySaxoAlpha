@@ -120,7 +120,7 @@ class MathFunc:
     def list_vars():
         user_vars = {k: v for k, v in Mt.mathset.items() if k not in Mt._reserved}
         if user_vars:
-            print(f"{Fore.BLUE}== USER VARIABLES =={Style.RESET_ALL}")
+            print(f"\n{Fore.BLUE}== USER VARIABLES =={Style.RESET_ALL}\n")
             for k, v in user_vars.items(): print(f"{Fore.CYAN}{k:<15}{Style.RESET_ALL}: {Fore.GREEN}{v}{Style.RESET_ALL}")
         else: print(f"{Fore.YELLOW}No custom variables saved yet.{Style.RESET_ALL}")
 
