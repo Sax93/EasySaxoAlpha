@@ -25,10 +25,13 @@ import shutil
 import subprocess
 import sys
 import time
+import tracemalloc
 import unicodedata
 from pathlib import Path
 
 from colorama import Fore, Style, just_fix_windows_console
+
+tracemalloc.start()
 
 just_fix_windows_console()
 
@@ -74,7 +77,7 @@ def sysh(cmd: str):
     except (PermissionError, TypeError, AttributeError) as err:
         print(f"{Fore.RED}System command error: {err}{Style.RESET_ALL}")
 
-def eesh(cmd: str):
+def eesh(cmd: str, arg: str | None):
     if cmd == "getmeaneasteregg": commands.e1()
     elif cmd in ["noeasteregg", "falseget", "lookatthis", "lookatts"]: commands.e2()
     elif cmd == "osaka": commands.e3()
@@ -82,6 +85,8 @@ def eesh(cmd: str):
         if commands.ee4: commands.e4()
         else: print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
     elif cmd in ["traceback", "error", "locateerror", "errorloc"]: commands.e5()
+    elif cmd in ["question", "sax", "sxf", "easysaxo", "yo"]:
+        commands.e6(arg if arg else cmd)
     else: print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
     
 def inp_display(identifier):
@@ -104,6 +109,8 @@ def trslt(translations):
 def kb_inter_holder():
     try:
         extoken = input(f"\n{Fore.LIGHTBLACK_EX}Want to exit? (Y/N): {Style.RESET_ALL}").lower()
+        if not extoken: return
+        
         if extoken == "y":
             SessionManager.save_session(ThreadData.current_user)
             return sys.exit(0)
@@ -143,6 +150,7 @@ def Core(session_info=None):
     # ==== Main Loop ====
 
     while True:
+        usit = None
         try:
             print()
             if ThreadData.path_display: raw_prompt = inp_display(dirloct.base_dir)
@@ -189,7 +197,7 @@ def Core(session_info=None):
         else: # if our target match is auto
             if in_easysaxo: COMMAND_REGISTRY[cmd](arg)
             elif sys_binary: sysh(usit)
-            elif cmd not in COMMAND_REGISTRY and enable_ee: eesh(cmd)
+            elif cmd not in COMMAND_REGISTRY and enable_ee: eesh(cmd, arg)
 
             # allow easter eggs (also hidden)
             elif cmd in ["secretenable", "enable_ee", "eastereggenable"] and scee:

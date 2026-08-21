@@ -70,7 +70,7 @@ class SessionManager:
                 }, f, indent=4)
             SessionManager.active_session_file = target
             print(f"{Fore.GREEN}Session saved successfully to '{os.path.basename(target)}'.{Style.RESET_ALL}")
-        except (PermissionError, FileNotFoundError) as e: print(f"{Fore.RED}Error saving session: {e}{Style.RESET_ALL}")
+        except (PermissionError, FileNotFoundError, KeyboardInterrupt) as e: print(f"{Fore.RED}Error saving session: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def load_session(filepath: str | None) -> dict:
@@ -106,7 +106,7 @@ class SessionManager:
                 "target_mode": data.get("target_mode", "auto")
             }
 
-        except (json.JSONDecodeError, ImportError, FileNotFoundError) as e:
+        except (json.JSONDecodeError, ImportError, FileNotFoundError, KeyboardInterrupt) as e:
             print(f"{Fore.RED}Failed to load session: {e}{Style.RESET_ALL}")
             return default_data
 

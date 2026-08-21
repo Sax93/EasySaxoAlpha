@@ -34,7 +34,7 @@ def uninstaller():
         if os.name == 'nt': os.startfile(note_path)
         elif sys.platform == 'darwin': subprocess.Popen(["open", note_path])
         else: subprocess.Popen(["xdg-open", note_path])
-    except (PermissionError, FileNotFoundError, subprocess.CalledProcessError): pass
+    except (PermissionError, FileNotFoundError, subprocess.CalledProcessError, KeyboardInterrupt): pass
 
     for folder in ["esmodules", "__pycache__", ".vscode"]: # delete app folders
         folder_path = os.path.join(base_dir, folder)
@@ -52,14 +52,16 @@ def uninstaller():
     sys.exit(0) # Force exit
 
 def unins_guide():
-    print(f"{Fore.LIGHTRED_EX}WARNING! This will delete all {easysaxo.name} files and info.{Style.RESET_ALL}")
-    con = input(f"{Fore.LIGHTCYAN_EX}Do you still want to proceed? (Y/N): {Style.RESET_ALL}").strip().lower() # please do not
+    try:
+        print(f"{Fore.LIGHTRED_EX}WARNING! This will delete all {easysaxo.name} files and info.{Style.RESET_ALL}")
+        con = input(f"{Fore.LIGHTCYAN_EX}Do you still want to proceed? (Y/N): {Style.RESET_ALL}").strip().lower() # please do not
 
-    if con in ["y", "yes"]:
-        print(f"Uninstalling {easysaxo.name} {easysaxo.ver}...")
-        time.sleep(0.5)
-        uninstaller()
-    else: print("Uninstall canceled.")
+        if con in ["y", "yes"]:
+            print(f"Uninstalling {easysaxo.name} {easysaxo.ver}...")
+            time.sleep(0.5)
+            uninstaller()
+        else: print("Uninstall canceled.")
+    except KeyboardInterrupt: return
 
 # Fake traceback cuz y not
 

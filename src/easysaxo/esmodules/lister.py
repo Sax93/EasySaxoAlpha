@@ -46,7 +46,7 @@ class EasterList:
     ]
 
     slop = [ # from eas2()  # noqa: RUF012
-        "fuck you",
+        "fuh you",
         "use command 'filecls python' please",
         "if your reading ts your a dumbahh",
         "hi",
@@ -59,6 +59,34 @@ class EasterList:
     osaka = [ # from e3()  # noqa: RUF012
         "saataa andaagii", "omaigahh", "amerikaya", "fella what?????",
         "haro everynyan", "get yo ahh to work bud", "haiii"
+    ]
+    
+    l_is_are = [ # noqa: RUF012
+        "Yes", "No", "Maybe", "Sorta", "HELL NAHH",
+        "I'on know", "OF COURSE BRO HOWS THAT EVEN A QUESTION",
+        "Nah def not"
+        ]
+    
+    l_why = [ # noqa: RUF012
+        "they're from the government", "this world is unfair",
+        "this world is definitely fair", "I say so",
+        "why not?", "they're free to be so ofc !!!1!", "uhh... nah I don't know"
+        ]
+    
+    l_who = [ # noqa: RUF012
+        "Me", "You", "Themselves", "Beats me", "Your mom",
+        "Probably my teacher", "Sounds like a politician",
+        "I don't know", "Same I wonder"
+    ]
+    
+    l_what = [ # noqa: RUF012
+        "The fact that people are starving or sumthin", "A definition of something that you humans assigned to smth",
+        "The name of an unreleased song of an underground artist surely", "I'on know", "A chinese screwdriver's type"
+    ]
+    
+    l_how = [ # noqa: RUF012
+        "With the power of friendship", "Dark magic ig", "Do you think I know?",
+        "Out of thin air", "With some ramen", "Pure Flex Tape bro", "You don't want to know"
     ]
 
 # command list ===================================================================================
@@ -90,7 +118,7 @@ class CommandList:
         f"{Fore.BLUE}fileopn{Style.RESET_ALL}     : Opens a {Fore.RED}file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}filecls{Style.RESET_ALL}     : Closes a {Fore.RED}file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}filesort{Style.RESET_ALL}    : Sorts and dumps {Fore.RED}files{Style.RESET_ALL} in a directory by extension.\n"
-        f"{Fore.BLUE}filesz{Style.RESET_ALL}      : Gets and shows the size of a {Fore.RED}file{Style.RESET_ALL}"
+        f"{Fore.BLUE}filesz{Style.RESET_ALL}      : Gets and shows the size of a {Fore.RED}file{Style.RESET_ALL}\n"
         f"{Fore.BLUE}jsonrd{Style.RESET_ALL}      : Reads a {Fore.RED}JSON file{Style.RESET_ALL}.\n"
         f"{Fore.BLUE}regex{Style.RESET_ALL}       : Looks for {Fore.GREEN}patterns{Style.RESET_ALL} in a text or textfile.\n"
         f"{Fore.BLUE}playaudio{Style.RESET_ALL}   : Plays an {Fore.RED}audio file{Style.RESET_ALL} (specify the route).\n"
@@ -202,6 +230,10 @@ class MathList:
         "abs", "pi", "e", "fact",
         "gamma"
     }
+    
+    _uncallable = {  # noqa: RUF012
+        "pi", "e",
+        }
 
     _allowed_operators = {  # noqa: RUF012
         ast.Add: operator.add,

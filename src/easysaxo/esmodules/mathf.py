@@ -88,7 +88,7 @@ class MathFunc:
             elif start is not None: num = random.randint(1, start)
             else: num = random.randint(1, 1000)
             print(f"Random number: {Fore.GREEN}{num}{Style.RESET_ALL}")
-        except (ValueError, TypeError) as e:
+        except (ValueError, TypeError, KeyboardInterrupt) as e:
             print(f"{Fore.RED}Error generating random number: {e}{Style.RESET_ALL}")
 
     @staticmethod

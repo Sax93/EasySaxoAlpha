@@ -5,7 +5,7 @@ class App:
         self.ver = ver
         self.dev = "SXF"
         self.problem = "in the chair"
-easysaxo = App("EasySaxo", "Alpha 1.06") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.061") # yes im that lazy to write this ever again
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
@@ -31,12 +31,10 @@ from colorama import Fore, Style
 class Changelog:
     header = f"===== {Fore.CYAN}Changelog!{Style.RESET_ALL} ({Fore.YELLOW}{easysaxo.name} {easysaxo.ver}{Style.RESET_ALL}) ====="
     entries = [  # noqa: RUF012  # Reserved for changelog purposes only.
-        f"Fixed commands: {Fore.BLUE}filesz{Style.RESET_ALL} (due to missing registry).",
-        f"Fixed command subprocess: {Fore.LIGHTBLUE_EX}fileopn{Style.RESET_ALL} (due to uncaught exceptions).",
-        f"Fixed {Fore.LIGHTGREEN_EX}subprocess{Style.RESET_ALL} exception raise, along with {Fore.BLUE}get packages{Style.RESET_ALL} fix.",
-        f"Applied {Fore.BLUE}render <preset>{Style.RESET_ALL} changes to {Fore.BLUE}banner render <preset>{Style.RESET_ALL}.",
-        f"Enhanced autocompleter ({Fore.LIGHTCYAN_EX}support for some subcommand-ranged commands{Style.RESET_ALL}).",
-        f"Fixed {Fore.BLUE}math{Style.RESET_ALL} parsing."
+        f"Fixed command: {Fore.BLUE}help{Style.RESET_ALL} (due to typo/bad organization).",
+        f"Fixed {Fore.LIGHTRED_EX}Keyboard interruption{Style.RESET_ALL} issue during command input/action.",
+        f"Added {Fore.BLUE}new secret function{Style.RESET_ALL} \U0001F440"
+        
     ]
     _visible_header = re.sub(r'\x1b\[[0-9;]*m', '', header) # hide color cmds in terminal, so
     footer = "=" * len(_visible_header)                     # len(footer) matches len(header)
@@ -57,7 +55,7 @@ def clr(): # clear screen
 
 # its actually not pretty bad to be the 56th codeline in a config script.
 
-def build_completion_dict(translations: dict) -> dict:
+def build_completion_dict(translations: dict) -> dict:    
     from .esmodules.builtinrender import Image, TextToImage
     from .esmodules.lister import MathList
     
@@ -81,7 +79,10 @@ def build_completion_dict(translations: dict) -> dict:
             "pathmode": {"on": None, "off": None, "enable": None, "disable": None},
         },
         "reset": {rval: None for rval in ("name", "username", "password", "pswd", "key", "all", "user")},
-        "math": {f"{func}(": None for func in MathList._reserved},
+        "math": {
+            "pi": None, "e": None,
+            **{f"{func}(": None for func in MathList.mathset if func not in MathList._uncallable}
+        },
         "mathhelp": {func: None for func in MathList.mathset}
     }
 

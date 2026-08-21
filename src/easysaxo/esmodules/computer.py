@@ -33,7 +33,7 @@ class ComputerData:
                 print(f"Architecture: {Fore.CYAN}{info.get('arch', 'N/A')}{Style.RESET_ALL}")
                 print(f"L2 Cache: {Fore.CYAN}{info.get('l2_cache_size', 'N/A')}{Style.RESET_ALL}")
                 print(f"L3 Cache: {Fore.CYAN}{info.get('l3_cache_size', 'N/A')}{Style.RESET_ALL}")
-            except (AttributeError, TypeError, ValueError) as e:
+            except (AttributeError, TypeError, ValueError, KeyboardInterrupt) as e:
                 return e
 
         print(f"Cores: {Fore.BLUE}{psutil.cpu_count(logical=False)} Physical | {psutil.cpu_count(logical=True)} Logical{Style.RESET_ALL}")
@@ -41,7 +41,7 @@ class ComputerData:
             freq = psutil.cpu_freq()
             if freq:
                 print(f"Speed: {Fore.BLUE}{freq.current:.2f} MHz (Min: {freq.min:.2f} MHz, Max: {freq.max:.2f} MHz){Style.RESET_ALL}")
-        except (AttributeError, TypeError, ValueError) as e:
+        except (AttributeError, TypeError, ValueError, KeyboardInterrupt) as e:
             return e
 
         print(f"Total CPU Usage: {Fore.BLUE}{psutil.cpu_percent(interval=0.0)}{Style.RESET_ALL}%")
@@ -81,7 +81,7 @@ class ComputerData:
                         print(f"  VRAM Used: {Fore.RED}{gpu.memoryUsed} MB ({gpu.memoryUtil*100:.1f}%){Style.RESET_ALL}")
                         print(f"  Temperature: {Fore.RED}{gpu.temperature} °C{Style.RESET_ALL}")
                     return
-            except (ImportError, ValueError, AttributeError) as e:
+            except (ImportError, ValueError, AttributeError, KeyboardInterrupt) as e:
                 return e
 
         try:
@@ -101,7 +101,7 @@ class ComputerData:
                         break
                 else:
                     print(f"GPU: {Fore.RED}No GPU detected{Style.RESET_ALL}")
-        except (PermissionError, subprocess.CalledProcessError):
+        except (PermissionError, subprocess.CalledProcessError, KeyboardInterrupt):
             print(f"GPU: {Fore.RED}Unable to detect GPU{Style.RESET_ALL}")
 
     @staticmethod
@@ -115,7 +115,7 @@ class ComputerData:
                       f"{Fore.CYAN}{result.stdout.strip()}{Style.RESET_ALL}\n")
             else:
                 print(f"Motherboard: {Fore.CYAN}Requires root permissions (dmidecode) on Linux/Unix{Style.RESET_ALL}\n")
-        except (PermissionError, AttributeError, subprocess.CalledProcessError) as e:
+        except (PermissionError, AttributeError, subprocess.CalledProcessError, KeyboardInterrupt) as e:
             print(f"Motherboard: {Fore.RED}Error fetching motherboard data:\n{e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -130,7 +130,7 @@ class ComputerData:
             table.add_column("Free", style="green")
             table.add_column("Usage", style="magenta")
 
-            for p in partitions: #what do u call 2 partitions in math? a pp hahalol
+            for p in partitions: # bad joke here 
                 try:
                     u = psutil.disk_usage(p.mountpoint)
                     table.add_row(p.mountpoint, p.fstype, f"{u.total / (1024**3):.2f} GB", f"{u.free / (1024**3):.2f} GB", f"{u.percent}%")
@@ -150,7 +150,7 @@ class ComputerData:
             io = psutil.disk_io_counters()
             if io:
                 print(f"\n--- Disk I/O Metrics ---\nRead: {Fore.YELLOW}{io.read_bytes / (1024**2):.2f} MB{Style.RESET_ALL} | Written: {Fore.YELLOW}{io.write_bytes / (1024**2):.2f} MB{Style.RESET_ALL}")
-        except (AttributeError, TypeError, ValueError, PermissionError):
+        except (AttributeError, TypeError, ValueError, PermissionError, KeyboardInterrupt):
             print(f"{Fore.RED}Could not fetch disk data.{Style.RESET_ALL}")
 
     @staticmethod
@@ -165,7 +165,7 @@ class ComputerData:
                     print(f"Time Remaining: {Fore.CYAN}{mins // 60}h {mins % 60}m{Style.RESET_ALL}")
             else:
                 print(f"Battery: {Fore.CYAN}No battery detected{Style.RESET_ALL}")
-        except (ValueError, AttributeError):
+        except (ValueError, AttributeError, KeyboardInterrupt):
             print(f"Battery: {Fore.RED}Unable to detect battery status{Style.RESET_ALL}") # poor
 
     @staticmethod
@@ -203,7 +203,7 @@ class ComputerData:
         try:
             reqs = subprocess.check_output([sys.executable, "-m", "uv", "pip", "list"])
             print(f"\n{Fore.CYAN}--- Installed Pip Packages ---{Style.RESET_ALL}\n{reqs.decode('utf-8')}")
-        except (PermissionError, AttributeError, subprocess.CalledProcessError) as e:
+        except (PermissionError, AttributeError, subprocess.CalledProcessError, KeyboardInterrupt) as e:
             print(f"{Fore.RED}Error retrieving installed packages:\n{e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -238,7 +238,7 @@ class ComputerOper:
             else:
                 time_arg = f"+{waittime}" if waittime else "now"
                 os.system(f"sudo shutdown -h {time_arg}")
-        except (PermissionError, ValueError) as e:
+        except (PermissionError, ValueError, KeyboardInterrupt) as e:
             print(f"An error occurred: {e}")
 
     @staticmethod

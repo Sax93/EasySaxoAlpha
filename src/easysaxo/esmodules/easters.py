@@ -100,3 +100,38 @@ def eas5():
     from .misc import traceback
     ranerror = random.choice(EasterList.ERRlist)
     traceback(ranerror)
+
+def eas6(question):
+    def anser(txt):
+        print(f"{Fore.CYAN}{txt}{Style.RESET_ALL}")
+    
+    import random
+
+    from .lister import EasterList as Ans
+
+    if not question:
+        anser("I dont know bru")
+        return
+    
+    if isinstance(question, list):
+        question = " ".join(question)
+    
+    parts = question.strip().split(maxsplit=1)
+    first_word = parts[0].lower()
+    
+    if first_word in ["is", "am", "are", "really"]:
+        response = random.choice(Ans.l_is_are)
+        anser(response)
+    elif first_word == "why":
+        response = random.choice(Ans.l_why)
+        anser(f"Because {response}")
+    elif first_word == "who":
+        response = random.choice(Ans.l_who)
+        anser(response)
+    elif first_word == "what":
+        response = random.choice(Ans.l_what)
+        anser(response)
+    elif first_word == "how":
+        response = random.choice(Ans.l_how)
+        anser(response)
+    else: anser("I dont know bru")

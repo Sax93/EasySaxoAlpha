@@ -47,6 +47,8 @@ def e4():
 
 def e5(): easters.eas5()
 
+def e6(arg): easters.eas6(arg)
+
 # =========== ATTRIBUTES FOR 'GET' ===========
 
 @register_command("cpu", aliases=["processor"], registry=GET_REGISTRY, help_text="get cpu - Displays CPU details and usage statistics.")
@@ -406,7 +408,7 @@ def c_rand(arg):
     else: MathFunc.rtool()
 
 @register_command("mathhelp", aliases=["mhelp"], help_text="mathhelp <attribute> - Displays help details for a specific MathSet function or constant.")
-def c_mathhelp(arg): # useless though
+def c_mathhelp(arg):
     if not arg:
         print(f"{Fore.RED}Usage: mathhelp <attribute>{Style.RESET_ALL}")
         print(f"Available attributes: {Fore.CYAN}{', '.join(MathList.mathset.keys())}{Style.RESET_ALL}")

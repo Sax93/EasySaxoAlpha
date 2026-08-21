@@ -20,7 +20,8 @@ class JsonData:
                 with open(full_path, "r", encoding="utf-8") as f:
                     print(f"\n--- Formatted JSON ---\n{json.dumps(json.load(f), indent=4)}\n--- End of JSON ---")
             else: print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
-        except (IsADirectoryError, FileNotFoundError) as e: print(f"{Fore.RED}Error reading JSON: {e}{Style.RESET_ALL}")
+        except (IsADirectoryError, FileNotFoundError, KeyboardInterrupt) as e:
+            print(f"{Fore.RED}Error reading JSON: {e}{Style.RESET_ALL}")
 
 import re
 
@@ -49,5 +50,5 @@ class RegexData:
                 RegexData.match_pattern(pattern, content, ignore_case=ignore_case)
             else:
                 print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
-        except (TypeError, ValueError, IsADirectoryError) as e:
+        except (TypeError, ValueError, IsADirectoryError, KeyboardInterrupt) as e:
             print(f"{Fore.RED}Error reading file for regex: {e}{Style.RESET_ALL}")
