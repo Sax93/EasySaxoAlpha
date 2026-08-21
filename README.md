@@ -7,7 +7,6 @@ It is meant to operate just as your system powershell, but allowing other tiny f
 math evaluations, software/hardware info and so on.
 
 Despite its "useful" functions, EasySaxo Alpha also shows a certain humour and informal language usage to be more unique and straightforward.
-Changelog: [View full CHANGELOG](CHANGELOG.md)
 
 # What does it do?
 
@@ -30,5 +29,8 @@ Both will automatically create a .venv folder, and install required dependencies
 
 If you want to make static changes, you can use `set cmdmatch sys` to use commands from your system shell. As well you can use `set cmdmatch es` to use ES commands.
 IF you want to make instant changes, you can type the command you want followed by " -s" or " -e" [System or EasySaxo].
+
+# Lastest changes
+[Click here](CHANGELOG.md) to view a descript of the upgrades of the last version.
 
 sxf.
