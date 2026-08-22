@@ -20,6 +20,7 @@ except ImportError:
     HTML = None
     print_formatted_text = None
 
+
 class ThreadData:
     current_user = "User"
     current_pswd = None
@@ -60,6 +61,7 @@ class SessionManager:
         uname = user_name if user_name else ThreadData.current_user
         target = DirLocation._resolve_path(filepath) if filepath else SessionManager.active_session_file
         user_vars = {k: v for k, v in MathList.mathset.items() if k not in MathList._reserved}
+        
         try:
             with open(target, "w", encoding="utf-8") as f:
                 json.dump({
@@ -162,5 +164,5 @@ def set_stat(arg):
                 print(f"{Fore.LIGHTRED_EX}Path mode disabled{Style.RESET_ALL}")
             else: print(f"{Fore.RED}Unknown/malformed subcommand.{Style.RESET_ALL}")
             SessionManager.save_session(ThreadData.current_user)
-
+            
         else: print(f"{Fore.RED}Unknown/malformed set subcommand.{Style.RESET_ALL}")

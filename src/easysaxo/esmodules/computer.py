@@ -54,17 +54,19 @@ class ComputerData:
 
     @staticmethod
     def getram():
-        mem = psutil.virtual_memory()
-        print(f"Total RAM: {Fore.GREEN}{mem.total / (1024**3):.2f} GB{Style.RESET_ALL}")
-        print(f"Available RAM: {Fore.GREEN}{mem.available / (1024**3):.2f} GB{Style.RESET_ALL}")
-        print(f"Used RAM: {Fore.GREEN}{mem.used / (1024**3):.2f} GB ({mem.percent}%){Style.RESET_ALL}")
         try:
-            swap = psutil.swap_memory()
-            print(f"Swap Total: {Fore.GREEN}{swap.total / (1024**3):.2f} GB{Style.RESET_ALL}")
-            print(f"Swap Used: {Fore.GREEN}{swap.used / (1024**3):.2f} GB ({swap.percent}%){Style.RESET_ALL}")
-        except RuntimeError:
-            print(f"Swap Memory: {Fore.YELLOW}Unavailable{Style.RESET_ALL}")
-
+            mem = psutil.virtual_memory()
+            print(f"Total RAM: {Fore.GREEN}{mem.total / (1024**3):.2f} GB{Style.RESET_ALL}")
+            print(f"Available RAM: {Fore.GREEN}{mem.available / (1024**3):.2f} GB{Style.RESET_ALL}")
+            print(f"Used RAM: {Fore.GREEN}{mem.used / (1024**3):.2f} GB ({mem.percent}%){Style.RESET_ALL}")
+            try:
+                swap = psutil.swap_memory()
+                print(f"Swap Total: {Fore.GREEN}{swap.total / (1024**3):.2f} GB{Style.RESET_ALL}")
+                print(f"Swap Used: {Fore.GREEN}{swap.used / (1024**3):.2f} GB ({swap.percent}%){Style.RESET_ALL}")
+            except RuntimeError:
+                print(f"Swap Memory: {Fore.YELLOW}Unavailable{Style.RESET_ALL}")
+        except KeyboardInterrupt: return
+        
     @staticmethod
     def getgpu():
         try:
@@ -120,39 +122,42 @@ class ComputerData:
 
     @staticmethod
     def getdisk():
-        partitions = psutil.disk_partitions()
-
-        if RICH_AVAILABLE:
-            table = Table(title="Disk Partitions & Usage")
-            table.add_column("Drive", style="yellow")
-            table.add_column("Type", style="cyan")
-            table.add_column("Total", style="green")
-            table.add_column("Free", style="green")
-            table.add_column("Usage", style="magenta")
-
-            for p in partitions: # bad joke here 
-                try:
-                    u = psutil.disk_usage(p.mountpoint)
-                    table.add_row(p.mountpoint, p.fstype, f"{u.total / (1024**3):.2f} GB", f"{u.free / (1024**3):.2f} GB", f"{u.percent}%")
-                except PermissionError:
-                    table.add_row(p.mountpoint, p.fstype, "Access Denied", "-", "-")
-            console.print(table)
-        else:
-            print("\n--- Disk Partitions & Usage ---")
-            for partition in partitions:
-                try:
-                    usage = psutil.disk_usage(partition.mountpoint)
-                    print(f"Drive {Fore.YELLOW}{partition.mountpoint}{Style.RESET_ALL} ({partition.fstype}): {Fore.YELLOW}{usage.total / (1024**3):.2f} GB{Style.RESET_ALL} Total, {Fore.YELLOW}{usage.free / (1024**3):.2f} GB{Style.RESET_ALL} Free ({usage.percent}% Used)")
-                except PermissionError:
-                    print(f"Drive {Fore.YELLOW}{partition.mountpoint}{Style.RESET_ALL}: Access denied.")
-
         try:
-            io = psutil.disk_io_counters()
-            if io:
-                print(f"\n--- Disk I/O Metrics ---\nRead: {Fore.YELLOW}{io.read_bytes / (1024**2):.2f} MB{Style.RESET_ALL} | Written: {Fore.YELLOW}{io.write_bytes / (1024**2):.2f} MB{Style.RESET_ALL}")
-        except (AttributeError, TypeError, ValueError, PermissionError, KeyboardInterrupt):
-            print(f"{Fore.RED}Could not fetch disk data.{Style.RESET_ALL}")
+            partitions = psutil.disk_partitions()
 
+            if RICH_AVAILABLE:
+                table = Table(title="Disk Partitions & Usage")
+                table.add_column("Drive", style="yellow")
+                table.add_column("Type", style="cyan")
+                table.add_column("Total", style="green")
+                table.add_column("Free", style="green")
+                table.add_column("Usage", style="magenta")
+
+                for p in partitions: # bad joke here 
+                    try:
+                        u = psutil.disk_usage(p.mountpoint)
+                        table.add_row(p.mountpoint, p.fstype, f"{u.total / (1024**3):.2f} GB", f"{u.free / (1024**3):.2f} GB", f"{u.percent}%")
+                    except PermissionError:
+                        table.add_row(p.mountpoint, p.fstype, "Access Denied", "-", "-")
+                console.print(table)
+            else:
+                print("\n--- Disk Partitions & Usage ---")
+                for partition in partitions:
+                    try:
+                        usage = psutil.disk_usage(partition.mountpoint)
+                        print(f"Drive {Fore.YELLOW}{partition.mountpoint}{Style.RESET_ALL} ({partition.fstype}): {Fore.YELLOW}{usage.total / (1024**3):.2f} GB{Style.RESET_ALL} Total, {Fore.YELLOW}{usage.free / (1024**3):.2f} GB{Style.RESET_ALL} Free ({usage.percent}% Used)")
+                    except PermissionError:
+                        print(f"Drive {Fore.YELLOW}{partition.mountpoint}{Style.RESET_ALL}: Access denied.")
+
+            try:
+                io = psutil.disk_io_counters()
+                if io:
+                    print(f"\n--- Disk I/O Metrics ---\nRead: {Fore.YELLOW}{io.read_bytes / (1024**2):.2f} MB{Style.RESET_ALL} | Written: {Fore.YELLOW}{io.write_bytes / (1024**2):.2f} MB{Style.RESET_ALL}")
+            except (AttributeError, TypeError, ValueError, PermissionError):
+                print(f"{Fore.RED}Could not fetch disk data.{Style.RESET_ALL}")
+        except KeyboardInterrupt:
+            print(f"{Fore.RED}Cancelled disk data fetching.{Style.RESET_ALL}")
+            
     @staticmethod
     def getbattery():
         try:

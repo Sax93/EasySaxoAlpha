@@ -10,10 +10,20 @@ Description: App that holds EasySaxo main menu
 
 print("Loading EasySaxo...")
 
+import sys
+
+
+def s_interrupt_hook(exctype, value, traceback):
+    if exctype is KeyboardInterrupt:
+        print("\nLoading cancelled by user.\nExiting.")
+        sys.exit(0)
+    else: sys.__excepthook__(exctype, value, traceback)
+
+sys.excepthook = s_interrupt_hook
+
 import os
 
 os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1" # was tired of the pygame msg
-os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0" # tensorflow hide msgs
 
 # =================================================
 # Import section
@@ -23,7 +33,6 @@ os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0" # tensorflow hide msgs
 import json
 import shutil
 import subprocess
-import sys
 import time
 import tracemalloc
 import unicodedata
@@ -70,12 +79,21 @@ def session_info_proc(session_info):
 # = mode & misc = 
 # 1
 def sysh(cmd: str):
-    try: subprocess.run(cmd, shell=True, check=True)
+    try:
+        parts = cmd.split()
+        flags = [p for p in parts if p.startswith("-") and p != "-s"]
+        _no_return_code_flag = "-silent" in flags
+        p_cmd = [p for p in parts if not p.startswith("-")]
+        
+        subprocess.run(p_cmd, shell=True, check=True)
     except subprocess.CalledProcessError as e:
-        print(f"\nResult from '{Fore.RED}{cmd}{Style.RESET_ALL}' returned exit code {Fore.LIGHTBLUE_EX + str(e.returncode) + Style.RESET_ALL}:\n"
-              f"{Fore.LIGHTMAGENTA_EX}{e}{Style.RESET_ALL}")
-    except (PermissionError, TypeError, AttributeError) as err:
-        print(f"{Fore.RED}System command error: {err}{Style.RESET_ALL}")
+        if not _no_return_code_flag:
+            print(f"\nResult from '{Fore.RED}{cmd}{Style.RESET_ALL}' returned exit code {Fore.LIGHTBLUE_EX + str(e.returncode) + Style.RESET_ALL}:\n"
+                  f"{Fore.LIGHTMAGENTA_EX}{e}{Style.RESET_ALL}")
+        else: return
+    except (PermissionError, TypeError, AttributeError, KeyboardInterrupt) as err:
+            print(f"{Fore.RED}System command exception: {err}{Style.RESET_ALL}") if not _no_return_code_flag else print()
+        
 
 def eesh(cmd: str, arg: str | None):
     if cmd == "getmeaneasteregg": commands.e1()
@@ -85,8 +103,7 @@ def eesh(cmd: str, arg: str | None):
         if commands.ee4: commands.e4()
         else: print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
     elif cmd in ["traceback", "error", "locateerror", "errorloc"]: commands.e5()
-    elif cmd in ["question", "sax", "sxf", "easysaxo", "yo"]:
-        commands.e6(arg if arg else cmd)
+    elif cmd in ["question", "sax", "sxf", "easysaxo", "yo"]: commands.e6(arg if arg else cmd)
     else: print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
     
 def inp_display(identifier):

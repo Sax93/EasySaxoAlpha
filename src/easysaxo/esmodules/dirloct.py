@@ -97,8 +97,44 @@ class DirLocation:
                 size_bytes /= 1024.0
 
             print(f"Size of {Fore.CYAN}{filepath}{Style.RESET_ALL}: {Fore.YELLOW}{readable_size}{Style.RESET_ALL}")
-        except (FileNotFoundError, PermissionError) as e:
+        except (FileNotFoundError, PermissionError, KeyboardInterrupt) as e:
             print(f"{Fore.RED}Error getting file size: {e}{Style.RESET_ALL}")
+
+    @staticmethod
+    def dirsz(filepath=None):
+        import psutil
+        try:
+            full_path = DirLocation._resolve_path(filepath) if filepath else base_dir
+            if not os.path.exists(full_path):
+                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                return
+            if not os.path.isdir(full_path):
+                print(f"{Fore.RED}{filepath}{Style.RESET_ALL} is a file, not a directory.")
+                return
+
+            if os.path.dirname(full_path) == full_path:
+                usage = psutil.disk_usage(full_path)
+                size_bytes = usage.used  # get exact used space on disk drive
+            else:
+                size_bytes = 0
+                for root, _, files in os.walk(full_path, onerror=lambda e: None):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        try:
+                            if not os.path.islink(file_path):
+                                size_bytes += os.path.getsize(file_path)
+                        except (PermissionError, FileNotFoundError, OSError): continue
+
+            for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+                if size_bytes < 1024.0:
+                    readable_size = f"{size_bytes:.2f} {unit}"
+                    break
+                size_bytes /= 1024.0
+
+            target_display = full_path if (not filepath or filepath == ".") else filepath
+            print(f"Size of directory {Fore.CYAN}{target_display}{Style.RESET_ALL}: {Fore.YELLOW}{readable_size}{Style.RESET_ALL}")
+        except (FileNotFoundError, PermissionError, KeyboardInterrupt) as e:
+            print(f"{Fore.RED}Error getting directory size: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def ls(filepath=None):
@@ -111,23 +147,23 @@ class DirLocation:
                 print(f"{Fore.RED}{filepath}{Style.RESET_ALL} is not a directory.")
                 return
 
-            items = os.listdir(target_dir)
             print(f"\n--- Directory Contents of {Fore.CYAN}{target_dir}{Style.RESET_ALL} ---")
-            for item in sorted(items):
-                item_path = os.path.join(target_dir, item)
-                if os.path.isdir(item_path):
-                    print(f"{Fore.BLUE}[DIR]  {item}{Style.RESET_ALL}")
-                else:
-                    # Get file size in bytes
-                    size_bytes = os.path.getsize(item_path)
+            
+            with os.scandir(target_dir) as entries:
+                for entry in sorted(entries, key=lambda e: e.name.lower()):
+                    if entry.is_dir(follow_symlinks=False):
+                        print(f"{Fore.BLUE}[DIR]  {entry.name}{Style.RESET_ALL}")
+                    else:
+                        size_bytes = entry.stat(follow_symlinks=False).st_size
+                        
+                        for unit in ['B', 'KB', 'MB', 'GB']:
+                            if size_bytes < 1024.0:
+                                size_str = f"{size_bytes:.2f} {unit}"
+                                break
+                            size_bytes /= 1024.0
 
-                    for unit in ['B', 'KB', 'MB', 'GB']:
-                        if size_bytes < 1024.0:
-                            size_str = f"{size_bytes:.2f} {unit}"
-                            break
-                        size_bytes /= 1024.0
-
-                    print(f"{Fore.GREEN}[FILE] {item}{Style.RESET_ALL} ({Fore.YELLOW}{size_str}{Style.RESET_ALL})")
+                        print(f"{Fore.GREEN}[FILE] {entry.name}{Style.RESET_ALL} ({Fore.YELLOW}{size_str}{Style.RESET_ALL})")
+                        
             print("--- End of Directory Listing ---\n")
         except (PermissionError, FileNotFoundError) as e:
             print(f"{Fore.RED}Error listing directory: {e}{Style.RESET_ALL}")

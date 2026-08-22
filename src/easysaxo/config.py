@@ -5,7 +5,7 @@ class App:
         self.ver = ver
         self.dev = "SXF"
         self.problem = "in the chair"
-easysaxo = App("EasySaxo", "Alpha 1.07") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.08") # yes im that lazy to write this ever again
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
@@ -29,17 +29,17 @@ from colorama import Fore, Style
 
 
 class Changelog:
-    header = f"===== {Fore.CYAN}Changelog!{Style.RESET_ALL} ({Fore.YELLOW}{easysaxo.name} {easysaxo.ver}{Style.RESET_ALL}) ====="
+    header = f"|========== {Fore.CYAN}Changelog!{Style.RESET_ALL} ({Fore.YELLOW}{easysaxo.name} {easysaxo.ver}{Style.RESET_ALL}) ==========|"
     entries = [  # noqa: RUF012  # Reserved for changelog purposes only.
-        f"Removed command: {Fore.BLUE}runloc{Style.RESET_ALL} (due to '{Fore.BLUE}cd{Style.RESET_ALL}' command).",
-        f"Added {Fore.LIGHTMAGENTA_EX}path completion{Style.RESET_ALL} to most commands which operate on files.",
-        f"Fixed (and enhanced) {Fore.BLUE}path resolving{Style.RESET_ALL} and '{Fore.BLUE}check{Style.RESET_ALL}' command.",
-        f"Structured {Fore.BLUE}help{Style.RESET_ALL} ({Fore.BLUE}command list{Style.RESET_ALL}) display.",
-        f"{Fore.MAGENTA}File extension{Style.RESET_ALL} color scheme expanded.",
+        f"Added commands: {Fore.BLUE}web, dirsz{Style.RESET_ALL} ({Fore.CYAN}help web{Style.RESET_ALL} / {Fore.CYAN}help dirsz{Style.RESET_ALL} for quick description).",
+        f"Added flag to system-shell command: {Fore.LIGHTBLUE_EX}-silent{Style.RESET_ALL} (hides error display if encountered).",
+        f"Updated minimum and recommended {Fore.BLUE}requirements{Style.RESET_ALL} to run {easysaxo.name}.",
+        f"Removed unused dependencies from {Fore.RED}pyproject.toml{Style.RESET_ALL}, app optimization by debloating.",
+        f"{Fore.LIGHTYELLOW_EX}KeyboardInterrupt{Style.RESET_ALL} error from startup patched."
     ]
     
     _visible_header = re.sub(r'\x1b\[[0-9;]*m', '', header) # hide color cmds in terminal, so
-    footer = "=" * len(_visible_header)                     # len(footer) matches len(header)
+    footer = ("|" + ("=" * len(_visible_header)) + "|" )  # len(footer) matches len(header)
 
     def entry_x(self):
         for i, entry in enumerate(self.entries, 1): print(f"  {i}. {entry}")
@@ -119,6 +119,8 @@ def build_completion_dict(translations: dict) -> dict:
             "cmdrun": {"sys": None, "app": None, "auto": None},
             "pathdisplay": {"on": None, "off": None, "enable": None, "disable": None},
             "pathmode": {"on": None, "off": None, "enable": None, "disable": None},
+            "language": None,
+            "lang": None
         },
         "reset": {rval: None for rval in ("name", "username", "password", "pswd", "key", "all", "user")},
         "math": {
@@ -163,4 +165,3 @@ def build_completion_dict(translations: dict) -> dict:
             comp_dict[trans_key] = None
 
     return comp_dict
-

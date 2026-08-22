@@ -13,7 +13,7 @@ from .esmodules.lister import MathList
 from .esmodules.mathf import MathFunc
 from .esmodules.medi import MediaData
 from .esmodules.misc import hrs
-from .esmodules.telemetry import TelemetryData
+from .esmodules.telemetry import TelemetryData, TelemetryOperations
 
 ee4 = True
 
@@ -149,9 +149,13 @@ def g_pswd(): print(f"{Fore.RED}You cannot get password due to security protocol
 def g_all():
     try:
         print(f"{Fore.BLUE}== COMPUTER DATA =={Style.RESET_ALL}")
-        for func in [g_cpu, g_arch, g_os, g_mboard, g_ram, g_gpu, g_disk, g_batt, g_user, g_py, g_proc]: func()
+        for func in [g_cpu, g_arch, g_os,
+                     g_mboard, g_ram, g_gpu,
+                     g_disk, g_batt, g_user,
+                     g_py, g_proc]: func()
         print(f"\n{Fore.BLUE}== TELEMETRY DATA =={Style.RESET_ALL}")
-        for func in [g_net, g_upt, g_ip, g_mac, g_pubip, g_netstat]: func()
+        for func in [g_net, g_upt, g_ip,
+                     g_mac, g_pubip, g_netstat]: func()
         print(f"\n{Fore.BLUE}== THREADING/MATH DATA =={Style.RESET_ALL}\n")
         for func in [g_th, g_mset, g_vars]: func()
         print(f"\n{Fore.BLUE}== MISC DATA =={Style.RESET_ALL}\n")
@@ -230,7 +234,7 @@ def c_dircrt(arg): DirLocation.dircrt(arg) if arg else print(f"{Fore.RED}Missing
 @register_command("dirdel", aliases=(["ddelete", "rm-r", "rmdir"]), help_text="dirdel <dirname> - Deletes a directory.")
 def c_dirdel(arg): DirLocation.dirdel(arg) if arg else print(f"{Fore.RED}Missing directory path.{Style.RESET_ALL}")
 
-@register_command("cd", aliases=["chdir"], help_text="cd <path> - Changes current working directory.")
+@register_command("cd", aliases=["chdir"], help_text="cd [<path>] - Changes current working directory or displays current.")
 def c_cd(arg): DirLocation.cd(arg)
 
 @register_command("filelst", aliases=["ls", "dir", "lsdir", "dirls", "listdir", "dirlist"], help_text="filelst <path> - Lists files and subdirectories in the specified or current directory.")
@@ -294,6 +298,9 @@ def c_filesort(arg):
 @register_command("filesz", aliases=["sizef", "sizeof"], help_text="filesz <file> - Shows size of a file.")
 def c_filesz(arg): DirLocation.filesz(arg) if arg else print(f"{Fore.RED}Missing filepath.{Style.RESET_ALL}")
 
+@register_command("dirsz", aliases=["dsize", "dsizeof"], help_text="dirsz <dir> - Shows size of a directory.")
+def c_dirsz(arg): DirLocation.dirsz(arg) if arg else print(f"{Fore.RED}Missing directory path.{Style.RESET_ALL}")
+
 @register_command("jsonrd", help_text="jsonrd <filepath> - Parses and pretty-prints JSON file contents.")
 def c_jsonrd(arg): JsonData.jsonrd(arg) if arg else print(f"{Fore.RED}Missing filepath.{Style.RESET_ALL}")
 
@@ -304,7 +311,7 @@ def c_regex(arg):
         print(f"{Fore.RED}Usage: regex <pattern> <text/file> [-f] [-a]{Style.RESET_ALL}")
         return
 
-    # farse flags
+    # parse flags
     flags = [p for p in parts if p.startswith("-")]
     has_file = "-f" in flags
     has_ignorecase = "-a" in flags
@@ -429,3 +436,15 @@ def s_shutdown(arg): ComputerOper.shut_down(arg)
 
 @register_command("requirements", aliases=["reqs", "sysreqs"], help_text="requirements - Shows the app requirements.")
 def s_requirements(arg): ComputerOper.requirements()
+
+@register_command("web", aliases=["request", "rq"], help_text="web <url> <method> - Sends a request to the web.")
+def t_web(arg):
+    if not arg:
+        print(f"{Fore.RED}Missing request URL.{Style.RESET_ALL}")
+        return
+    
+    parts = arg.split()
+    url = parts[0]
+    method = parts[1] if len(parts) > 1 else "GET"
+    
+    TelemetryOperations.w_request(url=url, method=method)

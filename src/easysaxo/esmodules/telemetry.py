@@ -106,3 +106,62 @@ class TelemetryData:
             print(f"{Fore.RED}Speed test failed: {e}{Style.RESET_ALL}")
 
 # broo chill i aint stealing ur shi
+
+import requests
+from bs4 import BeautifulSoup
+
+
+class TelemetryOperations:
+    @staticmethod
+    def w_request(url: str, method: str = "GET", payload: dict | None = None, timeout: int = 5):
+        from ..config import easysaxo
+        headers = {"User-Agent": f"EasySaxo-{easysaxo.name}/1.0"}
+        
+        try:
+            response = requests.request(
+                method=method.upper(),
+                url=url,
+                json=payload,
+                headers=headers,
+                timeout=timeout
+            )
+
+            print(f"\n--- Request: {Fore.YELLOW}{method.upper()} {url}{Style.RESET_ALL} ---")
+            print(f"Status Code: {Fore.GREEN if response.ok else Fore.RED}{response.status_code} {response.reason}{Style.RESET_ALL}")
+            print(f"Content-Type: {Fore.CYAN}{response.headers.get('content-type', 'N/A')}{Style.RESET_ALL}")
+
+            content_type = response.headers.get('content-type', '')
+            
+            if "application/json" in content_type:
+                print("Response JSON:")
+                print(response.json())
+
+            elif "text/html" in content_type:
+                soup = BeautifulSoup(response.text, "html.parser")
+                
+                title = soup.title.string.strip() if soup.title and soup.title.string else "No Title"
+                print(f"Page Title: {Fore.LIGHTMAGENTA_EX}{title}{Style.RESET_ALL}")
+
+                for element in soup(["script", "style", "head", "noscript", "meta"]):
+                    element.decompose()
+
+                clean_text = soup.get_text(separator=" ", strip=True)
+                preview = clean_text[:300] + ("..." if len(clean_text) > 300 else "")
+                print(f"Text Content:\n{preview}")
+
+            elif "text" in content_type:
+                preview = response.text[:200] + ("..." if len(response.text) > 200 else "")
+                print(f"Response Preview:\n{preview}")
+            
+            return response
+
+        except requests.exceptions.Timeout:
+            print(f"{Fore.RED}Request timed out after {timeout} seconds.{Style.RESET_ALL}")
+        except requests.exceptions.ConnectionError:
+            print(f"{Fore.RED}Failed to connect to host.{Style.RESET_ALL}")
+        except requests.exceptions.RequestException as e:
+            print(f"{Fore.RED}Request failed: {e}{Style.RESET_ALL}")
+        except KeyboardInterrupt:
+            print(f"\n{Fore.YELLOW}Request cancelled.{Style.RESET_ALL}")
+            
+        return None
