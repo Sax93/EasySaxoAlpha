@@ -31,6 +31,6 @@ If you want to make static changes, you can use `set cmdmatch sys` to use comman
 IF you want to make instant changes, you can type the command you want followed by " -s" or " -e" [System or EasySaxo].
 
 # Lastest changes
-[Click here](CHANGELOG.md) to view a descript of the upgrades of the last version.
+[Click here](changelog.md) to view a descript of the upgrades of the last version.
 
 sxf.
