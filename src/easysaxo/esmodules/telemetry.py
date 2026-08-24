@@ -107,6 +107,10 @@ class TelemetryData:
 
 # broo chill i aint stealing ur shi
 
+import json
+import textwrap
+import urllib.parse
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -114,8 +118,13 @@ from bs4 import BeautifulSoup
 class TelemetryOperations:
     @staticmethod
     def w_request(url: str, method: str = "GET", payload: dict | None = None, timeout: int = 5):
-        from ..config import easysaxo
-        headers = {"User-Agent": f"EasySaxo-{easysaxo.name}/1.0"}
+        if not urllib.parse.urlparse(url).scheme:
+            url = f"https://{url}"
+
+        # Browser-like headers to reduce blocking
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        }
         
         try:
             response = requests.request(
@@ -126,15 +135,20 @@ class TelemetryOperations:
                 timeout=timeout
             )
 
+            status_color = Fore.GREEN if response.ok else Fore.RED
             print(f"\n--- Request: {Fore.YELLOW}{method.upper()} {url}{Style.RESET_ALL} ---")
-            print(f"Status Code: {Fore.GREEN if response.ok else Fore.RED}{response.status_code} {response.reason}{Style.RESET_ALL}")
+            print(f"Status Code: {status_color}{response.status_code} {response.reason}{Style.RESET_ALL}")
             print(f"Content-Type: {Fore.CYAN}{response.headers.get('content-type', 'N/A')}{Style.RESET_ALL}")
 
             content_type = response.headers.get('content-type', '')
-            
+
             if "application/json" in content_type:
-                print("Response JSON:")
-                print(response.json())
+                print(f"\n{Fore.BLUE}=== JSON Response ==={Style.RESET_ALL}")
+                try:
+                    formatted_json = json.dumps(response.json(), indent=2)
+                    print(formatted_json[:1500] + ("\n..." if len(formatted_json) > 1500 else ""))
+                except ValueError:
+                    print(response.text[:500])
 
             elif "text/html" in content_type:
                 soup = BeautifulSoup(response.text, "html.parser")
@@ -142,16 +156,37 @@ class TelemetryOperations:
                 title = soup.title.string.strip() if soup.title and soup.title.string else "No Title"
                 print(f"Page Title: {Fore.LIGHTMAGENTA_EX}{title}{Style.RESET_ALL}")
 
-                for element in soup(["script", "style", "head", "noscript", "meta"]):
+                # Remove non-content elements
+                for element in soup(["script", "style", "head", "noscript", "meta", "nav", "footer", "header"]):
                     element.decompose()
 
-                clean_text = soup.get_text(separator=" ", strip=True)
-                preview = clean_text[:300] + ("..." if len(clean_text) > 300 else "")
-                print(f"Text Content:\n{preview}")
+                # Prioritize GitHub README container -> main tag -> article tag -> body
+                readme_container = soup.find("article", class_="markdown-body")
+                target_container = readme_container or soup.find("main") or soup.find("article") or soup.body
 
-            elif "text" in content_type:
-                preview = response.text[:200] + ("..." if len(response.text) > 200 else "")
-                print(f"Response Preview:\n{preview}")
+                blocks = []
+                if target_container:
+                    for elem in target_container.find_all(["h1", "h2", "h3", "p", "li"]):
+                        text = elem.get_text(strip=True)
+                        if not text:
+                            continue
+                        
+                        # Preserve document structure visually
+                        if elem.name in ["h1", "h2", "h3"]:
+                            blocks.append(f"\n{Fore.YELLOW}# {text}{Style.RESET_ALL}")
+                        elif elem.name == "li":
+                            blocks.append(f"  * {text}")
+                        else:
+                            blocks.append(textwrap.fill(text, width=80))
+
+                clean_output = "\n".join(blocks) if blocks else soup.get_text(separator="\n", strip=True)
+                
+                print(f"\n{Fore.BLUE}=== Content Preview ==={Style.RESET_ALL}\n")
+                print(clean_output[:1200] + ("\n..." if len(clean_output) > 1200 else ""))
+
+            else:
+                preview = response.text[:500] + ("..." if len(response.text) > 500 else "")
+                print(f"\nResponse Preview:\n{preview}")
             
             return response
 

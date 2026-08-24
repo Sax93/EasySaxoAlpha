@@ -334,6 +334,8 @@ class TextToImage:
         if attr.endswith("Text") and not attr.startswith("__")
     ]
   
+  # idle doodles
+  
   catText = r"""
      /\_/\
     ( o.o )
@@ -347,3 +349,57 @@ class TextToImage:
      (@)(@) ||
   """
   musicText = noteText
+
+  # countryflags doodles
+  
+  venezuelaText = r"""
+   [____________]
+   [::********::]
+   [@@@@@@@@@@@@]
+  """
+  
+  usaText = r"""
+  [*******======]
+  [*******======]
+  [=============]
+  """
+  unitedstatesText = usaText
+  
+  mexicoflag = r"""
+  [::::    @@@@]
+  [:::: >/ @@@@]
+  [::::    @@@@]
+  """
+  
+  switzerlandText = r"""
+  [@@@[ ]@@@]
+  [@[     ]@]
+  [@@@[ ]@@@]
+  """
+  switzText = switzerlandText
+  
+  ukText = r"""
+  [-_'-_ || _-'_-]
+  [======::======]
+  [_-'_-'||'-_'-_]
+  """
+  britainText = ukText
+  
+  chileText = r"""
+  [::**::       ]
+  [%%%%%%@@@@@@@]
+  [@@@@@@@@@@@@@]
+  """
+  
+  germanyText = r"""
+  [             ]
+  [%%%%%%%%%%%%%]
+  [:::::::::::::]
+  """
+  deutschlandText = germanyText
+  
+  japanText = r"""
+  [             ]
+  [     (@)     ]
+  [             ]
+  """

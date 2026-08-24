@@ -1,6 +1,11 @@
-> <center>A (finally) major update for EasySaxo Alpha</center>
+> <center>A minor update for ES Alpha 1.08-1</center>
 
-# <center>Changelog (Version 1.08, Aug 22th)</center>
+# <center>Changelog (Version 1.081, Aug 23th)</center>
+
+
+
+<details>
+<summary>ES Alpha 1.08 base changelog</summary>
 
 ## <center>1. Added new commands: `web` and `dirsz`.</center>
 Two new commands were just added to EasySaxo:
@@ -64,5 +69,24 @@ The reason behind was, _besides `deptry` reasons_, to debloat **Virtual Environm
 ## <center>5. `KeyboardInterrupt` constant patching.</center>
 To my surprise, a great chunk of the app was not supported over `KeyboardInterrupt`, and crashed the app early; **while loading**.\
 This half-patch uses `sys` to prevent `KeyboardInterrupt` to crash the entire app while it is still _loading its settings and commands_.
+</details>
+
+## <center>6. Added *country flags* as doodles for command `banner render <doodle>`.
+As a tiny add-up to the version, the first additional feature is a set of *8 doodled country flags* in the `render` attribute inside `banner` command.
+
+<details>
+<summary>Added country flags (with alias):</summary>
+
+- Britain (UK)
+- Chile
+- Deutschland (Germany)
+- Japan
+- Mexico
+- Switzerland (Switz)
+- United States (USA)
+- Venezuela
+</details>
+
+Since *doodles* only range a max of **3 lines**, some flags may look really weird, so sorry about that ;(
 
 sxf

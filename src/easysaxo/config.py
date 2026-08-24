@@ -5,7 +5,7 @@ class App:
         self.ver = ver
         self.dev = "SXF"
         self.problem = "in the chair"
-easysaxo = App("EasySaxo", "Alpha 1.08") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.081") # yes im that lazy to write this ever again
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
@@ -35,7 +35,8 @@ class Changelog:
         f"Added flag to system-shell command: {Fore.LIGHTBLUE_EX}-silent{Style.RESET_ALL} (hides error display if encountered).",
         f"Updated minimum and recommended {Fore.BLUE}requirements{Style.RESET_ALL} to run {easysaxo.name}.",
         f"Removed unused dependencies from {Fore.RED}pyproject.toml{Style.RESET_ALL}, app optimization by debloating.",
-        f"{Fore.LIGHTYELLOW_EX}KeyboardInterrupt{Style.RESET_ALL} error from startup patched."
+        f"{Fore.LIGHTYELLOW_EX}KeyboardInterrupt{Style.RESET_ALL} error from startup patched.",
+        f"Added {Fore.LIGHTGREEN_EX}country flags{Style.RESET_ALL} as preset doodles to command line: {Fore.CYAN}banner render <doodle>{Style.RESET_ALL}."
     ]
     
     _visible_header = re.sub(r'\x1b\[[0-9;]*m', '', header) # hide color cmds in terminal, so

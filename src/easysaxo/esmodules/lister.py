@@ -62,7 +62,7 @@ class EasterList:
     ]
     
     
-    yes_no_kw = ["is", "am", "are", "really", "can", "will", "would", "could", "shall", "should", "may", "does"]  # ruff: ignore[mutable-class-default]
+    yes_no_kw = ["is", "am", "are", "really", "can", "will", "would", "could", "shall", "should", "may", "does", "do"]  # ruff: ignore[mutable-class-default]
     
     l_yes_no = [ # noqa: RUF012
         "Yes", "No", "Maybe", "HELL NAHH",
