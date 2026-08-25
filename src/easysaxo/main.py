@@ -8,8 +8,6 @@ Description: App that holds EasySaxo main menu
 # Runs main processes like command input and user data processing
 # Ironically, it is not the most dangerous file to modify
 
-print("Loading EasySaxo...")
-
 import sys
 
 
@@ -20,6 +18,8 @@ def s_interrupt_hook(exctype, value, traceback):
     else: sys.__excepthook__(exctype, value, traceback)
 
 sys.excepthook = s_interrupt_hook
+
+print("Loading EasySaxo...")
 
 import os
 
@@ -145,8 +145,8 @@ def Core(session_info=None):
     translations = {}
     trslt(translations)
     
-    print(f"{Fore.LIGHTBLACK_EX}Default path: {dirloct.base_dir}{Style.RESET_ALL}")
-    print(f"Welcome to {Fore.CYAN}{easysaxo.name}{Style.RESET_ALL}! Insert commands down below.")
+    print(f"Welcome to {Fore.CYAN}{easysaxo.name} {easysaxo.ver}{Style.RESET_ALL}!\n"
+          f"{Fore.LIGHTBLACK_EX + Style.DIM}{dirloct.base_dir}{Style.RESET_ALL}")
 
     all_commands = list(COMMAND_REGISTRY.keys()) + list(translations.keys())
 
@@ -170,7 +170,10 @@ def Core(session_info=None):
         usit = None
         try:
             print()
-            if ThreadData.path_display: raw_prompt = inp_display(dirloct.base_dir)
+            if ThreadData.path_display:
+                path_helper = Fore.LIGHTBLACK_EX + Style.DIM + dirloct.DirLocation.get_display_path() + Style.RESET_ALL
+                print(path_helper)
+                raw_prompt = inp_display(ThreadData.current_user)
             else: raw_prompt = inp_display(ThreadData.current_user)
 
             if PROMPT_TOOLKIT_AVAILABLE:

@@ -99,7 +99,7 @@ class SessionManager:
                 MathList.mathset[var_name] = value
 
             SessionManager.active_session_file = target
-            print(f"{Fore.CYAN}Loaded '{os.path.basename(target)}' for user '{user_name}'.{Style.RESET_ALL}")
+            print(f"{Fore.CYAN + Style.DIM}Loaded '{os.path.basename(target)}' for user '{user_name}'.{Style.RESET_ALL}")
 
             return {
                 "user_name": user_name,

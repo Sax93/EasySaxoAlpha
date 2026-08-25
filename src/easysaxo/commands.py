@@ -1,5 +1,4 @@
-"""EasySaxo Alpha Command Input/Registry.
-Full to all GET and base commands/subcommands"""
+"""EasySaxo Alpha Command Input/Registry. Full to all GET and base commands/subcommands"""
 # NOTE: `commands.py` is strictly for command creation, not meant to support other than command registering.
 
 from colorama import Fore, Style
@@ -127,7 +126,10 @@ def g_vars(): MathFunc.list_vars()
 def g_appn(): print(f"App name: {Fore.CYAN}{easysaxo.name}{Style.RESET_ALL}")
 
 @register_command("appver", aliases=["version"], registry=GET_REGISTRY, help_text="get appver - Displays app version.")
-def g_appv(): print(f"App version: {Fore.CYAN}{easysaxo.ver}{Style.RESET_ALL}")
+def g_appv():
+    from .config import app_databuild
+    build = app_databuild()
+    print(f"App version: {Fore.CYAN}{easysaxo.ver} (build-{build}){Style.RESET_ALL}")
 
 @register_command("appdev", aliases=["developer", "creator", "devs", "dev"], registry=GET_REGISTRY)
 def g_appd():

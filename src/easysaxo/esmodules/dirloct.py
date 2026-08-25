@@ -15,6 +15,16 @@ dir_forcreate = os.path.join(base_dir, "esmodules", "filecreation")
 
 class DirLocation:
     @staticmethod
+    def get_display_path():
+        """Returns ~easysaxo relative path if within PROJECT_ROOT, else returns base_dir."""
+        if base_dir == PROJECT_ROOT:
+            return "~easysaxo"
+        elif base_dir.startswith(PROJECT_ROOT):
+            rel_path = os.path.relpath(base_dir, PROJECT_ROOT)
+            return f"~easysaxo\\{rel_path}"
+        return base_dir
+    
+    @staticmethod
     def cd(path=None):
         global base_dir
         if not path:
@@ -24,14 +34,14 @@ class DirLocation:
         clean_path = path.strip()
         if clean_path.lower().startswith("/d "):
             clean_path = clean_path[3:].strip()
-            print(f"{Fore.LIGHTBLACK_EX}'/d' in this command is automated, you do not need to type it!{Style.RESET_ALL}")
+            print(f"{Fore.LIGHTBLACK_EX + Style.DIM}'/d' in this command is automated, you do not need to type it!{Style.RESET_ALL}")
 
         target = DirLocation._resolve_path(clean_path)
 
         if os.path.exists(target) and os.path.isdir(target):
             os.chdir(target)
             base_dir = os.getcwd()
-            print(f"Directory changed to {Fore.MAGENTA}{base_dir}{Style.RESET_ALL}")
+            print(f"Directory changed to {Fore.MAGENTA}{DirLocation.get_display_path()}{Style.RESET_ALL}")
         else:
             print(f"{Fore.RED}Directory '{clean_path}' does not exist.{Style.RESET_ALL}")
 

@@ -5,7 +5,7 @@ class App:
         self.ver = ver
         self.dev = "SXF"
         self.problem = "in the chair"
-easysaxo = App("EasySaxo", "Alpha 1.081") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.082") # yes im that lazy to write this ever again
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
@@ -29,34 +29,60 @@ from colorama import Fore, Style
 
 
 class Changelog:
-    header = f"|========== {Fore.CYAN}Changelog!{Style.RESET_ALL} ({Fore.YELLOW}{easysaxo.name} {easysaxo.ver}{Style.RESET_ALL}) ==========|"
-    entries = [  # noqa: RUF012  # Reserved for changelog purposes only.
+    _raw_title = f"Changelog! ({easysaxo.name} {easysaxo.ver})"
+    _color_title = f"{Fore.CYAN}Changelog!{Style.RESET_ALL} ({Fore.CYAN}{easysaxo.name} {easysaxo.ver}{Style.RESET_ALL})"
+    
+    entries = [  # noqa: RUF012
         f"Added commands: {Fore.BLUE}web, dirsz{Style.RESET_ALL} ({Fore.CYAN}help web{Style.RESET_ALL} / {Fore.CYAN}help dirsz{Style.RESET_ALL} for quick description).",
         f"Added flag to system-shell command: {Fore.LIGHTBLUE_EX}-silent{Style.RESET_ALL} (hides error display if encountered).",
         f"Updated minimum and recommended {Fore.BLUE}requirements{Style.RESET_ALL} to run {easysaxo.name}.",
         f"Removed unused dependencies from {Fore.RED}pyproject.toml{Style.RESET_ALL}, app optimization by debloating.",
         f"{Fore.LIGHTYELLOW_EX}KeyboardInterrupt{Style.RESET_ALL} error from startup patched.",
-        f"Added {Fore.LIGHTGREEN_EX}country flags{Style.RESET_ALL} as preset doodles to command line: {Fore.CYAN}banner render <doodle>{Style.RESET_ALL}."
+        f"Added {Fore.LIGHTGREEN_EX}country flags{Style.RESET_ALL} as preset doodles to command line: {Fore.CYAN}banner render <doodle>{Style.RESET_ALL}.",
+        f"Modified {Fore.LIGHTMAGENTA_EX}path display{Style.RESET_ALL} along with {Fore.BLUE}cd{Style.RESET_ALL} command.",
+        f"Added {Fore.LIGHTGREEN_EX}build date{Style.RESET_ALL} to app metadata.",
+        f"Updated {Fore.CYAN}Changelog{Style.RESET_ALL} display."
     ]
-    
-    _visible_header = re.sub(r'\x1b\[[0-9;]*m', '', header) # hide color cmds in terminal, so
-    footer = ("|" + ("=" * len(_visible_header)) + "|" )  # len(footer) matches len(header)
 
-    def entry_x(self):
-        for i, entry in enumerate(self.entries, 1): print(f"  {i}. {entry}")
+    @staticmethod
+    def _strip_ansi(text: str) -> str: return re.sub(r'\x1b\[[0-9;]*m', '', text)
 
-Nw = Changelog()
+    @classmethod
+    def print_box(cls):
+        formatted_entries = []
+        raw_lengths = []
+        for i, entry in enumerate(cls.entries, 1):
+            formatted = f"{i}. {entry}"
+            formatted_entries.append(formatted)
+            raw_lengths.append(len(cls._strip_ansi(formatted)))
 
-def whats_new():
-    print(Nw.header)
-    Nw.entry_x()
-    print(Nw.footer)
+        max_content_len = max(raw_lengths) if raw_lengths else 0
+        min_header_len = len(cls._raw_title) + 6
+        inner_width = max(max_content_len, min_header_len) + 2
+
+        needed_eq = inner_width - len(cls._raw_title) - 2
+        left_eq = "=" * (needed_eq // 2)
+        right_eq = "=" * (needed_eq - len(left_eq))
+        top_header = f"|{left_eq} {cls._color_title} {right_eq}|"
+
+        print(f"\n{top_header}")
+        print(f"|{' ' * inner_width}|")  # top space line
+
+        for entry_text, raw_len in zip(formatted_entries, raw_lengths):
+            padding = inner_width - raw_len - 1
+            print(f"| {entry_text}{' ' * padding}|")
+
+        print(f"|{' ' * inner_width}|")   # bottom space line
+        print(f"|{'=' * inner_width}|")   # bottom border line
+
+
+def whats_new(): Changelog.print_box()
 
 def clr(): # clear screen
     import os
     os.system('cls' if os.name == 'nt' else 'clear')
 
-# its actually not pretty bad to be the 56th codeline in a config script.
+# he was whipping up ANGER IN A KETTLE
 
 import os
 
@@ -166,3 +192,30 @@ def build_completion_dict(translations: dict) -> dict:
             comp_dict[trans_key] = None
 
     return comp_dict
+
+
+def app_databuild():
+    import datetime
+
+    from .esmodules.dirloct import PROJECT_ROOT, DirLocation, base_dir
+    from .esmodules.lister import FileList
+
+    FileList._allow = [f"{file}.py" for file in FileList._allow] if base_dir is PROJECT_ROOT else [file for file in FileList._allow]
+
+    mtimes = []
+    total_size = 0
+
+    for file_rel in FileList._allow:
+        resolved_path = DirLocation._resolve_path(file_rel) if base_dir is PROJECT_ROOT else os.path.join(PROJECT_ROOT, file_rel)
+        if os.path.exists(resolved_path):
+            mtimes.append(os.path.getmtime(resolved_path))
+            total_size += os.path.getsize(resolved_path)
+
+    latest_mtime = max(mtimes) if mtimes else 0
+    build_mdata_display = (
+        datetime.datetime.fromtimestamp(latest_mtime, tz=datetime.UTC).strftime("%Y-%m-%d")
+        if latest_mtime
+        else "N/A"
+    )
+
+    return build_mdata_display

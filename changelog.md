@@ -1,8 +1,6 @@
-> <center>A minor update for ES Alpha 1.08-1</center>
+> <center>A mostly minor update for ES Alpha 1.08-2</center>
 
-# <center>Changelog (Version 1.081, Aug 23th)</center>
-
-
+# <center>Changelog (Version 1.082, Aug 25th)</center>
 
 <details>
 <summary>ES Alpha 1.08 base changelog</summary>
@@ -71,6 +69,9 @@ To my surprise, a great chunk of the app was not supported over `KeyboardInterru
 This half-patch uses `sys` to prevent `KeyboardInterrupt` to crash the entire app while it is still _loading its settings and commands_.
 </details>
 
+<details>
+<summary>ES Alpha 1.081 changelog</summary>
+
 ## <center>6. Added *country flags* as doodles for command `banner render <doodle>`.
 As a tiny add-up to the version, the first additional feature is a set of *8 doodled country flags* in the `render` attribute inside `banner` command.
 
@@ -88,5 +89,21 @@ As a tiny add-up to the version, the first additional feature is a set of *8 doo
 </details>
 
 Since *doodles* only range a max of **3 lines**, some flags may look really weird, so sorry about that ;(
+</details>
+
+## <center>7. Modified **path display** set subcommand and `cd` command.
+As a better way at "acknowledging" the current path/directory, both *`pathdisplay` set subcommand* and `cd` command were lightly modified.
+
+- The directory path will now be shown above the user command input as a *dim text*, leaving the user a guide of where they are located.\
+    - When located in the app *root folder* (by default '`\src\easysaxo`'), the path will be displayed as "`~easysaxo`" to shorten the full path.\
+    - If the user enters a subfolder inside the root (e. g. '`\src\easysaxo\esmodules\`'), the path will be displayed as "`~easysaxo\esmodules`".
+    - To see the full path of where the *root folder* is located, use `cd` command.
+- The `cd` command received a minor modification linked to the *path display* update; will refer to paths in *root folder* as "`~easysaxo\path`". Though, the entry stays the same (`cd path`).
+
+## <center>8. Added **build date** as *app metadata*.
+ES Alpha 1.082 adds a new metadata to the app, which displays the earliest *modification date* of any listed ES Alpha file as the **build date**. It is meant to work as a date route for code modification, useful for patchs and updates.
+
+## <center>9. Updated **Built-in Changelog** display.
+In the app, the way the integrated changelog (`changelog`) displayed was just modified, taking the shape of a *resizable squared box* instead of a *raw scroll*.
 
 sxf
