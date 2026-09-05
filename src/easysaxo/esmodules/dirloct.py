@@ -92,7 +92,7 @@ class DirLocation:
         try:
             full_path = DirLocation._resolve_path(filepath)
             if not os.path.exists(full_path):
-                print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
                 return
             if os.path.isdir(full_path):
                 print(f"{Fore.RED}{filepath}{Style.RESET_ALL} is a directory, not a file.")
@@ -116,7 +116,7 @@ class DirLocation:
         try:
             full_path = os.path.abspath(DirLocation._resolve_path(filepath)) if filepath else base_dir
             if not os.path.exists(full_path):
-                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
                 return
             if not os.path.isdir(full_path):
                 print(f"{Fore.RED}{filepath}{Style.RESET_ALL} is a file, not a directory.")
@@ -159,7 +159,7 @@ class DirLocation:
         try:
             target_dir = DirLocation._resolve_path(filepath) if filepath else base_dir
             if not os.path.exists(target_dir):
-                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
                 return
             if not os.path.isdir(target_dir):
                 print(f"{Fore.RED}{filepath}{Style.RESET_ALL} is not a directory.")
@@ -191,7 +191,7 @@ class DirLocation:
         try:
             target_dir = DirLocation._resolve_path(filepath) if filepath else base_dir
             if not os.path.exists(target_dir):
-                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
                 return
             if not os.path.isdir(target_dir):
                 print(f"{Fore.RED}{filepath}{Style.RESET_ALL} is not a directory.")
@@ -245,7 +245,7 @@ class DirLocation:
         try:
             full_path = DirLocation._resolve_path(filepath)
             if not os.path.exists(full_path):
-                print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
                 return None
 
             # first, check if it's a python script
@@ -330,7 +330,7 @@ class DirLocation:
                 os.rmdir(full_path)
                 print(f"Directory {Fore.GREEN}{filepath}{Style.RESET_ALL} deleted successfully.")
             else:
-                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist or is not a folder.")
+                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist or is not a folder. Make sure the path is written correctly.")
         except (OSError):
             import shutil
             full_path = DirLocation._resolve_path(filepath)
@@ -359,7 +359,7 @@ class DirLocation:
                     except ImportError: display_content = f"{Fore.GREEN}{content}{Style.RESET_ALL}"
 
                 print(f"\n--- Contents of {Fore.CYAN}{filepath}{Style.RESET_ALL} ---\n{display_content}\n--- End of file ---")
-            else: print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+            else: print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
         except PermissionError as e: print(f"{Fore.RED}Error reading file: {e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -369,7 +369,7 @@ class DirLocation:
             if os.path.exists(full_path):
                 os.remove(full_path)
                 print(f"File {Fore.GREEN}{filepath}{Style.RESET_ALL} deleted successfully.")
-            else: print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+            else: print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
         except (PermissionError, OSError) as e: print(f"{Fore.RED}Error deleting file: {e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -526,7 +526,7 @@ class DirLocation:
             dest_dir = DirLocation._resolve_path(dirdest)
 
             if not os.path.exists(source_dir) or not os.path.isdir(source_dir):
-                print(f"{Fore.RED}Source directory '{dirpath}' does not exist or is not a directory.{Style.RESET_ALL}")
+                print(f"{Fore.RED}Source directory '{dirpath}' does not exist or is not a directory. Make sure the path is written correctly.{Style.RESET_ALL}")
                 return
 
             os.makedirs(dest_dir, exist_ok=True)
@@ -555,7 +555,7 @@ class DirLocation:
             full_zip = DirLocation._resolve_path(zip_path)
 
             if not os.path.exists(full_zip):
-                print(f"{Fore.RED}File '{zip_path}' does not exist.{Style.RESET_ALL}")
+                print(f"{Fore.RED}File '{zip_path}' does not exist. Make sure the path is written correctly.{Style.RESET_ALL}")
                 return
 
             if not zipfile.is_zipfile(full_zip):

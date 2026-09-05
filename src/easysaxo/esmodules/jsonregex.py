@@ -19,7 +19,7 @@ class JsonData:
             if os.path.exists(full_path):
                 with open(full_path, "r", encoding="utf-8") as f:
                     print(f"\n--- Formatted JSON ---\n{json.dumps(json.load(f), indent=4)}\n--- End of JSON ---")
-            else: print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+            else: print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
         except (IsADirectoryError, FileNotFoundError, KeyboardInterrupt) as e:
             print(f"{Fore.RED}Error reading JSON: {e}{Style.RESET_ALL}")
 
@@ -54,6 +54,6 @@ class RegexData:
                 with open(full_path, "r", encoding="utf-8") as f:
                     content = f.read()
                 RegexData.match_pattern(pattern, content, ignore_case=ignore_case)
-            else: print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+            else: print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
         except (TypeError, ValueError, KeyboardInterrupt, PermissionError) as e:
             print(f"{Fore.RED}Error reading file for regex: {e}{Style.RESET_ALL}")

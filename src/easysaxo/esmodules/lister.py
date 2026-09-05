@@ -57,8 +57,9 @@ class EasterList:
     ]
 
     osaka = [ # from e3()  # noqa: RUF012
-        "saataa andaagii", "omaigahh", "amerikaya", "fella what?????",
-        "haro everynyan", "get yo ahh to work bud", "haiii"
+        "saataa andagii", "omaigah", "amerikaya", "fella what?????",
+        "haro everynyan", "get yo ahh to work bud", "haro!",
+        "download osaka collector 2 in github bro trust"
     ]
     
     
