@@ -1,0 +1,5 @@
+.venv/
+__pycache__/
+filecreation/
+*.code-workspace
+session.json
