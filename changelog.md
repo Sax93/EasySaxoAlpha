@@ -60,4 +60,8 @@ This way, the terminal will not confuse the ES flags with the system flags.
 >> `web <https://url.dom/section-1> -d <cool_file>` *(downloads specific file)*\
 > *This function supports GitHub related links, allowing EasySaxo to download repositories, files from repositories and much more.*
 
+## <center> 5. Changed *app name display*
+
+The *app name and app version display* is now moved from the start screen to the terminal window name.
+
 sxf

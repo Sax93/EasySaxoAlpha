@@ -59,6 +59,10 @@ from .config import COMMAND_REGISTRY, build_completion_dict, easysaxo
 from .esmodules import dirloct
 from .esmodules.heavyholder import SessionManager, ThreadData
 
+
+sys.stdout.write(f"\x1b]2;{easysaxo.name} {easysaxo.ver}\x07")  # Since decided not to show the app name at start,
+sys.stdout.flush()                                              # this sets the terminal name to EasySaxo Alpha X.x
+
 # = session info process
 
 def session_info_proc(session_info):
@@ -144,9 +148,9 @@ def Core(session_info=None):
     
     translations = {}
     trslt(translations)
-    
-    print(f"Welcome to {Fore.CYAN}{easysaxo.name} {easysaxo.ver}{Style.RESET_ALL}!\n"
-          f"{Fore.LIGHTBLACK_EX + Style.DIM}{dirloct.base_dir}{Style.RESET_ALL}")
+
+    # decided to only show loaded path instead of app version
+    print(f"{Fore.LIGHTBLACK_EX + Style.DIM}{dirloct.base_dir}{Style.RESET_ALL}")
 
     all_commands = list(COMMAND_REGISTRY.keys()) + list(translations.keys())
 
