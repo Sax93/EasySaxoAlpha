@@ -73,10 +73,22 @@ class MathFunc:
 
             parsed_ast = ast.parse(expression, mode='eval').body
             print(f"Result: {Fore.GREEN}{MathFunc._eval_ast_node(parsed_ast)}{Style.RESET_ALL}")
-        except (ValueError, ZeroDivisionError, TypeError) as e:
-            print(f"{Fore.RED}Error evaluating expression: {e}{Style.RESET_ALL}")
+
         except SyntaxError as e:
-            print(f"{Fore.RED}Invalid syntax in expression: {e}{Style.RESET_ALL}")
+            # e.offset points to the character position of the syntax error
+            offset = e.offset or 1
+            pointer_pos = min(offset - 1, len(expression)) 
+            
+            print(f"{Fore.RED}Syntax Error:{Style.RESET_ALL} {e.msg}")
+            print(f"  {expression}")
+            print(f"  {Fore.RED}{' ' * pointer_pos}^{Style.RESET_ALL}")
+
+        except (ValueError, ZeroDivisionError) as e:
+            print(f"{Fore.RED}Evaluation Error:{Style.RESET_ALL} {e}")
+        except TypeError as e:
+            print(f"{Fore.RED}Type Error:{Style.RESET_ALL} {e}")
+
+        except KeyboardInterrupt: print(f"\n{Fore.YELLOW}Evaluation interrupted.{Style.RESET_ALL}")
 
     @staticmethod
     def getmath(): print(Mt.math_funcslist)
@@ -113,8 +125,7 @@ class MathFunc:
             print(f"{Fore.CYAN}{var_name}{Style.RESET_ALL} = {Fore.GREEN}{Mt.mathset[var_name]}{Style.RESET_ALL}")
         elif var_name in Mt._reserved:
             print(f"{Fore.YELLOW}'{var_name}' is a built-in function/constant.{Style.RESET_ALL}")
-        else:
-            print(f"{Fore.RED}Variable '{var_name}' not found.{Style.RESET_ALL}")
+        else: print(f"{Fore.RED}Variable '{var_name}' not found.{Style.RESET_ALL}")
 
     @staticmethod
     def list_vars():

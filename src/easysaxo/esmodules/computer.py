@@ -244,7 +244,7 @@ class ComputerOper:
                 time_arg = f"+{waittime}" if waittime else "now"
                 os.system(f"sudo shutdown -h {time_arg}")
         except (PermissionError, ValueError, KeyboardInterrupt) as e:
-            print(f"An error occurred: {e}")
+            print(f"Cannot shut down: {e}")
 
     @staticmethod
     def requirements():

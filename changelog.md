@@ -64,4 +64,8 @@ This way, the terminal will not confuse the ES flags with the system flags.
 
 The *app name and app version display* is now moved from the start screen to the terminal window name.
 
+## <center> 6. Changed *error handler display*
+
+For some commands, their *error handler* is now slightly modified to identify the issue more precisely.
+
 sxf

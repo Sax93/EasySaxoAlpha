@@ -5,7 +5,7 @@ class App:
         self.ver = ver
         self.dev = "SXF"
         self.problem = "in the chair"
-easysaxo = App("EasySaxo", "Alpha 1.09.01") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.09.02") # yes im that lazy to write this ever again
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
@@ -37,6 +37,7 @@ class Changelog:
         f"Updated flag format for system shell commands (does not affect '-s' or '-e'): {Fore.LIGHTBLUE_EX}-<{Style.RESET_ALL}.",
         f"Fixed commands by uncaught exceptions: {Fore.BLUE}regex, dirsz, dirdel{Style.RESET_ALL}.",
         f"Updated command functionality for: {Fore.BLUE}filerd, web{Style.RESET_ALL}.",
+        f"Minor modifications with {Fore.RED}Error Handler{Style.RESET_ALL}.",
     ]
 
     @staticmethod
@@ -89,33 +90,36 @@ class PathCompleter(Completer):
         self.get_base_dir = get_base_dir_func
 
     def get_completions(self, document, complete_event):
-        full_text = document.text_before_cursor
-        parts = full_text.split(maxsplit=1)
-        text = parts[1] if len(parts) > 1 else ""
+        # lets extract everything typed after the command name
+        text = document.text_before_cursor
+        parts = text.split(maxsplit=1)
+        path_arg = parts[1] if len(parts) > 1 else ""
 
         base_dir = self.get_base_dir()
 
-        if "/" in text or "\\" in text:
-            dirname, prefix = os.path.split(text)
+        if "/" in path_arg or "\\" in path_arg:
+            dirname, prefix = os.path.split(path_arg)
             search_dir = os.path.join(base_dir, dirname) if not os.path.isabs(dirname) else dirname
         else:
             dirname = ""
-            prefix = text
+            prefix = path_arg
             search_dir = base_dir
 
         if not os.path.exists(search_dir) or not os.path.isdir(search_dir): return
 
         try:
             for item in os.listdir(search_dir):
-                if item.startswith(prefix):
+                if item.lower().startswith(prefix.lower()):
                     full_path = os.path.join(search_dir, item)
-                    display = item + ("/" if os.path.isdir(full_path) else "")
-                    completion_val = os.path.join(dirname, display) if dirname else display
+                    is_dir = os.path.isdir(full_path)
+                    display_name = item + ("/" if is_dir else "")
                     
+                    completion_val = os.path.join(dirname, display_name) if dirname else display_name
+
                     yield Completion(
                         completion_val,
-                        start_position=-len(prefix),  # Replace only the typed prefix
-                        display=display
+                        start_position=-len(path_arg),
+                        display=display_name
                     )
         except PermissionError: return
 

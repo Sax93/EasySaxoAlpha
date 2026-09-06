@@ -40,7 +40,7 @@ class MediaData:
                 pygame.mixer.music.stop()
                 print(f"{Fore.GREEN}Audio stopped.{Style.RESET_ALL}")
             else: print(f"{Fore.YELLOW}No audio is currently playing.{Style.RESET_ALL}")
-        except ImportError as e: print(f"{Fore.RED}Error stopping audio: {e}{Style.RESET_ALL}")
+        except (ImportError, OSError, KeyboardInterrupt) as e: print(f"{Fore.RED}Error stopping audio: {e}{Style.RESET_ALL}")
         
     # render area
     @staticmethod
@@ -85,7 +85,7 @@ class MediaData:
             cols = int(colnum) if str(colnum).isdigit() else 80
             ascii_r = AsciiArt.from_image(resolved_path)
             ascii_r.to_terminal(columns=cols)
-        except (ValueError, FileNotFoundError, PermissionError) as e:
+        except (ValueError, FileNotFoundError, PermissionError, KeyboardInterrupt) as e:
             print(f"{Fore.RED}Could not render: {e}{Style.RESET_ALL}")
     
     @staticmethod
