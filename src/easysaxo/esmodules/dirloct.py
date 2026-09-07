@@ -15,6 +15,81 @@ base_dir = PROJECT_ROOT
 dir_forcreate = os.path.join(base_dir, "esmodules", "filecreation")
 
 class DirLocation:
+    """Path identifier global operator and handler"""
+    FLAGS = {  # ruff: ignore[mutable-class-default]
+        "-<root": lambda: PROJECT_ROOT,
+        "-<es": lambda: os.path.join(PROJECT_ROOT, "esmodules"),
+        "-<fc": lambda: dir_forcreate,
+    }
+    
+    @staticmethod
+    def _parse_flag_or_path(filepath: str) -> str:
+        """Evaluates flag keys (-<root, -<es, -<fc, -<drv) or returns raw path string."""
+        if not filepath:
+            return base_dir
+
+        clean_path = filepath.strip()
+        flag_key = clean_path.lower()
+
+        if flag_key in DirLocation.FLAGS:
+            return DirLocation.FLAGS[flag_key]()
+
+        if flag_key.startswith("-<drv"):
+            drive_arg = clean_path[5:].strip()
+            if drive_arg:
+                return os.path.abspath(drive_arg + os.sep) if not drive_arg.endswith(os.sep) else drive_arg
+            return os.path.abspath(os.path.splitdrive(base_dir)[0] + os.sep)
+
+        return clean_path
+
+    @staticmethod
+    def _resolve_path(filepath: str) -> str:
+        filepath = DirLocation._parse_flag_or_path(filepath)
+
+        if os.path.isabs(filepath): 
+            return filepath
+
+        # check relative to current working directory
+        cwd_path = os.path.join(base_dir, filepath)
+        if os.path.exists(cwd_path) or base_dir == PROJECT_ROOT: 
+            return cwd_path
+
+        # check relative to fixed project root (mainly `check func)
+        root_path = os.path.join(PROJECT_ROOT, filepath)
+        if os.path.exists(root_path): 
+            return root_path
+
+        # check inside esmodules under project root
+        es_path = os.path.join(PROJECT_ROOT, "esmodules", filepath)
+        if os.path.exists(es_path): 
+            return es_path
+
+        # fallback for file creation
+        os.makedirs(dir_forcreate, exist_ok=True)
+        return os.path.join(dir_forcreate, filepath)
+
+    @staticmethod
+    def cd(path=None):
+        global base_dir
+        if not path:
+            print(f"Current directory: {Fore.MAGENTA}{DirLocation.get_display_path()}{Style.RESET_ALL}")
+            return
+
+        clean_path = path.strip()
+
+        if clean_path.lower().startswith("/d "):
+            clean_path = clean_path[3:].strip()
+            print(f"{Fore.LIGHTBLACK_EX + Style.DIM}'/d' in this command is automated, you do not need to type it!{Style.RESET_ALL}")
+
+        target = DirLocation._resolve_path(clean_path)
+
+        if os.path.exists(target) and os.path.isdir(target):
+            os.chdir(target)
+            base_dir = os.getcwd()
+            print(f"Directory changed to {Fore.MAGENTA}{DirLocation.get_display_path()}{Style.RESET_ALL}")
+        else: 
+            print(f"{Fore.RED}Directory '{clean_path}' does not exist.{Style.RESET_ALL}")
+
     @staticmethod
     def get_display_path(path=None):
         """Returns ~easysaxo relative path if within PROJECT_ROOT, else returns normalized path."""
@@ -26,56 +101,18 @@ class DirLocation:
             rel_path = os.path.relpath(target_path, PROJECT_ROOT)
             return f"~easysaxo\\{rel_path}"
         return target_path
-    
-    @staticmethod
-    def cd(path=None):
-        global base_dir
-        if not path:
-            print(f"Current directory: {Fore.MAGENTA}{DirLocation.get_display_path()}{Style.RESET_ALL}")
-            return
-
-        clean_path = path.strip()
-        if clean_path.lower().startswith("/d "):
-            clean_path = clean_path[3:].strip()
-            print(f"{Fore.LIGHTBLACK_EX + Style.DIM}'/d' in this command is automated, you do not need to type it!{Style.RESET_ALL}")
-
-        target = DirLocation._resolve_path(clean_path)
-
-        if os.path.exists(target) and os.path.isdir(target):
-            os.chdir(target)
-            base_dir = os.getcwd()
-            print(f"Directory changed to {Fore.MAGENTA}{DirLocation.get_display_path()}{Style.RESET_ALL}")
-        else:
-            print(f"{Fore.RED}Directory '{clean_path}' does not exist.{Style.RESET_ALL}")
-
-    @staticmethod
-    def _resolve_path(filepath: str) -> str:
-        if os.path.isabs(filepath): return filepath
-
-        # check relative to current working directory
-        cwd_path = os.path.join(base_dir, filepath)
-        if os.path.exists(cwd_path) or base_dir == PROJECT_ROOT: return cwd_path
-
-        # check relative to fixed project root (mainly `check func)
-        root_path = os.path.join(PROJECT_ROOT, filepath)
-        if os.path.exists(root_path): return root_path
-
-        # check inside esmodules under project root
-        es_path = os.path.join(PROJECT_ROOT, "esmodules", filepath)
-        if os.path.exists(es_path): return es_path
-
-        # fallback for file creation
-        os.makedirs(dir_forcreate, exist_ok=True)
-        return os.path.join(dir_forcreate, filepath)
 
     @staticmethod
     def allowance():
         try:
             from .lister import FileList
 
-            FileList._allow = [f"{file}.py" for file in FileList._allow] if base_dir is PROJECT_ROOT else [file for file in FileList._allow]
+            if base_dir is PROJECT_ROOT: 
+                files_to_check = [f if f.endswith(".py") else f"{f}.py" for f in FileList._allow]
+            else: 
+                files_to_check = [f for f in FileList._allow if not f.endswith(".py")]
 
-            for file in FileList._allow:
+            for file in files_to_check:
                 resolved_path = DirLocation._resolve_path(file) if base_dir is PROJECT_ROOT else PROJECT_ROOT
 
                 if not os.path.exists(resolved_path):
@@ -85,9 +122,12 @@ class DirLocation:
                 is_init = file.endswith("__init__.py")
                 is_valid_size = is_init or os.path.getsize(resolved_path) > 0
 
-                if is_valid_size: print(f"{Fore.GREEN}Checked: {Fore.YELLOW}{file}{Style.RESET_ALL}")
-                else: print(f"{Fore.CYAN}Empty (expected non-empty): {Fore.YELLOW}{file}{Style.RESET_ALL}")
-        except (ImportError, KeyboardInterrupt): return
+                if is_valid_size: 
+                    print(f"{Fore.GREEN}Checked: {Fore.YELLOW}{file}{Style.RESET_ALL}")
+                else: 
+                    print(f"{Fore.CYAN}Empty (expected non-empty): {Fore.YELLOW}{file}{Style.RESET_ALL}")
+        except (ImportError, KeyboardInterrupt): 
+            return
 
     @staticmethod
     def filesz(filepath):
@@ -127,7 +167,7 @@ class DirLocation:
 
             if os.path.dirname(full_path) == full_path:
                 usage = psutil.disk_usage(full_path)
-                size_bytes = usage.used  # get exact used space on disk drive
+                size_bytes = usage.used
             else:
                 def _get_dir_size(path):
                     total = 0
@@ -139,8 +179,10 @@ class DirLocation:
                                         total += entry.stat(follow_symlinks=False).st_size
                                     elif entry.is_dir(follow_symlinks=False):
                                         total += _get_dir_size(entry.path)
-                                except (PermissionError, FileNotFoundError, OSError): continue
-                    except (PermissionError, FileNotFoundError, OSError): pass
+                                except (PermissionError, FileNotFoundError, OSError): 
+                                    continue
+                    except (PermissionError, FileNotFoundError, OSError): 
+                        pass
                     return total
 
                 size_bytes = _get_dir_size(full_path)
@@ -152,11 +194,14 @@ class DirLocation:
                 size_bytes /= 1024.0
 
             display_dir = DirLocation.get_display_path(full_path)
-            if filepath and filepath != ".": target_display = f"{filepath} ({display_dir})"
-            else: target_display = display_dir
+            if filepath and filepath != ".": 
+                target_display = f"{filepath} ({display_dir})"
+            else: 
+                target_display = display_dir
             
             print(f"Size of directory {Fore.CYAN}{target_display}{Style.RESET_ALL}: {Fore.YELLOW}{readable_size}{Style.RESET_ALL}")
-        except (FileNotFoundError, PermissionError, KeyboardInterrupt) as e: print(f"{Fore.RED}Error getting directory size: {e}{Style.RESET_ALL}")
+        except (FileNotFoundError, PermissionError, KeyboardInterrupt) as e: 
+            print(f"{Fore.RED}Error getting directory size: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def ls(filepath=None):
@@ -210,7 +255,8 @@ class DirLocation:
                     print(f"{prefix}{Fore.LIGHTBLACK_EX}... (max depth reached){Style.RESET_ALL}")
                     return
 
-                try: entries = sorted(os.listdir(dir_path))
+                try: 
+                    entries = sorted(os.listdir(dir_path))
                 except PermissionError:
                     print(f"{prefix}{Fore.RED}[Permission Denied]{Style.RESET_ALL}")
                     return
@@ -236,7 +282,6 @@ class DirLocation:
                         _build_tree(item_path, prefix + child_prefix, current_depth + 1)
                     else:
                         from .lister import FileList
-                        # color coding based on file extension
                         _, ext = os.path.splitext(item)
                         ext_color = FileList.EXTENSION_COLORS.get(ext.lower(), Fore.WHITE)
 
@@ -245,7 +290,8 @@ class DirLocation:
             _build_tree(target_dir)
             print(f"\n{Fore.CYAN}--- End of Directory Tree ---{Style.RESET_ALL}\n")
 
-        except (PermissionError, FileNotFoundError, KeyboardInterrupt) as e: print(f"{Fore.RED}Error rendering directory tree: {e}{Style.RESET_ALL}")
+        except (PermissionError, FileNotFoundError, KeyboardInterrupt) as e: 
+            print(f"{Fore.RED}Error rendering directory tree: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def fileopn(filepath):
@@ -258,11 +304,9 @@ class DirLocation:
 
             display_file = DirLocation.get_display_path(full_path)
 
-            # first, check if it's a python script
             if filepath.endswith(".py"):
                 print(f"Executing {Fore.GREEN}{display_file}{Style.RESET_ALL}...")
 
-                # run the python script
                 result = subprocess.run(
                     [sys.executable, full_path],
                     capture_output=True,
@@ -270,20 +314,23 @@ class DirLocation:
                     check=True
                 )
 
-                # check if execution threw an error to show in shell
                 if result.returncode != 0:
                     traceback_str = result.stderr
                     print(f"{Fore.MAGENTA}Program returns an exception:{Style.RESET_ALL}\n{traceback_str}")
                     return traceback_str
                 else:
-                    if result.stdout: print(result.stdout, end="")
+                    if result.stdout: 
+                        print(result.stdout, end="")
                     print(f"{Fore.GREEN}Program finished with exit code {Fore.CYAN}{result.returncode}{Style.RESET_ALL}")
                     return None
             else:
                 print(f"Opening {Fore.GREEN}{display_file}{Style.RESET_ALL}...")
-                if os.name == "nt": os.startfile(full_path)
-                elif platform.system() == "Darwin": subprocess.run(["open", full_path], check=True)
-                else: subprocess.run(["xdg-open", full_path], check=True)
+                if os.name == "nt": 
+                    os.startfile(full_path)
+                elif platform.system() == "Darwin": 
+                    subprocess.run(["open", full_path], check=True)
+                else: 
+                    subprocess.run(["xdg-open", full_path], check=True)
                 return None
 
         except subprocess.CalledProcessError as e:
@@ -305,8 +352,10 @@ class DirLocation:
                         proc.terminate()
                         print(f"Closed process {Fore.GREEN}{proc.info['name']}{Style.RESET_ALL} (PID: {proc.info['pid']}).")
                         terminated = True
-                except (psutil.NoSuchProcess, psutil.AccessDenied): continue
-            if not terminated: print(f"No running process found matching {Fore.YELLOW}{process_name_or_file}{Style.RESET_ALL}.")
+                except (psutil.NoSuchProcess, psutil.AccessDenied): 
+                    continue
+            if not terminated: 
+                print(f"No running process found matching {Fore.YELLOW}{process_name_or_file}{Style.RESET_ALL}.")
         except (PermissionError, psutil.NoSuchProcess, psutil.AccessDenied) as e:
             print(f"{Fore.RED}Error closing file process: {e}{Style.RESET_ALL}")
 
@@ -315,23 +364,26 @@ class DirLocation:
         try:
             full_path = DirLocation._resolve_path(filepath)
             display_file = DirLocation.get_display_path(full_path)
-            if os.path.exists(full_path): print(f"File {Fore.YELLOW}{display_file}{Style.RESET_ALL} already exists.")
+            if os.path.exists(full_path): 
+                print(f"File {Fore.YELLOW}{display_file}{Style.RESET_ALL} already exists.")
             else:
                 open(full_path, "a").close()
                 print(f"File {Fore.GREEN}{display_file}{Style.RESET_ALL} created successfully.")
-        except (PermissionError) as e: print(f"{Fore.RED}Error creating file: {e}{Style.RESET_ALL}")
+        except (PermissionError) as e: 
+            print(f"{Fore.RED}Error creating file: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def dircrt(filepath):
         try:
-            full_path = os.path.abspath(os.path.join(base_dir, filepath)) if not os.path.isabs(filepath) else filepath
+            full_path = DirLocation._resolve_path(filepath)
             display_dir = DirLocation.get_display_path(full_path)
             if os.path.exists(full_path):
                 print(f"Directory or path {Fore.YELLOW}{display_dir}{Style.RESET_ALL} already exists.")
             else:
                 os.makedirs(full_path, exist_ok=True)
                 print(f"Directory {Fore.GREEN}{display_dir}{Style.RESET_ALL} created successfully.")
-        except PermissionError as e: print(f"{Fore.RED}Error creating directory: {e}{Style.RESET_ALL}")
+        except PermissionError as e: 
+            print(f"{Fore.RED}Error creating directory: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def dirdel(filepath):
@@ -359,7 +411,8 @@ class DirLocation:
             full_path = DirLocation._resolve_path(filepath)
             display_file = DirLocation.get_display_path(full_path)
             if os.path.exists(full_path):
-                with open(full_path, "r", encoding="utf-8") as f: content = f.read()
+                with open(full_path, "r", encoding="utf-8") as f: 
+                    content = f.read()
 
                 display_content = content
 
@@ -370,11 +423,14 @@ class DirLocation:
                         from pygments.lexers import PythonLexer
 
                         display_content = highlight(content, PythonLexer(), TerminalFormatter())
-                    except ImportError: display_content = f"{Fore.GREEN}{content}{Style.RESET_ALL}"
+                    except ImportError: 
+                        display_content = f"{Fore.GREEN}{content}{Style.RESET_ALL}"
 
                 print(f"\n--- Contents of {Fore.CYAN}{display_file}{Style.RESET_ALL} ---\n{display_content}\n--- End of file ---")
-            else: print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
-        except PermissionError as e: print(f"{Fore.RED}Error reading file: {e}{Style.RESET_ALL}")
+            else: 
+                print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
+        except PermissionError as e: 
+            print(f"{Fore.RED}Error reading file: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def filedel(filepath):
@@ -384,8 +440,8 @@ class DirLocation:
             if os.path.exists(full_path):
                 os.remove(full_path)
                 print(f"File {Fore.GREEN}{display_file}{Style.RESET_ALL} deleted successfully.")
-            else: print(f"File {Fore.RED}{display_file}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
-        except (PermissionError, OSError) as e: print(f"{Fore.RED}Error deleting file: {e}{Style.RESET_ALL}")
+            else:  print(f"File {Fore.RED}{display_file}{Style.RESET_ALL} does not exist. Make sure the path is written correctly.")
+        except (PermissionError, OSError) as e:  print(f"{Fore.RED}Error deleting file: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def filewrt(filepath, content=None):
@@ -416,7 +472,8 @@ class DirLocation:
 
             def visit_Import(self, node):
                 for alias in node.names:
-                    if alias.name == "sys" or alias.name == "os": """Pass."""
+                    if alias.name == "sys" or alias.name == "os": 
+                        """Pass."""
                 self.generic_visit(node)
 
             def visit_Call(self, node):
@@ -464,10 +521,10 @@ class DirLocation:
                                 if syntax_err:
                                     print(f"{Fore.RED}[Linter] {syntax_err}{Style.RESET_ALL}")
                                     confirm = input(f"{Fore.YELLOW}Save with syntax error? (y/N): {Style.RESET_ALL}").strip().lower()
-                                    if confirm != 'y': continue
+                                    if confirm != 'y':  continue
                                 elif warnings:
                                     print(f"{Fore.YELLOW}[Linter Warnings]:{Style.RESET_ALL}")
-                                    for w in warnings: print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
+                                    for w in warnings:   print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
                             break
 
                         elif cmd == ":q":
@@ -476,10 +533,12 @@ class DirLocation:
 
                         elif cmd in [":lint", ":check", ":lt"]:
                             warnings, syntax_err = _run_linter("\n".join(lines))
-                            if syntax_err: print(f"{Fore.RED}[Linter] {syntax_err}{Style.RESET_ALL}")
+                            if syntax_err: 
+                                print(f"{Fore.RED}[Linter] {syntax_err}{Style.RESET_ALL}")
                             elif warnings:
                                 print(f"{Fore.YELLOW}[Linter Found {len(warnings)} Warning(s)]:{Style.RESET_ALL}")
-                                for w in warnings: print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
+                                for w in warnings: 
+                                    print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
                             else:
                                 print(f"{Fore.GREEN}[Linter] Check return no errors.{Style.RESET_ALL}")
 
@@ -500,8 +559,10 @@ class DirLocation:
                                 if 0 <= idx < len(lines):
                                     removed = lines.pop(idx)
                                     print(f"{Fore.RED}Removed line {idx+1}: {Style.RESET_ALL}{removed}")
-                                else: print(f"{Fore.RED}Invalid line number.{Style.RESET_ALL}")
-                            else: print(f"{Fore.RED}Usage: :d <line_number>{Style.RESET_ALL}")
+                                else: 
+                                    print(f"{Fore.RED}Invalid line number.{Style.RESET_ALL}")
+                            else: 
+                                print(f"{Fore.RED}Usage: :d <line_number>{Style.RESET_ALL}")
 
                         elif cmd.startswith(":i"):
                             parts = cmd.split(maxsplit=2)
@@ -511,12 +572,16 @@ class DirLocation:
                                 if 0 <= idx <= len(lines):
                                     lines.insert(idx, new_text)
                                     print(f"{Fore.GREEN}Inserted line {idx+1}.{Style.RESET_ALL}")
-                                else: print(f"{Fore.RED}Line number out of range.{Style.RESET_ALL}")
-                            else: print(f"{Fore.RED}Usage: :i <line_number> <text>{Style.RESET_ALL}")
+                                else: 
+                                    print(f"{Fore.RED}Line number out of range.{Style.RESET_ALL}")
+                            else: 
+                                print(f"{Fore.RED}Usage: :i <line_number> <text>{Style.RESET_ALL}")
 
-                        elif cmd in [":h", ":help"]: print(CommandList.FWRTlist)
+                        elif cmd in [":h", ":help"]: 
+                            print(CommandList.FWRTlist)
 
-                        else: lines.append(line)
+                        else: 
+                            lines.append(line)
 
                     except KeyboardInterrupt:
                         print(f"\n{Fore.RED}Write operation cancelled.{Style.RESET_ALL}")
@@ -551,7 +616,8 @@ class DirLocation:
             for item in os.listdir(source_dir):
                 src_file_path = os.path.join(source_dir, item)
 
-                if os.path.isdir(src_file_path): continue
+                if os.path.isdir(src_file_path): 
+                    continue
 
                 if item.lower().endswith(file_ext):
                     dest_file_path = os.path.join(dest_dir, item)
@@ -579,7 +645,8 @@ class DirLocation:
             if not extract_to:
                 base_name = os.path.splitext(os.path.basename(full_zip))[0]
                 extract_to = os.path.join(os.path.dirname(full_zip), base_name)
-            else: extract_to = DirLocation._resolve_path(extract_to)
+            else: 
+                extract_to = DirLocation._resolve_path(extract_to)
 
             os.makedirs(extract_to, exist_ok=True)
 
@@ -588,7 +655,8 @@ class DirLocation:
 
             print(f"Extracting {Fore.CYAN}{display_zip}{Style.RESET_ALL} -> {Fore.YELLOW}{display_extract}{Style.RESET_ALL}...")
 
-            with zipfile.ZipFile(full_zip, "r") as zip_ref: zip_ref.extractall(extract_to)
+            with zipfile.ZipFile(full_zip, "r") as zip_ref: 
+                zip_ref.extractall(extract_to)
 
             print(f"{Fore.GREEN}Extraction complete!{Style.RESET_ALL}")
 

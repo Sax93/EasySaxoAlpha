@@ -1,3 +1,5 @@
+"""Multimedia handler for EasySaxo."""
+
 #`medi.py` ONLY FOR MULTIMEDIA FILE HANDLING COMMAND DEFINING
 
 import os
@@ -12,6 +14,7 @@ try: # we are trying to import asciiart here to avoid double check in main file
 except ImportError: ASCII_AVAILABLE = False
 
 class MediaData:
+    """Multimedia handler/operator set (Audio and ASCII Render)."""
     pygame_initialized = False
 
     @staticmethod

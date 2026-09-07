@@ -5,7 +5,7 @@ class App:
         self.ver = ver
         self.dev = "SXF"
         self.problem = "in the chair"
-easysaxo = App("EasySaxo", "Alpha 1.09.02") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.10.00") # yes im that lazy to write this ever again
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
@@ -33,11 +33,7 @@ class Changelog:
     _color_title = f"{Fore.CYAN}Changelog!{Style.RESET_ALL} ({Fore.CYAN}{easysaxo.name} {easysaxo.ver}{Style.RESET_ALL})"
     
     entries = [  # noqa: RUF012
-        f"Added new commands: {Fore.BLUE}unzip{Style.RESET_ALL}",
-        f"Updated flag format for system shell commands (does not affect '-s' or '-e'): {Fore.LIGHTBLUE_EX}-<{Style.RESET_ALL}.",
-        f"Fixed commands by uncaught exceptions: {Fore.BLUE}regex, dirsz, dirdel{Style.RESET_ALL}.",
-        f"Updated command functionality for: {Fore.BLUE}filerd, web{Style.RESET_ALL}.",
-        f"Minor modifications with {Fore.RED}Error Handler{Style.RESET_ALL}.",
+        f"Added new command flags for {Fore.BLUE}path related commands{Style.RESET_ALL}.",
     ]
 
     @staticmethod

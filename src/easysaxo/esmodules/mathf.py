@@ -12,6 +12,7 @@ from .lister import MathList as Mt
 
 
 class MathFunc:
+    """Mathematic expressions and equations handler + MathSet handler."""
     @staticmethod
     def help_attribute(attr: str):
         attr = attr.strip()
@@ -100,8 +101,7 @@ class MathFunc:
             elif start is not None: num = random.randint(1, start)
             else: num = random.randint(1, 1000)
             print(f"Random number: {Fore.GREEN}{num}{Style.RESET_ALL}")
-        except (ValueError, TypeError, KeyboardInterrupt) as e:
-            print(f"{Fore.RED}Error generating random number: {e}{Style.RESET_ALL}")
+        except (ValueError, TypeError, KeyboardInterrupt) as e: print(f"{Fore.RED}Error generating random number: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def set_var(var_name: str, value: float):
@@ -112,8 +112,7 @@ class MathFunc:
 
     @staticmethod
     def del_var(var_name: str):
-        if var_name in Mt._reserved:
-            print(f"{Fore.RED}Cannot delete built-in constant/function '{var_name}'.{Style.RESET_ALL}")
+        if var_name in Mt._reserved: print(f"{Fore.RED}Cannot delete built-in constant/function '{var_name}'.{Style.RESET_ALL}")
         elif var_name in Mt.mathset:
             del Mt.mathset[var_name]
             print(f"Variable {Fore.GREEN}{var_name}{Style.RESET_ALL} deleted.")
@@ -121,10 +120,8 @@ class MathFunc:
 
     @staticmethod
     def getvar(var_name: str):
-        if var_name in Mt.mathset and var_name not in Mt._reserved:
-            print(f"{Fore.CYAN}{var_name}{Style.RESET_ALL} = {Fore.GREEN}{Mt.mathset[var_name]}{Style.RESET_ALL}")
-        elif var_name in Mt._reserved:
-            print(f"{Fore.YELLOW}'{var_name}' is a built-in function/constant.{Style.RESET_ALL}")
+        if var_name in Mt.mathset and var_name not in Mt._reserved: print(f"{Fore.CYAN}{var_name}{Style.RESET_ALL} = {Fore.GREEN}{Mt.mathset[var_name]}{Style.RESET_ALL}")
+        elif var_name in Mt._reserved: print(f"{Fore.YELLOW}'{var_name}' is a built-in function/constant.{Style.RESET_ALL}")
         else: print(f"{Fore.RED}Variable '{var_name}' not found.{Style.RESET_ALL}")
 
     @staticmethod

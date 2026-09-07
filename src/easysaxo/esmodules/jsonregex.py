@@ -8,10 +8,12 @@ import os
 
 from colorama import Fore, Style
 
-from ..esmodules.dirloct import DirLocation
+from .dirloct import DirLocation
 
 
 class JsonData:
+    """Provides utility methods for loading, validating and pretty-printing JSON files."""
+
     @staticmethod
     def jsonrd(filepath):
         try:
@@ -27,6 +29,10 @@ import re
 
 
 class RegexData:
+    """Provides pattern-matching utilities for inline strings and text files
+    using regular expressions.
+    """
+
     @staticmethod
     def match_pattern(pattern, text, ignore_case=False):
         try:

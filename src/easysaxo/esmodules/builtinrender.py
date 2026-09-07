@@ -1,6 +1,9 @@
+"""ASCII render preset for EasySaxo"""
+
 # a few built-in images, callable with render cmd
 
 class Image:
+  """IMAGE set for render preset."""
   @classmethod
   def get_presets(cls):
     """Returns a list of valid preset names without 'Logo' suffix."""
@@ -325,6 +328,7 @@ class Image:
   """
 
 class TextToImage:
+  """DOODLE set for banner-render preset."""
   @classmethod
   def get_presets(cls):
     """Returns a list of valid preset names without 'Text' suffix."""

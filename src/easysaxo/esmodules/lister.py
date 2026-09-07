@@ -11,6 +11,8 @@ from ..config import easysaxo
 # easter egg lists ================================================================================
 
 class EasterList:
+    """Secret's global list for secret commands."""
+    
     ERRlist = [ # from eas5()  # noqa: RUF012
         f"NotAnError{Style.RESET_ALL}: {Fore.MAGENTA}Seemingly, there was no error at all",
         f"ConfidenceError{Style.RESET_ALL}: {Fore.MAGENTA}There was an error, but it was not confident enough to show up",
@@ -101,6 +103,8 @@ class EasterList:
 # command list ===================================================================================
 
 class CommandList:
+    """Command-related global lister for information display."""
+    
     CMDlist = (
         f"{Fore.CYAN}|======= COMMAND LIST: =======|{Style.RESET_ALL}\n\n"
         f"{Fore.CYAN}help{Style.RESET_ALL}          : Shows this {Fore.CYAN}Command List{Style.RESET_ALL}.\n"
@@ -165,6 +169,7 @@ class CommandList:
 # file list ===============================================================================
 
 class FileList:
+    """File verifier list for file viewing and handling."""
     _allow = [  # noqa: RUF012
         "__init__",
         "main",
@@ -240,6 +245,7 @@ import operator
 
 
 class MathList:
+    """Lister for math utilities and help display."""
     MATHSET_HELP = {  # noqa: RUF012
         "sqrt": "sqrt(x) - Returns the square root of x.",
         "sin": "sin(x) - Returns the sine of x in radians.",
@@ -293,6 +299,7 @@ class MathList:
 # colorama color list ==============================================================================
 
 class ColorList:
+    """ANSI color list."""
     colors = [  # noqa: RUF012
         "RED", "BLUE", "GREEN", "BLACK", "MAGENTA", "YELLOW", "CYAN", "WHITE",
         "LIGHTRED_EX", "LIGHTBLUE_EX", "LIGHTGREEN_EX", "LIGHTBLACK_EX",
@@ -302,6 +309,7 @@ class ColorList:
 # mamidi ============================================================================================
 
 class MidiSetList:
+    """Keybinds and note assigning list for Piano Keyboard."""
     note_freqs = {  # noqa: RUF012
         'C4': 261.63, 'C#4': 277.18,
         'D4': 293.66, 'D#4': 311.13,
@@ -339,6 +347,7 @@ class MidiSetList:
     }
 
 class SongSet:
+    """Song set list for Piano Keyboard."""
     # song structure: list of {"key": ["<k_binding>"], "duration": <secs>}
     songs = {  # noqa: RUF012
         "Twinkle Twinkle": { # q = 0.4
@@ -897,6 +906,7 @@ class SongSet:
 # reqs
 
 class SystemList:
+    """System global list for requirements and miscellaneous system information."""
     min_req = (
         f"{Fore.BLUE}OS{Style.RESET_ALL}        : {Fore.LIGHTBLUE_EX}Windows 10 / Linux (kernel 4.19+){Style.RESET_ALL}\n"
         f"{Fore.BLUE}CPU{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}Single-Core 1.5 GHz (x86-64){Style.RESET_ALL}\n"

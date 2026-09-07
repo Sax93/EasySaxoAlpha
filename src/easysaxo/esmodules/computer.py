@@ -19,6 +19,7 @@ except ImportError:
     RICH_AVAILABLE = False
 
 class ComputerData:
+    """Computer data/metadata handler."""
     @staticmethod
     def getcpu():
         try:
@@ -234,6 +235,7 @@ class ComputerData:
                 print(f"  PID: {p.info['pid']} | Name: {Fore.CYAN}{p.info['name']}{Style.RESET_ALL} | CPU: {p.info['cpu_percent']}% | RAM: {p.info['memory_percent']:.2f}%")
 
 class ComputerOper:
+    """Computer internal operation handler."""
     @staticmethod
     def shut_down(waittime: int | None):
         try:

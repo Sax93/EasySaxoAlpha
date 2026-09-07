@@ -1,4 +1,4 @@
-"""Telemetry Network data getter for EasySaxo"""
+"""Telemetry/Network data getter for EasySaxo"""
 # dont worry, this is only shown to ur terminal and not publicly
 
 import re
@@ -11,6 +11,7 @@ from colorama import Fore, Style
 
 
 class TelemetryData:
+    """Telemetry/Network information displayer."""
     @staticmethod
     def getnet():
         try:
@@ -116,6 +117,7 @@ from bs4 import BeautifulSoup
 
 
 class TelemetryOperations:
+    """Web operator handler set for web operations."""
     @staticmethod
     def resolve_github_url(url: str) -> tuple[str, str]:
         clean_url = url.rstrip("/")

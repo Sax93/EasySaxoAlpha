@@ -22,6 +22,10 @@ except ImportError:
 
 
 class ThreadData:
+    """Manages global thread state, active user runtime variables
+    and asynchronous background tasks.
+    """
+
     current_user = "User"
     current_pswd = None
     target_mode = "auto"
@@ -42,7 +46,7 @@ class ThreadData:
     def set_timer(seconds, message):
         try:
             sec = int(seconds)
-            msg = message if message else "Timer finished!"
+            msg = message or "Timer finished!"
             threading.Thread(target=ThreadData._timer_task, args=(sec, msg), daemon=True).start()
             print(f"Timer set for {Fore.CYAN}{sec} seconds{Style.RESET_ALL} in the background.")
         except ValueError: print(f"{Fore.RED}Please provide a valid integer for seconds.{Style.RESET_ALL}")
@@ -54,11 +58,15 @@ from .lister import MathList
 
 
 class SessionManager:
+    """Handles persistence for user workspace settings, environment variables,
+    and authentication state via JSON storage.
+    """
+
     active_session_file = os.path.join(base_dir, "session.json")
 
     @staticmethod
     def save_session(user_name: str | None, filepath: str | None = None):
-        uname = user_name if user_name else ThreadData.current_user
+        uname = user_name or ThreadData.current_user
         target = DirLocation._resolve_path(filepath) if filepath else SessionManager.active_session_file
         user_vars = {k: v for k, v in MathList.mathset.items() if k not in MathList._reserved}
         
