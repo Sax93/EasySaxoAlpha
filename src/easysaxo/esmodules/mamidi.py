@@ -137,8 +137,7 @@ def draw_piano(highlight_note=None, mode_info=None):
 def get_key_nonblocking():
     if sys.platform == 'win32':
         import msvcrt
-        if msvcrt.kbhit():
-            return msvcrt.getch().decode('utf-8', errors='ignore').lower()
+        if msvcrt.kbhit(): return msvcrt.getch().decode('utf-8', errors='ignore').lower()
     else:
         import select
         import termios
@@ -159,8 +158,7 @@ def run_piano():
     # Flush input buffer before starting
     if sys.platform == 'win32':
         import msvcrt
-        while msvcrt.kbhit():
-            msvcrt.getch()
+        while msvcrt.kbhit(): msvcrt.getch()
 
     draw_piano()
 

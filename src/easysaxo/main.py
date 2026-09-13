@@ -6,7 +6,6 @@ Description: App that holds EasySaxo main menu
 """
 # NOTE: `main.py` is the file that has to be debugged/executed for the program to fully work.
 # Runs main processes like command input and user data processing
-# Ironically, it is not the most dangerous file to modify
 
 import sys
 
@@ -33,14 +32,9 @@ os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1" # was tired of the pygame msg
 import json
 import shutil
 import subprocess
-import time
-import tracemalloc
 import unicodedata
-from pathlib import Path
 
 from colorama import Fore, Style, just_fix_windows_console
-
-tracemalloc.start()
 
 just_fix_windows_console()
 
@@ -58,7 +52,6 @@ from . import commands
 from .config import COMMAND_REGISTRY, build_completion_dict, easysaxo
 from .esmodules import dirloct
 from .esmodules.heavyholder import SessionManager, ThreadData
-
 
 sys.stdout.write(f"\x1b]2;{easysaxo.name} {easysaxo.ver}\x07")  # Since decided not to show the app name at start,
 sys.stdout.flush()                                              # this sets the terminal name to EasySaxo Alpha X.x
@@ -85,42 +78,48 @@ def session_info_proc(session_info):
 def sysh(cmd: str):
     try:
         parts = cmd.split()
+
         flags = [p for p in parts if p.startswith("-<") and p != "-s"]
         _no_return_code_flag = "-<silent" in flags
         p_cmd = [p for p in parts if not p.startswith("-<")]
-        
+
         subprocess.run(p_cmd, shell=True, check=True)
     except subprocess.CalledProcessError as e:
         if not _no_return_code_flag:
             print(f"\nResult from '{Fore.RED}{cmd}{Style.RESET_ALL}' returned exit code {Fore.LIGHTBLUE_EX + str(e.returncode) + Style.RESET_ALL}:\n"
                   f"{Fore.LIGHTMAGENTA_EX}{e}{Style.RESET_ALL}")
-        else: return
-    except (PermissionError, TypeError, AttributeError, KeyboardInterrupt) as err:
-            print(f"{Fore.RED}System command exception: {err}{Style.RESET_ALL}") if not _no_return_code_flag else print()
-        
+        return
+    except (PermissionError, TypeError, AttributeError, KeyboardInterrupt) as err: 
+        easysaxo.k_log("9")
+        print(f"{Fore.RED}System command exception: {err}{Style.RESET_ALL}") if not _no_return_code_flag else print()
 
 def eesh(cmd: str, arg: str | None):
     if cmd == "getmeaneasteregg": commands.e1()
     elif cmd in ["noeasteregg", "falseget", "lookatthis", "lookatts"]: commands.e2()
     elif cmd == "osaka": commands.e3()
     elif cmd in ["mansnothot", "noketchup", "thesauceflexing"]:
-        if commands.ee4: commands.e4()
-        else: print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
+        if commands.ee4: commands.e4(); return
+        easysaxo.k_log("1")
+        print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
     elif cmd in ["traceback", "error", "locateerror", "errorloc"]: commands.e5()
     elif cmd in ["question", "sax", "sxf", "easysaxo", "yo"]: commands.e6(arg or cmd)
-    else: print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
+    else:
+        easysaxo.k_log("1")
+        print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
     
 def inp_display(identifier):
+    if ThreadData.path_display:
+        path_helper = Fore.LIGHTBLACK_EX + Style.DIM + dirloct.DirLocation.get_display_path() + Style.RESET_ALL
+        print(path_helper)
     raw_prompt = Fore.BLACK + Style.BRIGHT + f"{identifier} > " + Style.RESET_ALL
     return raw_prompt
 
 # 2
 
 def trslt(translations):
-    Tdir = Path(__file__).resolve().parent
-    tr_file = Tdir / "translations.json"
+    tr_file = dirloct.DirLocation._resolve_path("-<root\\translations.json")
     
-    if tr_file.exists():
+    if os.path.exists(tr_file):
         with open(tr_file, "r", encoding="utf-8") as f:
             raw_data = json.load(f)
             for key, val in raw_data.items():
@@ -131,11 +130,13 @@ def kb_inter_holder():
     try:
         extoken = input(f"\n{Fore.LIGHTBLACK_EX}Want to exit? (Y/N): {Style.RESET_ALL}").lower()
         if not extoken: return
-        
         if extoken == "y":
+            easysaxo.k_log("a0")
             SessionManager.save_session(ThreadData.current_user)
             return sys.exit(0)
-    except (KeyboardInterrupt, EOFError): sys.exit("\nExiting.") # aka subtle exit
+    except (KeyboardInterrupt, EOFError): 
+        easysaxo.k_log("a0")
+        sys.exit()
 
 #=================================================
 # Core main loop
@@ -143,13 +144,13 @@ def kb_inter_holder():
 def Core(session_info=None):
     enable_ee = False
     scee = True
+    easysaxo.mute = ThreadData.log_muter
 
     session_info_proc(session_info)
     
     translations = {}
     trslt(translations)
 
-    # decided to only show loaded path instead of app version
     print(f"{Fore.LIGHTBLACK_EX + Style.DIM}{dirloct.base_dir}{Style.RESET_ALL}")
 
     all_commands = list(COMMAND_REGISTRY.keys()) + list(translations.keys())
@@ -174,18 +175,12 @@ def Core(session_info=None):
         usit = None
         try:
             print()
-            if ThreadData.path_display:
-                path_helper = Fore.LIGHTBLACK_EX + Style.DIM + dirloct.DirLocation.get_display_path() + Style.RESET_ALL
-                print(path_helper)
-                raw_prompt = inp_display(ThreadData.current_user)
-            else: raw_prompt = inp_display(ThreadData.current_user)
+            raw_prompt = inp_display(ThreadData.current_user)
 
             if PROMPT_TOOLKIT_AVAILABLE:
-                with patch_stdout():
-                    usit = session.prompt(ANSI(raw_prompt)).strip()
+                with patch_stdout(): usit = session.prompt(ANSI(raw_prompt)).strip()
             else: usit = input(raw_prompt).strip()
-        except KeyboardInterrupt: kb_inter_holder()
-        except EOFError: break
+        except (KeyboardInterrupt, EOFError): kb_inter_holder()
 
         if not usit: continue
 
@@ -203,7 +198,7 @@ def Core(session_info=None):
 
         parts = usit.split(maxsplit=1)
         cmd = parts[0].lower()
-        arg = parts[1] if len(parts) > 1 else None
+        arg = parts[1].lower() if len(parts) > 1 else None
 
         if cmd in translations: cmd = translations[cmd]
 
@@ -212,8 +207,8 @@ def Core(session_info=None):
 
         if effective_mode == "system": # forced syscmd
             if sys_binary: sysh(usit)
-            else: print(f"{Fore.RED}System command '{cmd}' not found in PATH.{Style.RESET_ALL}")
-
+            else: print(f"{Fore.RED}System command '{usit}' not found in PATH.{Style.RESET_ALL}")
+                
         elif effective_mode == "easysaxo": # forced escmd
             if in_easysaxo: COMMAND_REGISTRY[cmd](arg)
             else: print(f"{Fore.RED}EasySaxo command '{cmd}' not found.{Style.RESET_ALL}")
@@ -228,7 +223,9 @@ def Core(session_info=None):
                 enable_ee = True
                 scee = False
                 print(f"{Fore.LIGHTBLACK_EX}Something happened.{Style.RESET_ALL} You have to find it out.")
-            else: print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
+            else:
+                easysaxo.k_log("1")
+                print(f"{Fore.RED}Unknown command. Type 'help' for assistance.{Style.RESET_ALL}")
 
 from .config import clr
 
@@ -236,7 +233,7 @@ from .config import clr
 def run():
     clr()
     preboot_file = None
-    #session loader
+    # session loader
     if len(sys.argv) > 1:
         if sys.argv[1].lower() == "load" and len(sys.argv) > 2: preboot_file = sys.argv[2]
         elif sys.argv[1].endswith(".json"): preboot_file = sys.argv[1]
@@ -259,12 +256,12 @@ def run():
                 except (TypeError, ValueError): is_valid = False
                 if is_valid:
                     print(f"{Fore.LIGHTGREEN_EX}Opening app...{Style.RESET_ALL}")
-                    time.sleep(0.5)
                     clr()
                     break
                 print(f"{Fore.RED}Wrong password, try again.{Style.RESET_ALL}\n")
-        Core(session_info=session_data) # nothing special yet
-    except KeyboardInterrupt: sys.exit("\nExiting.")
+        Core(session_info=session_data)
+    except KeyboardInterrupt:
+        easysaxo.k_log("a1")
+        sys.exit()
 
-if __name__ == "__main__":
-    run()
+if __name__ == "__main__": run()

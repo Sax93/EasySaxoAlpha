@@ -12,8 +12,8 @@ from .misc import talk
 
 def eas1():
     from ..commands import c_set
-    case_number = random.randint(1, 4)
-    match case_number:
+    n = random.randint(1, 4)
+    match n:
         case 1:
             print(f"{Fore.LIGHTBLUE_EX}omg easter egg??/?/?{Style.RESET_ALL}")
             c_set("name lol")
@@ -31,9 +31,9 @@ def eas1():
         case _: pass
 
 def eas2():
-    case_number = random.randint(1, 4)
+    n = random.randint(1, 4)
 
-    match case_number:
+    match n:
         case 1:
             from ..commands import c_filecrt, c_filewrt
             from .lister import EasterList
@@ -45,12 +45,12 @@ def eas2():
             from .dirloct import DirLocation
             print("Generating your one-use waste of time...")
             time.sleep(random.randint(1, 69))
-            if os.name == 'nt':
-                if os.path.exists("C:\\Windows"):
-                    DirLocation.ls("C:\\Windows")
-                    DirLocation.filerd("C:\\Windows\\win.ini")
-                    print("interesting info yk")
-            else: print("done")
+            if os.name == 'nt' and os.path.exists("C:\\Windows"):
+                DirLocation.ls("C:\\Windows")
+                DirLocation.filerd("C:\\Windows\\win.ini")
+                print("interesting info yk")
+                return
+            print("done")
 
         case 3:
             from ..commands import easysaxo
@@ -58,7 +58,8 @@ def eas2():
             if not do_nothing:
                 print("Don't move my code buddy")
                 easysaxo.name = "EasySaxo"
-            else: print(f"you a nice one actually {Fore.GREEN}:){Style.RESET_ALL}")
+                return
+            print(f"you a nice one actually {Fore.GREEN}:){Style.RESET_ALL}")
 
         case 4:
             from ..commands import easysaxo
@@ -70,7 +71,8 @@ def eas2():
                 talk("waait")
                 talk("noo", 0.3)
                 sys.exit()
-            else: talk("im watching you bud", 2)
+                return
+            talk("im watching you bud", 2)
 
         case _: pass
 
@@ -103,8 +105,7 @@ def eas5():
 
 def eas6(question):
     try:
-        def anser(txt):
-            print(f"{Fore.CYAN}{txt}{Style.RESET_ALL}")
+        def anser(txt): print(f"{Fore.CYAN}{txt}{Style.RESET_ALL}")
 
         from .lister import EasterList as Ans
 
@@ -112,8 +113,7 @@ def eas6(question):
             anser("I dont know bru")
             return
 
-        if isinstance(question, list):
-            question = " ".join(question)
+        if isinstance(question, list): question = " ".join(question)
 
         parts = question.strip().split(maxsplit=2)
         first_word = parts[1].lower() if parts[0].lower() in ["so", "then", "and"] else parts[0].lower()

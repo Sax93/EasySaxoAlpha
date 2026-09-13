@@ -61,7 +61,8 @@ class EasterList:
     osaka = [ # from e3()  # noqa: RUF012
         "saataa andagii", "omaigah", "amerikaya", "fella what?????",
         "haro everynyan", "get yo ahh to work bud", "haro!",
-        "download osaka collector 2 in github bro trust"
+        "download osaka collector 2 in github bro trust",
+        "baka baka!"
     ]
     
     
@@ -105,66 +106,105 @@ class EasterList:
 class CommandList:
     """Command-related global lister for information display."""
     
-    CMDlist = (
-        f"{Fore.CYAN}|======= COMMAND LIST: =======|{Style.RESET_ALL}\n\n"
-        f"{Fore.CYAN}help{Style.RESET_ALL}          : Shows this {Fore.CYAN}Command List{Style.RESET_ALL}.\n"
-        f"{Fore.CYAN}changelog{Style.RESET_ALL}     : Shows the latest {Fore.CYAN}app updates{Style.RESET_ALL}.\n"
-        f"{Fore.CYAN}requirements{Style.RESET_ALL}  : Shows minimum and recommended {Fore.CYAN}device requirements{Style.RESET_ALL}.\n"
-        f"{Fore.CYAN}clear{Style.RESET_ALL}         : Clears the {Fore.CYAN}terminal{Style.RESET_ALL} screen.\n"
-        f"{Fore.CYAN}get{Style.RESET_ALL}           : Gets information of a {Fore.CYAN}variable{Style.RESET_ALL} or an {Fore.CYAN}attribute{Style.RESET_ALL}.\n"
-        f"{Fore.CYAN}set{Style.RESET_ALL}           : Sets storable information like {Fore.CYAN}user name{Style.RESET_ALL} and {Fore.CYAN}variables{Style.RESET_ALL}.\n"
-        f"{Fore.CYAN}reset{Style.RESET_ALL}         : Resets {Fore.CYAN}user data{Style.RESET_ALL} (either {Fore.CYAN}user name{Style.RESET_ALL} or {Fore.CYAN}password{Style.RESET_ALL}).\n"
-        "\n"
-        f"{Fore.GREEN}save{Style.RESET_ALL}          : Creates/rewrites a {Fore.GREEN}JSON file{Style.RESET_ALL} with {Fore.GREEN}user{Style.RESET_ALL} data.\n"
-        f"{Fore.GREEN}load{Style.RESET_ALL}          : Loads a {Fore.GREEN}JSON file{Style.RESET_ALL} with {Fore.GREEN}user{Style.RESET_ALL} data.\n"
-        f"{Fore.GREEN}jsonrd{Style.RESET_ALL}        : Reads a {Fore.GREEN}JSON file{Style.RESET_ALL}.\n"
-        f"{Fore.GREEN}regex{Style.RESET_ALL}         : Looks for {Fore.GREEN}patterns{Style.RESET_ALL} in a text or textfile.\n"
-        "\n"
-        f"{Fore.BLUE}math{Style.RESET_ALL}          : Allows mathematical equations.\n"
-        f"{Fore.BLUE}mathhelp{Style.RESET_ALL}      : Displays information about math-related functions.\n"
-        f"{Fore.BLUE}random{Style.RESET_ALL}        : Shows a random {Fore.BLUE}number{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}time{Style.RESET_ALL}          : Displays {Fore.BLUE}hour{Style.RESET_ALL} and {Fore.BLUE}date{Style.RESET_ALL}.\n"
-        f"{Fore.BLUE}timer{Style.RESET_ALL}         : Sets a timer in {Fore.BLUE}seconds{Style.RESET_ALL} before displaying a message.\n"
-        f"{Fore.BLUE}delvar{Style.RESET_ALL}        : Deletes a specified {Fore.BLUE}variable{Style.RESET_ALL}.\n"
-        "\n"
-        f"{Fore.RED}cd{Style.RESET_ALL}            : Shows current {Fore.RED}path location{Style.RESET_ALL} and allows navigation.\n"
-        f"{Fore.RED}check{Style.RESET_ALL}         : Checks if required {Fore.RED}script files{Style.RESET_ALL} exist.\n"
-        f"{Fore.RED}filelst{Style.RESET_ALL}       : Lists {Fore.RED}files{Style.RESET_ALL} and {Fore.RED}folders{Style.RESET_ALL} in a directory.\n"
-        f"{Fore.RED}tree{Style.RESET_ALL}          : Renders {Fore.RED}directory{Style.RESET_ALL} as a tree.\n"
-        f"{Fore.RED}filecrt{Style.RESET_ALL}       : Creates a {Fore.RED}file{Style.RESET_ALL} with specified extension.\n"
-        f"{Fore.RED}filerd{Style.RESET_ALL}        : Reads and displays the content of a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.RED}filedel{Style.RESET_ALL}       : Deletes a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.RED}filewrt{Style.RESET_ALL}       : Writes content in a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.RED}fileopn{Style.RESET_ALL}       : Opens a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.RED}filecls{Style.RESET_ALL}       : Closes a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.RED}filesort{Style.RESET_ALL}      : Sorts and dumps {Fore.RED}files{Style.RESET_ALL} in a directory by extension.\n"
-        f"{Fore.RED}filesz{Style.RESET_ALL}        : Gets and shows the size of a {Fore.RED}file{Style.RESET_ALL}.\n"
-        f"{Fore.RED}dirsz{Style.RESET_ALL}         : Gets and shows the size of a {Fore.RED}directory{Style.RESET_ALL}.\n"
-        f"{Fore.RED}unzip{Style.RESET_ALL}         : Gets and extracts the content of a {Fore.RED}ZIP file{Style.RESET_ALL}.\n"
-        "\n"
-        f"{Fore.MAGENTA}playaudio{Style.RESET_ALL}     : Plays an {Fore.MAGENTA}audio file{Style.RESET_ALL} (specify route).\n"
-        f"{Fore.MAGENTA}stopaudio{Style.RESET_ALL}     : Stops the current {Fore.MAGENTA}audio file{Style.RESET_ALL}.\n"
-        f"{Fore.MAGENTA}render{Style.RESET_ALL}        : Renders and draws a specified {Fore.MAGENTA}image file{Style.RESET_ALL}.\n"
-        f"{Fore.MAGENTA}banner{Style.RESET_ALL}        : Renders and prints inputted {Fore.MAGENTA}text{Style.RESET_ALL}.\n"
-        f"{Fore.MAGENTA}pkm{Style.RESET_ALL}           : Enters the {Fore.MAGENTA}Piano Keyboard Mode{Style.RESET_ALL}.\n"
-        "\n"
-        f"{Fore.LIGHTBLACK_EX}web{Style.RESET_ALL}           : Sends a {Fore.LIGHTBLACK_EX}request to an URL{Style.RESET_ALL}, thus installing files from links if requested.\n"
-        f"{Fore.LIGHTBLACK_EX}shutdown{Style.RESET_ALL}      : Shuts the system down.\n"
-        f"{Fore.LIGHTBLACK_EX}unins{Style.RESET_ALL}         : Guides to uninstall {easysaxo.name}.\n"
-        f"{Fore.LIGHTBLACK_EX}exit{Style.RESET_ALL}          : Exit {easysaxo.name}.\n"
-        f"\nRemember you can search for command syntax and usage by using {Fore.CYAN}help <cmd/attr>{Style.RESET_ALL} :)"
-    )
+    CMDlist = f"""
+{Fore.CYAN}|======= COMMAND LIST: =======|{Style.RESET_ALL}
+  {Fore.CYAN}help{Style.RESET_ALL}          : Shows this {Fore.CYAN}Command List{Style.RESET_ALL}.
+  {Fore.CYAN}changelog{Style.RESET_ALL}     : Shows the latest {Fore.CYAN}app updates{Style.RESET_ALL}.
+  {Fore.CYAN}requirements{Style.RESET_ALL}  : Shows minimum and recommended {Fore.CYAN}device requirements{Style.RESET_ALL}.
+  {Fore.CYAN}clear{Style.RESET_ALL}         : Clears the {Fore.CYAN}terminal{Style.RESET_ALL} screen.
+  {Fore.CYAN}get{Style.RESET_ALL}           : Gets information of a {Fore.CYAN}variable{Style.RESET_ALL} or an {Fore.CYAN}attribute{Style.RESET_ALL}.
+  {Fore.CYAN}set{Style.RESET_ALL}           : Sets storable information like {Fore.CYAN}user name{Style.RESET_ALL} and {Fore.CYAN}variables{Style.RESET_ALL}.
+  {Fore.CYAN}reset{Style.RESET_ALL}         : Resets {Fore.CYAN}user data{Style.RESET_ALL} (either {Fore.CYAN}user name{Style.RESET_ALL} or {Fore.CYAN}password{Style.RESET_ALL}).
 
-    FWRTlist = (
-        f"{Fore.YELLOW}Commands:{Style.RESET_ALL}\n"
-        f"  {Fore.GREEN}:l{Style.RESET_ALL} -> List buffer with line numbers\n"
-        f"  {Fore.GREEN}:d <line_num>{Style.RESET_ALL} -> Delete a line\n"
-        f"  {Fore.GREEN}:i <line_num> <text>{Style.RESET_ALL} -> Insert text at line number\n"
-        f"  {Fore.GREEN}:c{Style.RESET_ALL} -> Clear buffer entirely\n"
-        f"  {Fore.GREEN}:w{Style.RESET_ALL} or {Fore.GREEN}:x{Style.RESET_ALL} or {Fore.GREEN}EOF{Style.RESET_ALL} -> Save & Exit\n"
-        f"  {Fore.GREEN}:q{Style.RESET_ALL} -> Quit without saving\n"
-        f"  {Fore.GREEN}:lt{Style.RESET_ALL} -> Lint current.\n"
-    )
+  {Fore.GREEN}save{Style.RESET_ALL}          : Creates/rewrites a {Fore.GREEN}JSON file{Style.RESET_ALL} with {Fore.GREEN}user{Style.RESET_ALL} data.
+  {Fore.GREEN}load{Style.RESET_ALL}          : Loads a {Fore.GREEN}JSON file{Style.RESET_ALL} with {Fore.GREEN}user{Style.RESET_ALL} data.
+  {Fore.GREEN}jsonrd{Style.RESET_ALL}        : Reads a {Fore.GREEN}JSON file{Style.RESET_ALL}.
+  {Fore.GREEN}regex{Style.RESET_ALL}         : Looks for {Fore.GREEN}patterns{Style.RESET_ALL} in a text or textfile.
+
+  {Fore.BLUE}math{Style.RESET_ALL}          : Allows mathematical equations.
+  {Fore.BLUE}mathhelp{Style.RESET_ALL}      : Displays information about math-related functions.
+  {Fore.BLUE}random{Style.RESET_ALL}        : Shows a random {Fore.BLUE}number{Style.RESET_ALL}.
+  {Fore.BLUE}time{Style.RESET_ALL}          : Displays {Fore.BLUE}hour{Style.RESET_ALL} and {Fore.BLUE}date{Style.RESET_ALL}.
+  {Fore.BLUE}timer{Style.RESET_ALL}         : Sets a timer in {Fore.BLUE}seconds{Style.RESET_ALL} before displaying a message.
+  {Fore.BLUE}delvar{Style.RESET_ALL}        : Deletes a specified {Fore.BLUE}variable{Style.RESET_ALL}.
+
+  {Fore.RED}cd{Style.RESET_ALL}            : Shows current {Fore.RED}path location{Style.RESET_ALL} and allows navigation.
+  {Fore.RED}check{Style.RESET_ALL}         : Checks if required {Fore.RED}script files{Style.RESET_ALL} exist.
+  {Fore.RED}filelst{Style.RESET_ALL}       : Lists {Fore.RED}files{Style.RESET_ALL} and {Fore.RED}folders{Style.RESET_ALL} in a directory.
+  {Fore.RED}tree{Style.RESET_ALL}          : Renders {Fore.RED}directory{Style.RESET_ALL} as a tree.
+  {Fore.RED}filecrt{Style.RESET_ALL}       : Creates a {Fore.RED}file{Style.RESET_ALL} with specified extension.
+  {Fore.RED}filerd{Style.RESET_ALL}        : Reads and displays the content of a {Fore.RED}file{Style.RESET_ALL}.
+  {Fore.RED}filedel{Style.RESET_ALL}       : Deletes a {Fore.RED}file{Style.RESET_ALL}.
+  {Fore.RED}filewrt{Style.RESET_ALL}       : Writes content in a {Fore.RED}file{Style.RESET_ALL}.
+  {Fore.RED}fileopn{Style.RESET_ALL}       : Opens a {Fore.RED}file{Style.RESET_ALL}.
+  {Fore.RED}filecls{Style.RESET_ALL}       : Closes a {Fore.RED}file{Style.RESET_ALL}.
+  {Fore.RED}filesort{Style.RESET_ALL}      : Sorts and dumps {Fore.RED}files{Style.RESET_ALL} in a directory by extension.
+  {Fore.RED}filesz{Style.RESET_ALL}        : Gets and shows the size of a {Fore.RED}file{Style.RESET_ALL}.
+  {Fore.RED}dirsz{Style.RESET_ALL}         : Gets and shows the size of a {Fore.RED}directory{Style.RESET_ALL}.
+  {Fore.RED}unzip{Style.RESET_ALL}         : Gets and extracts the content of a {Fore.RED}ZIP file{Style.RESET_ALL}.
+
+  {Fore.MAGENTA}playaudio{Style.RESET_ALL}     : Plays an {Fore.MAGENTA}audio file{Style.RESET_ALL} (specify route).
+  {Fore.MAGENTA}stopaudio{Style.RESET_ALL}     : Stops the current {Fore.MAGENTA}audio file{Style.RESET_ALL}.
+  {Fore.MAGENTA}render{Style.RESET_ALL}        : Renders and draws a specified {Fore.MAGENTA}image file{Style.RESET_ALL}.
+  {Fore.MAGENTA}banner{Style.RESET_ALL}        : Renders and prints inputted {Fore.MAGENTA}text{Style.RESET_ALL}.
+  {Fore.MAGENTA}pkm{Style.RESET_ALL}           : Enters the {Fore.MAGENTA}Piano Keyboard Mode{Style.RESET_ALL}.
+
+  {Fore.LIGHTBLUE_EX}web{Style.RESET_ALL}           : Sends a {Fore.LIGHTBLUE_EX}request to an URL{Style.RESET_ALL}, thus installing files from links if requested.
+  {Fore.LIGHTBLUE_EX}dnsflush{Style.RESET_ALL}      : Clears the cache of the {Fore.LIGHTBLUE_EX}system DNS resolver{Style.RESET_ALL}.
+
+  {Fore.LIGHTBLACK_EX}shutdown{Style.RESET_ALL}      : {Fore.LIGHTBLACK_EX}Shuts the system down{Style.RESET_ALL} or cancels such operation.
+  {Fore.LIGHTBLACK_EX}restart{Style.RESET_ALL}       : {Fore.LIGHTBLACK_EX}Restarts the system{Style.RESET_ALL}.
+  {Fore.LIGHTBLACK_EX}sleep{Style.RESET_ALL}         : {Fore.LIGHTBLACK_EX}Suspends the system{Style.RESET_ALL}.
+  {Fore.LIGHTBLACK_EX}lock{Style.RESET_ALL}          : {Fore.LIGHTBLACK_EX}Lock the user session{Style.RESET_ALL} immediately.
+  {Fore.LIGHTBLACK_EX}tempflush{Style.RESET_ALL}     : Clears the {Fore.LIGHTBLACK_EX}system /Temp directory{Style.RESET_ALL}.
+  {Fore.LIGHTBLACK_EX}app{Style.RESET_ALL}           : Runs {easysaxo.name} base commands.
+  {Fore.LIGHTBLACK_EX}exit{Style.RESET_ALL}          : Exit {easysaxo.name}.
+Remember you can search for command syntax and usage by using {Fore.CYAN}help <cmd/attr>{Style.RESET_ALL} :)
+    """
+
+    FWRTlist = f"""
+{Fore.YELLOW}Commands:{Style.RESET_ALL}
+{Fore.GREEN}:l{Style.RESET_ALL} -> List buffer with line numbers
+{Fore.GREEN}:d <line_num>{Style.RESET_ALL} -> Delete a line
+{Fore.GREEN}:i <line_num> <text>{Style.RESET_ALL} -> Insert text at line number
+{Fore.GREEN}:c{Style.RESET_ALL} -> Clear buffer entirely
+{Fore.GREEN}:w{Style.RESET_ALL} or {Fore.GREEN}:x{Style.RESET_ALL} or {Fore.GREEN}EOF{Style.RESET_ALL} -> Save & Exit
+{Fore.GREEN}:q{Style.RESET_ALL} -> Quit without saving
+{Fore.GREEN}:lt{Style.RESET_ALL} -> Lint current.
+    """
+
+    LOGlist = f"""
+{Fore.CYAN}Log code |>{Style.RESET_ALL}
+  {Fore.LIGHTBLACK_EX}> No character before number indicates a general error message.{Style.RESET_ALL}
+    {Fore.CYAN}1{Style.RESET_ALL} ------> Unknown/malformed command.
+    {Fore.CYAN}2{Style.RESET_ALL} ------> No arguments provided.
+    {Fore.CYAN}3{Style.RESET_ALL} ------> Operation failed.
+    {Fore.CYAN}4{Style.RESET_ALL} ------> Permission denied or access error.
+    {Fore.CYAN}5{Style.RESET_ALL} ------> File or directory not found.
+    {Fore.CYAN}6{Style.RESET_ALL} ------> Invalid input or value error.
+    {Fore.CYAN}7{Style.RESET_ALL} ------> Network or connection error.
+    {Fore.CYAN}8{Style.RESET_ALL} ------> Request or API error.
+    {Fore.CYAN}9{Style.RESET_ALL} ------> System command execution failed.
+    {Fore.CYAN}10{Style.RESET_ALL} -----> Unexpected error occurred.
+    {Fore.CYAN}11{Style.RESET_ALL} -----> Operation canceled.
+
+  {Fore.LIGHTBLACK_EX}> 'a' before number indicates an info message.{Style.RESET_ALL}
+    {Fore.CYAN}a0{Style.RESET_ALL} -----> Exiting app.
+
+  {Fore.LIGHTBLACK_EX}> 'f' before number indicates specific file error.{Style.RESET_ALL}
+    {Fore.CYAN}f1{Style.RESET_ALL} -----> Path or file is invalid.
+    {Fore.CYAN}f2{Style.RESET_ALL} -----> Path is a file.
+    {Fore.CYAN}f3{Style.RESET_ALL} -----> Path is a directory.
+    {Fore.CYAN}f4{Style.RESET_ALL} -----> Path exists.
+
+  {Fore.LIGHTBLACK_EX}> 'p' before number indicates specific process error.{Style.RESET_ALL}
+    {Fore.CYAN}p1{Style.RESET_ALL} -----> No such running process / Process does not exist.
+
+  {Fore.LIGHTBLACK_EX}> 'm' before number indicates specific math error{Style.RESET_ALL}
+    {Fore.CYAN}m1{Style.RESET_ALL} -----> Cannot operate over term.
+    {Fore.CYAN}m2{Style.RESET_ALL} -----> Variable does not exist.
+    {Fore.CYAN}m3{Style.RESET_ALL} -----> Term does not exist.
+    """
 
 # file list ===============================================================================
 
@@ -198,26 +238,24 @@ class FileList:
         # scripts
         ".py": Fore.LIGHTYELLOW_EX,
         ".js": Fore.YELLOW,
-        ".jar": Fore.RED,
+        ".jar": Fore.RED, ".jav": Fore.RED,
         ".html": Fore.LIGHTRED_EX,
         ".css": Fore.LIGHTBLUE_EX,
-        ".json": Fore.LIGHTGREEN_EX,
+        ".json": Fore.LIGHTYELLOW_EX,
         ".xml": Fore.LIGHTGREEN_EX,
         ".c": Fore.CYAN,
         ".toml": Fore.BLUE,
         # docs
         ".md": Fore.CYAN,
-        ".txt": Fore.WHITE,
-        ".doc": Fore.BLUE,
-        ".docx": Fore.BLUE,
-        ".xls": Fore.GREEN,
-        ".xlsx": Fore.GREEN,
+        ".txt": Fore.WHITE + Style.DIM,
+        ".doc": Fore.BLUE,".docx": Fore.BLUE,
+        ".xls": Fore.GREEN, ".xlsx": Fore.GREEN,
         ".pdf": Fore.RED,
         ".pptx": Fore.RED,
         # media
         ".png": Fore.MAGENTA,
-        ".jpg": Fore.MAGENTA,
-        ".jpeg": Fore.MAGENTA,
+        ".ico": Fore.MAGENTA,
+        ".jpg": Fore.MAGENTA, ".jpe": Fore.MAGENTA,".jfif": Fore.MAGENTA, ".jpeg": Fore.MAGENTA,
         ".svg": Fore.MAGENTA,
         ".webp": Fore.MAGENTA,
         ".mp3": Fore.LIGHTMAGENTA_EX,
@@ -228,15 +266,43 @@ class FileList:
         ".mp4": Fore.LIGHTCYAN_EX,
         ".gif": Fore.LIGHTCYAN_EX,
         # fls
-        ".zip": Fore.LIGHTRED_EX,
-        ".rar": Fore.LIGHTRED_EX,
-        ".exe": Fore.RED,
+        ".zip": Fore.LIGHTRED_EX, ".rar": Fore.LIGHTRED_EX,
+        ".exe": Fore.RED, ".bat": Fore.RED, ".sh": Fore.RED,
+        ".bak": Fore.LIGHTYELLOW_EX, ".pak": Fore.LIGHTYELLOW_EX,
         ".ini": Fore.LIGHTBLACK_EX,
-        ".bat": Fore.RED,
+        ".dat": Fore.LIGHTBLACK_EX,
         ".dll": Fore.LIGHTBLACK_EX,
+        ".pkg": Fore.LIGHTBLACK_EX,
         ".bin": Fore.LIGHTBLACK_EX,
-        ".sh": Fore.RED,
+        ".cmd": Fore.LIGHTBLACK_EX,
+        # misc
+        ".lnk": Fore.GREEN,
+        ".url": Fore.GREEN,
+        ".tmp": Fore.LIGHTBLACK_EX,
+        ".gitignore": Fore.LIGHTBLACK_EX,
+        ".gitconfig": Fore.LIGHTBLACK_EX,
+        ".ttf": Fore.LIGHTBLUE_EX,
     }
+
+
+class FileDisclaimer:
+    """Hint disclaimer for exceptions during path resolving."""
+    _strinit = Fore.LIGHTBLACK_EX + Style.DIM
+    _rstr = Fore.LIGHTBLACK_EX
+    _strend = Style.RESET_ALL
+    _hint = Fore.CYAN
+    
+    def _path_assurance(path):
+        Fd = FileDisclaimer
+        path_assurance = f"{Fd._strinit}If this directory is incorrect, try this path instead: {Fd._hint}{path.upper()}\\{Fd._strend}"
+        return path_assurance
+
+    not_found_path = f"{_strinit}Make sure the path is written correctly.{_strend}"
+    
+    cd_d_flag = f"{_strinit}{_hint}'/d'{_rstr} in this command is automated, you do not need to type it!{_strend}"
+
+    res_flag_typo = f"{_strinit}Make sure you typed exactly {_hint}\"-<\"{_rstr} right before the flag name.{_strend}"
+    res_flag_typo_2 = f"{_strinit}Make sure the {_hint}flag name{_rstr} you typed exists.{_strend}"
 
 # math lists =====================================================================================
 import ast
@@ -888,37 +954,34 @@ class SongSet:
     }
 
     @classmethod
-    def list_songs(cls) -> list:
-        return list(cls.songs.keys())
+    def list_songs(cls) -> list: return list(cls.songs.keys())
 
     @classmethod
     def get_song(cls, name: str) -> list | None:
         name_lower = name.lower()
         for key in cls.songs:
-            if key.lower() == name_lower:
-                return cls.songs[key]
+            if key.lower() == name_lower: return cls.songs[key]
         return None
 
     @classmethod
-    def add_song(cls, name: str, notes: list):
-        cls.songs[name.lower()] = notes
+    def add_song(cls, name: str, notes: list): cls.songs[name.lower()] = notes
 
 # reqs
 
 class SystemList:
     """System global list for requirements and miscellaneous system information."""
-    min_req = (
-        f"{Fore.BLUE}OS{Style.RESET_ALL}        : {Fore.LIGHTBLUE_EX}Windows 10 / Linux (kernel 4.19+){Style.RESET_ALL}\n"
-        f"{Fore.BLUE}CPU{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}Single-Core 1.5 GHz (x86-64){Style.RESET_ALL}\n"
-        f"{Fore.BLUE}RAM{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}256MB free memory{Style.RESET_ALL}\n"
-        f"{Fore.BLUE}Storage{Style.RESET_ALL}   : {Fore.LIGHTBLUE_EX}200MB free space (including dependencies){Style.RESET_ALL}\n"
-        f"{Fore.BLUE}Python{Style.RESET_ALL}    : {Fore.LIGHTBLUE_EX}3.10+ Python version{Style.RESET_ALL}\n"
-    )
+    min_req = f"""
+  {Fore.BLUE}OS{Style.RESET_ALL}        : {Fore.LIGHTBLUE_EX}Windows 10 / Linux (kernel 4.19+){Style.RESET_ALL}
+  {Fore.BLUE}CPU{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}Single-Core 1.5 GHz (x86-64){Style.RESET_ALL}
+  {Fore.BLUE}RAM{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}128MB free memory{Style.RESET_ALL}
+  {Fore.BLUE}Storage{Style.RESET_ALL}   : {Fore.LIGHTBLUE_EX}200MB free space (including dependencies){Style.RESET_ALL}
+  {Fore.BLUE}Python{Style.RESET_ALL}    : {Fore.LIGHTBLUE_EX}3.10+ Python version{Style.RESET_ALL}
+"""
 
-    rec_req = (
-        f"{Fore.BLUE}OS{Style.RESET_ALL}        : {Fore.LIGHTBLUE_EX}Windows 10 / Linux (kernel 4.19+){Style.RESET_ALL}\n"
-        f"{Fore.BLUE}CPU{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}Dual-Core 2.0 GHz (x86-64 / ARM64){Style.RESET_ALL}\n"
-        f"{Fore.BLUE}RAM{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}1024MB free memory{Style.RESET_ALL}\n"
-        f"{Fore.BLUE}Storage{Style.RESET_ALL}   : {Fore.LIGHTBLUE_EX}400MB free space{Style.RESET_ALL}\n"
-        f"{Fore.BLUE}Python{Style.RESET_ALL}    : {Fore.LIGHTBLUE_EX}3.13 Python version{Style.RESET_ALL}\n"
-    )
+    rec_req = f"""
+  {Fore.BLUE}OS{Style.RESET_ALL}        : {Fore.LIGHTBLUE_EX}Windows 10 / Linux (kernel 4.19+){Style.RESET_ALL}
+  {Fore.BLUE}CPU{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}Dual-Core 2.0 GHz (x86-64 / ARM64){Style.RESET_ALL}
+  {Fore.BLUE}RAM{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}1024MB free memory{Style.RESET_ALL}
+  {Fore.BLUE}Storage{Style.RESET_ALL}   : {Fore.LIGHTBLUE_EX}400MB free space{Style.RESET_ALL}
+  {Fore.BLUE}Python{Style.RESET_ALL}    : {Fore.LIGHTBLUE_EX}3.13 Python version{Style.RESET_ALL}
+"""

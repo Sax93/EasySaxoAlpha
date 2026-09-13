@@ -6,6 +6,7 @@ import os
 
 from colorama import Fore, Style
 
+from ..config import easysaxo
 from ..esmodules.dirloct import DirLocation
 
 try: # we are trying to import asciiart here to avoid double check in main file
@@ -33,7 +34,9 @@ class MediaData:
             pygame.mixer.music.load(DirLocation._resolve_path(filepath))
             pygame.mixer.music.play()
             print(f"Playing audio: {Fore.GREEN}{filepath}{Style.RESET_ALL}")
-        except (FileNotFoundError, PermissionError) as e: print(f"{Fore.RED}Error playing audio file: {e}{Style.RESET_ALL}")
+        except (FileNotFoundError, PermissionError) as e: 
+            easysaxo.k_log("5" if isinstance(e, FileNotFoundError) else "4")
+            print(f"{Fore.RED}Error playing audio file: {e}{Style.RESET_ALL}")
 
     @staticmethod
     def stopaudio():
@@ -43,7 +46,9 @@ class MediaData:
                 pygame.mixer.music.stop()
                 print(f"{Fore.GREEN}Audio stopped.{Style.RESET_ALL}")
             else: print(f"{Fore.YELLOW}No audio is currently playing.{Style.RESET_ALL}")
-        except (ImportError, OSError, KeyboardInterrupt) as e: print(f"{Fore.RED}Error stopping audio: {e}{Style.RESET_ALL}")
+        except (ImportError, OSError, KeyboardInterrupt) as e: 
+            easysaxo.k_log("10" if not isinstance(e, KeyboardInterrupt) else "11")
+            print(f"{Fore.RED}Error stopping audio: {e}{Style.RESET_ALL}")
         
     # render area
     @staticmethod
@@ -76,10 +81,12 @@ class MediaData:
 
         VALID_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.webp', '.bmp', '.gif')
         if not resolved_path.lower().endswith(VALID_EXTENSIONS):
+            easysaxo.k_log("f1")
             print(f"{Fore.RED}Error: Invalid image extension. Supported: {', '.join(VALID_EXTENSIONS)}{Style.RESET_ALL}")
             return
 
         if not os.path.isfile(resolved_path):
+            easysaxo.k_log("5")
             print(f"{Fore.RED}Error: Image file '{filepath}' not found.{Style.RESET_ALL}")
             return
 
@@ -89,6 +96,7 @@ class MediaData:
             ascii_r = AsciiArt.from_image(resolved_path)
             ascii_r.to_terminal(columns=cols)
         except (ValueError, FileNotFoundError, PermissionError, KeyboardInterrupt) as e:
+            easysaxo.k_log("5" if isinstance(e, FileNotFoundError) else "4" if isinstance(e, PermissionError) else "6" if isinstance(e, ValueError) else "11")
             print(f"{Fore.RED}Could not render: {e}{Style.RESET_ALL}")
     
     @staticmethod
@@ -96,6 +104,7 @@ class MediaData:
         try: 
             from art import text2art
         except ImportError:
+            easysaxo.k_log("9")
             print(f"{Fore.RED}Art not available.{Style.RESET_ALL}")
             return
         result = text2art(text)

@@ -4,3 +4,4 @@ filecreation/
 *.code-workspace
 session.json
 downloads/
+.vscode/

@@ -4,14 +4,14 @@ build-backend = "uv_build"
 
 [project]
 name = "easysaxo"
-version = "1.09.02"
+version = "1.11.00"
 description = "EasySaxo Alpha Edition, mini-shell CLI that works with your system commands as well!"
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [
     { name = "SXF", email = "saxalinka2@gmail.com" }
 ]
-keywords = ["ezsx", "EaSa", "SXF"]
+keywords = ["ezsx", "SXF"]
 dependencies = [
     "colorama>=0.4.6",
     "rich>=13.0.0",

@@ -9,6 +9,8 @@ import uuid
 
 from colorama import Fore, Style
 
+from ..config import easysaxo
+
 
 class TelemetryData:
     """Telemetry/Network information displayer."""
@@ -21,6 +23,7 @@ class TelemetryData:
             print(f"Bytes Sent/Recv: {Fore.CYAN}{net_io.bytes_sent / (1024**2):.2f} MB{Style.RESET_ALL} / {Fore.CYAN}{net_io.bytes_recv / (1024**2):.2f} MB{Style.RESET_ALL}")
             print(f"Packets Sent/Recv: {Fore.CYAN}{net_io.packets_sent}{Style.RESET_ALL} / {Fore.CYAN}{net_io.packets_recv}{Style.RESET_ALL}")
         except (ImportError, KeyboardInterrupt) as e:
+            easysaxo.k_log("11" if isinstance(e, KeyboardInterrupt) else "9")
             print(f"{Fore.RED}Unable to get network stats: {e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -32,7 +35,8 @@ class TelemetryData:
             mins, secs = divmod(remainder, 60)
             days, hrs_val = divmod(hrs_val, 24)
             print(f"System Uptime: {Fore.MAGENTA}{days}d {hrs_val}h {mins}m {secs}s{Style.RESET_ALL}")
-        except (ImportError, KeyboardInterrupt) as e:
+        except (ImportError, KeyboardInterrupt) as e: 
+            easysaxo.k_log("11" if isinstance(e, KeyboardInterrupt) else "9")
             print(f"{Fore.RED}Unable to get uptime: {e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -45,7 +49,8 @@ class TelemetryData:
                 for addr in addrs:
                     if addr.family == socket.AF_INET: print(f"  IPv4: {Fore.GREEN}{addr.address}{Style.RESET_ALL}")
                     elif addr.family == socket.AF_INET6: print(f"  IPv6: {Fore.CYAN}{addr.address}{Style.RESET_ALL}")
-        except (ImportError, KeyboardInterrupt) as e:
+        except (ImportError, KeyboardInterrupt) as e: 
+            easysaxo.k_log("11" if isinstance(e, KeyboardInterrupt) else "9")
             print(f"{Fore.RED}Unable to get IP address: {e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -59,8 +64,9 @@ class TelemetryData:
         try:
             pub_ip = urllib.request.urlopen("https://api.ipify.org", timeout=4).read().decode("utf-8")
             print(f"Public IP Address: {Fore.GREEN}{pub_ip}{Style.RESET_ALL}")
-        except (PermissionError, KeyboardInterrupt):
-            print(f"Public IP: {Fore.RED}Unable to fetch public IP (Offline or Timeout){Style.RESET_ALL}")
+        except Exception:  # ruff: ignore[blind-except]
+            easysaxo.k_log("10")
+            print(f"Public IP: {Fore.RED}Unable to fetch public IP.{Style.RESET_ALL}")
 
     @staticmethod
     def getnetstats():
@@ -71,7 +77,8 @@ class TelemetryData:
             for nic, stat in stats.items():
                 status = f"{Fore.GREEN}UP{Style.RESET_ALL}" if stat.isup else f"{Fore.RED}DOWN{Style.RESET_ALL}"
                 print(f"Adapter {Fore.YELLOW}{nic}{Style.RESET_ALL}: Status [{status}] | Speed: {stat.speed}MB | MTU: {stat.mtu}")
-        except (ImportError, KeyboardInterrupt) as e:
+        except (ImportError, KeyboardInterrupt) as e: 
+            easysaxo.k_log("11" if isinstance(e, KeyboardInterrupt) else "9")
             print(f"{Fore.RED}Unable to get network status: {e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -84,7 +91,8 @@ class TelemetryData:
                 laddr = f"{conn.laddr.ip}:{conn.laddr.port}" if conn.laddr else "N/A"
                 raddr = f"{conn.raddr.ip}:{conn.raddr.port}" if conn.raddr else "N/A"
                 print(f"Proto: {conn.type.name} | Local: {Fore.GREEN}{laddr:<20}{Style.RESET_ALL} -> Remote: {Fore.CYAN}{raddr:<20}{Style.RESET_ALL} Status: {conn.status}")
-        except (AttributeError, ValueError, KeyboardInterrupt) as e:
+        except (AttributeError, ValueError, KeyboardInterrupt) as e: 
+            easysaxo.k_log("11" if isinstance(e, KeyboardInterrupt) else "6")
             print(f"{Fore.RED}Could not fetch active connections: {e}{Style.RESET_ALL}")
 
     @staticmethod
@@ -94,6 +102,7 @@ class TelemetryData:
         except ImportError: speedtest = None
 
         if not speedtest:
+            easysaxo.k_log("9")
             print(f"{Fore.YELLOW}Speedtest package not installed.{Style.RESET_ALL}")
             return
         print("Testing network speed (this may take a few seconds)...")
@@ -103,12 +112,16 @@ class TelemetryData:
             print(f"Download Speed: {Fore.GREEN}{st.download() / (1024**2):.2f} Mbps{Style.RESET_ALL}")
             print(f"Upload Speed: {Fore.GREEN}{st.upload() / (1024**2):.2f} Mbps{Style.RESET_ALL}")
             print(f"Ping: {Fore.CYAN}{st.results.ping} ms{Style.RESET_ALL}")
-        except (ValueError, AttributeError, KeyboardInterrupt) as e:
+        except (ValueError, AttributeError, KeyboardInterrupt) as e: 
+            easysaxo.k_log("11" if isinstance(e, KeyboardInterrupt) else "6")
             print(f"{Fore.RED}Speed test failed: {e}{Style.RESET_ALL}")
 
 # broo chill i aint stealing ur shi
 
 import json
+import os
+import platform
+import subprocess
 import textwrap
 import urllib.parse
 
@@ -137,8 +150,7 @@ class TelemetryOperations:
 
     @staticmethod
     def w_request(url: str, method: str = "GET", payload: dict | None = None, timeout: int = 10, download_path: str | None = None):
-        if not urllib.parse.urlparse(url).scheme:
-            url = f"https://{url}"
+        if not urllib.parse.urlparse(url).scheme: url = f"https://{url}"
 
         headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"}
         
@@ -184,15 +196,16 @@ class TelemetryOperations:
                 try:
                     formatted_json = json.dumps(response.json(), indent=2)
                     print(formatted_json[:1500] + ("\n..." if len(formatted_json) > 1500 else ""))
-                except ValueError: print(response.text[:500])
+                except ValueError: 
+                    easysaxo.k_log("6")
+                    print(response.text[:500])
 
             elif "text/html" in content_type:
                 soup = BeautifulSoup(response.text, "html.parser")
                 title = soup.title.string.strip() if soup.title and soup.title.string else "No Title"
                 print(f"Page Title: {Fore.LIGHTMAGENTA_EX}{title}{Style.RESET_ALL}")
 
-                for element in soup(["script", "style", "head", "noscript", "meta", "nav", "footer", "header"]):
-                    element.decompose()
+                for element in soup(["script", "style", "head", "noscript", "meta", "nav", "footer", "header"]): element.decompose()
 
                 readme_container = soup.find("article", class_="markdown-body")
                 target_container = readme_container or soup.find("main") or soup.find("article") or soup.body
@@ -218,9 +231,30 @@ class TelemetryOperations:
             
             return response
 
-        except requests.exceptions.Timeout: print(f"{Fore.RED}Request timed out after {timeout} seconds.{Style.RESET_ALL}")
-        except requests.exceptions.ConnectionError: print(f"{Fore.RED}Failed to connect to host.{Style.RESET_ALL}")
-        except requests.exceptions.RequestException as e: print(f"{Fore.RED}Request failed: {e}. Check if there are any typos in the prompt.{Style.RESET_ALL}")
-        except KeyboardInterrupt: print(f"\n{Fore.YELLOW}Request cancelled.{Style.RESET_ALL}")
+        except requests.exceptions.Timeout: 
+            easysaxo.k_log("7")
+            print(f"{Fore.RED}Request timed out after {timeout} seconds.{Style.RESET_ALL}")
+        except requests.exceptions.ConnectionError: 
+            easysaxo.k_log("7")
+            print(f"{Fore.RED}Failed to connect to host.{Style.RESET_ALL}")
+        except requests.exceptions.RequestException as e: 
+            easysaxo.k_log("8")
+            print(f"{Fore.RED}Request failed: {e}. Check if there are any typos in the prompt.{Style.RESET_ALL}")
+        except KeyboardInterrupt: 
+            easysaxo.k_log("11")
+            print(f"\n{Fore.YELLOW}Request cancelled.{Style.RESET_ALL}")
             
         return None
+
+    @staticmethod
+    def flush_dns():
+        try:
+            if os.name == 'nt': subprocess.run(["ipconfig", "/flushdns"], check=True, capture_output=True)
+            elif platform.system() == 'Darwin':
+                subprocess.run(["dscacheutil", "-flushcache"], check=True)
+                subprocess.run(["killall", "-HUP", "mDNSResponder"], check=True)
+            else: subprocess.run(["resolvectl", "flush-caches"], check=True)
+            print(f"{Fore.GREEN}DNS cache flushed successfully.{Style.RESET_ALL}")
+        except Exception as e:  # ruff: ignore[blind-except]
+            easysaxo.k_log("10")
+            print(f"{Fore.RED}Could not flush DNS cache: {e}{Style.RESET_ALL}")
