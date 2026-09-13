@@ -5,7 +5,7 @@ set "PYTHON_ENV=.venv\Scripts\python.exe"
 
 if not exist "%PYTHON_ENV%" (
     echo Action: Creating .venv directory...
-    py -3 -m venv .venv
+    py -3 -m venv .venv || python -m venv .venv
 
     if not exist "%PYTHON_ENV%" (
         echo.
