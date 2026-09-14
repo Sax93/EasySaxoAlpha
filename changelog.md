@@ -1,32 +1,39 @@
-> <center>ES Alpha 1.11.xx version.</center>
-
-# <center>Changelog (Version 1.11.00, Sep 12th)</center>
+# <center>Changelog (Version 1.11.01, Sep 13th)</center>
 
 ## <center>1. Added new commands *(a lot)*</center>
 
-### 1. `Restart` command: Restarts the computer after a defined time in seconds *(omit seconds for instant reset; flag `cancel` to cancel operation if scheduled)*.
+### 1. `Restart` command: Restarts the computer after a defined time in seconds *(omit seconds for instant reset; flag `cancel` to cancel operation if scheduled)*
+
 - Syntax: `restart [seconds; {cancel}]`
 
 ### 2. `Sleep` command: Puts the computer to sleep immediately (a. k. a. *suspended state*)
+
 - Syntax: `sleep`
 
-### 3. `Lock` command: Locks the computer session immediately.
+### 3. `Lock` command: Locks the computer session immediately
+
 - Syntax: `lock`
 
-### 4. `TempFlush` command: Clears *(most of)* the files in the `\\Temp` directory of the system.
+### 4. `TempFlush` command: Clears *(most of)* the files in the `\\Temp` directory of the system
+
 - Syntax: `tempflush`
 
-### 5. `DNSFlush` command: Clears the cache of the DNS resolver in the system.
+### 5. `DNSFlush` command: Clears the cache of the DNS resolver in the system
+
 - Syntax: `dnsflush`
 
-### 6. `App` command: Uses app manager commands.
+### 6. `App` command: Uses app manager commands
+
 - Syntax: `app (command)`
 - Subcommands: `app ({restart}, {unins}, {log ({mute}, {unmute}, {codes})}, {state})`
+>
 > - `Restart` > Restarts the app in the same terminal.
 > - `Unins` > Sets up the app uninstaller (earlier known as base command `unins`)
 > - `Log` > Manages a new app logger:
+>>
 >> - `Mute/Unmute`: Mutes or unmutes the App logger, which throws exception messages that warn the user about mismatches in the prompt as well as other information.
 >> - `Codes`: Shows the log code of the App logger.
+>>
 > - `State` > Shows the app statistics according to the App manager.
 
 ## <center>2. Extended functionality for `Shutdown` command.</center>
@@ -42,6 +49,7 @@ Syntax: `shutdown cancel`
 Every command that calls the **Path resolver** function is now evaluated with a set of disclaimers, meant to *advice the user for mismatches in the result of such called command*.
 
 Example:
+
 - User enters > `dirsz C:`, which calls the Path resolver.
 - The resolver looks for any possible paths, aiming at which seems the most precise.
 - The resolver returns the path, which may or may not be the referred path.
@@ -49,6 +57,7 @@ Example:
 Path issues are something that EasySaxo struggles to manage perfectly, so a close solution is to add *path assurance disclaimers*.
 
 Example:
+
 - User enters > `dirsz C:`, which calls the Path resolver.
 - The resolver looks for any possible paths, aiming at which seems the most precise.
 - The resolver returns the path along with a dimmed disclaimer, variable according to case.
@@ -65,6 +74,7 @@ As mentioned before, the `Unins` command is no longer a base command, and it has
 With the introduction of the `App` command, the app metadata has been seen noticeably updated.
 
 Callable with `app state` prompt, the updated information includes:
+
 - App name, version and build date.
 - Developer *(and with luck, future ones)*
 - Session time (time since the app was opened)
@@ -80,6 +90,22 @@ The logic in the code of soome app files has been modified slightly, with the go
 
 EasySaxo and SXF logos have been updated in `builtinrender.py`. In order to reflect the major updates in the app since the very first versions of the app, the app logo had changed its design.
 
+## <center>8. Fixed errors in commands: `FileWrt`, `FileRd`</center>
+
+An issue was found with the `FileWrt` and `FileRd` command, which raised an `UnicodeDecodeError`.
+
+- Cause: Using the command with a file whose encoding is not `UTF-8` (like an image or an audio file) raises an invalid byte start error, and because the resolver does not check the encoding of the called file, the `UnicodeDecodeError` sneaks in through and crashes the application.
+
+- Solution: The error handler in both commands now catches this exception, disclaiming the `Invalid file or directory` message instead.
+
+## <center>9. Added flags in `DirLocation`: </center>
+> Since all of the next flags point at `C:\\Users\\User`, the parent path will be called as `~`
+- `-<dwn`: Points at `~\\Downloads`.
+- `-<docs`: Points at `~\\Documents`.
+- `-<imgs`: Points at `~\\Pictures`.
+- `-<aud`: Points at `~\\Music`.
+- `-<vid`: Points at `~\\Videos`.
+
 # <center>Additional data (Details about new features)</center>
 
 ## > App Logger
@@ -92,7 +118,9 @@ Once the logger is unmuted, every error will be assigned with a certain number, 
 To look at the log code, use this prompt: `app log codes`
 
 If an error occurs, the logger will display a message stating:
+
 ### `[EasySaxo] |> (Code: X) An error occured.`
+>
 > Where `X` is a character (`X` or `xX`) and `An error occured` is the error message.
 
 To mute it, use this prompt: `app log mute`
@@ -102,6 +130,7 @@ To mute it, use this prompt: `app log mute`
 The path assurance disclaimers, as earlier said, are meant to inform the user about possible mistakes during the path analysis, which could lead to an unfound file, a wrong path or a name error while resolve.
 
 The common disclaimers are:
+
 - `If this directory is incorrect, try this path instead:` : Indicates issues when typing a drive root without slash (`C:`). The resolver parses it as `C:\\`, but the disclaimer remains to warn if it ever confuses the drive with another path.
 
 - `Make sure the path is written correctly.` : Indicates that the resolver found a path that does not exactly match the actual directory name. It warns that the resolver parsed the input and returned a different one, despite usually not meaning a full path change. It shows up when the path is not found or the path had to be parsed several times.

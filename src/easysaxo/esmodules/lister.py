@@ -66,7 +66,7 @@ class EasterList:
     ]
     
     
-    yes_no_kw = ["is", "am", "are", "really", "can", "will", "would", "could", "shall", "should", "may", "does", "do"]  # ruff: ignore[mutable-class-default]
+    yes_no_kw = ["is", "am", "are", "really", "can", "will", "would", "could", "shall", "should", "may", "does", "do"]  # noqa: RUF012
     
     l_yes_no = [ # noqa: RUF012
         "Yes", "No", "Maybe", "HELL NAHH",
@@ -96,7 +96,7 @@ class EasterList:
         "Out of thin air", "With some ramen", "Pure Flex Tape bro", "You don't want to know"
     ]
     
-    l_when = [  # ruff: ignore[mutable-class-default]
+    l_when = [  # noqa: RUF012
         "Yesterday", "Maybe in a few days", "God knows", "Soon, trust",
         "February 30th bro", "A few days ago", "As if I knew that"
     ]

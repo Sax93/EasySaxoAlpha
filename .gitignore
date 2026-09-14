@@ -3,5 +3,6 @@ __pycache__/
 filecreation/
 *.code-workspace
 session.json
+*.ezsx
 downloads/
 .vscode/

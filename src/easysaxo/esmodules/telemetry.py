@@ -64,7 +64,7 @@ class TelemetryData:
         try:
             pub_ip = urllib.request.urlopen("https://api.ipify.org", timeout=4).read().decode("utf-8")
             print(f"Public IP Address: {Fore.GREEN}{pub_ip}{Style.RESET_ALL}")
-        except Exception:  # ruff: ignore[blind-except]
+        except Exception:  # noqa: BLE001
             easysaxo.k_log("10")
             print(f"Public IP: {Fore.RED}Unable to fetch public IP.{Style.RESET_ALL}")
 
@@ -255,6 +255,6 @@ class TelemetryOperations:
                 subprocess.run(["killall", "-HUP", "mDNSResponder"], check=True)
             else: subprocess.run(["resolvectl", "flush-caches"], check=True)
             print(f"{Fore.GREEN}DNS cache flushed successfully.{Style.RESET_ALL}")
-        except Exception as e:  # ruff: ignore[blind-except]
+        except Exception as e:  # noqa: BLE001
             easysaxo.k_log("10")
             print(f"{Fore.RED}Could not flush DNS cache: {e}{Style.RESET_ALL}")

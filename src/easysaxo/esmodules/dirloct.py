@@ -33,6 +33,11 @@ class DirLocation:
         "-<temp": tempfile.gettempdir,
         "-<home": lambda: os.path.expanduser("~"),
         "-<desk": lambda: os.path.join(os.path.expanduser("~"), "Desktop"),
+        "-<dwn": lambda: os.path.join(os.path.expanduser("~"), "Downloads"),
+        "-<docs": lambda: os.path.join(os.path.expanduser("~"), "Documents"),
+        "-<imgs": lambda: os.path.join(os.path.expanduser("~"), "Pictures"),
+        "-<aud": lambda: os.path.join(os.path.expanduser("~"), "Music"),
+        "-<vid": lambda: os.path.join(os.path.expanduser("~"), "Videos"),
         "-<bin": lambda: os.path.dirname(sys.executable),
     }
     
@@ -69,17 +74,15 @@ class DirLocation:
     def _resolve_path(filepath: str) -> str:
         filepath = DirLocation._parse_flag_or_path(filepath)
 
-        if filepath.endswith(":") and len(filepath) == 2 and filepath[0].isalpha(): 
-            filepath += os.sep
+        if filepath.endswith(":") and len(filepath) == 2 and filepath[0].isalpha(): filepath += os.sep
 
         # check absolute path
         if os.path.isabs(filepath): 
-            if not os.path.exists(filepath): 
-                print(Fd.not_found_path)
+            if not os.path.exists(filepath): print(Fd.not_found_path)
             return filepath
 
         # if path has subdirs ("whydidichosethiscareer\\file.py"):
-        # always bind it relative to base_dir so it doesn't fallback to dir_forcreate
+        # always bind it relative to base_dir so it doesnt fallback to dir_forcreate
         if os.path.dirname(filepath): return os.path.abspath(os.path.join(base_dir, filepath))
 
         # check relative to current working directory
@@ -474,6 +477,12 @@ class DirLocation:
         except PermissionError as e:
             easysaxo.k_log("4")
             print(f"{Fore.RED}Error reading file: {e}{Style.RESET_ALL}")
+        except UnicodeDecodeError:
+            easysaxo.k_log("f1")
+            print(f"{Fore.RED}Make sure your file is valid for reading.{Style.RESET_ALL}")
+        except KeyboardInterrupt:
+            easysaxo.k_log("11")
+            print(f"\n{Fore.RED}Read operation cancelled by user.{Style.RESET_ALL}")
 
     @staticmethod
     def filedel(filepath):
@@ -586,14 +595,12 @@ class DirLocation:
                             if syntax_err: print(f"{Fore.RED}[Linter] {syntax_err}{Style.RESET_ALL}")
                             elif warnings:
                                 print(f"{Fore.YELLOW}[Linter Found {len(warnings)} Warning(s)]:{Style.RESET_ALL}")
-                                for w in warnings: 
-                                    print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
+                                for w in warnings: print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
                             else: print(f"{Fore.GREEN}[Linter] Check return no errors.{Style.RESET_ALL}")
 
                         elif cmd in [":l", ":list"]:
                             print(f"\n{Fore.CYAN}--- Buffer Preview ---{Style.RESET_ALL}")
-                            for idx, l in enumerate(lines, 1):
-                                print(f"{Fore.YELLOW}{idx:3d} |{Style.RESET_ALL} {l}")
+                            for idx, l in enumerate(lines, 1): print(f"{Fore.YELLOW}{idx:3d} |{Style.RESET_ALL} {l}")
                             print(f"{Fore.CYAN}-----------------------{Style.RESET_ALL}\n")
 
                         elif cmd == ":c":
@@ -639,6 +646,12 @@ class DirLocation:
         except (PermissionError, FileNotFoundError) as e: 
             easysaxo.k_log("4")
             print(f"{Fore.RED}Error writing to file: {e}{Style.RESET_ALL}")
+        except UnicodeDecodeError:
+            easysaxo.k_log("f1")
+            print(f"{Fore.RED}Make sure your file is valid for writing.{Style.RESET_ALL}") 
+        except KeyboardInterrupt:
+            easysaxo.k_log("11")
+            print(f"\n{Fore.RED}Write operation cancelled by user.{Style.RESET_ALL}")
 
     @staticmethod
     def filesort(dirpath, file_ext, dirdest):
@@ -655,8 +668,7 @@ class DirLocation:
                 return
 
             os.makedirs(dest_dir, exist_ok=True)
-            if not file_ext.startswith("."):
-                file_ext = f".{file_ext}"
+            if not file_ext.startswith("."): file_ext = f".{file_ext}"
             file_ext = file_ext.lower()
 
             moved_count = 0

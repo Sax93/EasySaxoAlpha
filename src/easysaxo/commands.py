@@ -241,9 +241,9 @@ def c_load(arg):
             ThreadData.current_user = session_info
             easysaxo.k_log("5")
             print(f"{Fore.RED}JSON file not found or specified.{Style.RESET_ALL}")
-    else:
-        easysaxo.k_log("2")
-        print(f"{Fore.RED}Usage: load <filepath.json>{Style.RESET_ALL}")
+        return
+    easysaxo.k_log("2")
+    print(f"{Fore.RED}Usage: load <filepath.json>{Style.RESET_ALL}")
 
 @register_command("delvar", help_text="delvar <var_name> - Deletes a user-defined math variable.")
 def c_delvar(arg):
@@ -251,7 +251,6 @@ def c_delvar(arg):
         easysaxo.k_log("2")
         print(f"{Fore.RED}Usage: delvar <var_name>{Style.RESET_ALL}")
         return
-
     MathFunc.del_var(arg)
     SessionManager.save_session(ThreadData.current_user)       
 
