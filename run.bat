@@ -20,6 +20,11 @@ if not exist "%PYTHON_ENV%" (
     "%PYTHON_ENV%" -m pip install -e .
 )
 
+<<<<<<< HEAD
 "%PYTHON_ENV%" -m uv sync
 "%PYTHON_ENV%" -m easysaxo.main
 pause
+=======
+"%PYTHON_ENV%" -m easysaxo.main
+pause
+>>>>>>> 13c7af5003faf147c68c4ff1e2e54593e2d9a127
