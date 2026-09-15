@@ -109,7 +109,7 @@ class App:
         print(f"  > CPU Usage      : {cpu_percent:.1f}%")
         print(f"{Fore.CYAN}=" * 30 + f"{Style.RESET_ALL}\n")
         
-easysaxo = App("EasySaxo", "Alpha 1.11.01") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.11.02") # yes im that lazy to write this ever again
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
@@ -147,14 +147,16 @@ class Changelog:
 
     entries = f"""
 Added new commands: {Fore.BLUE}restart, sleep, lock, tempflush, dnsflush, app{Style.RESET_ALL}.
-Extended functionality for command: {Fore.BLUE}shutdown{Style.RESET_ALL}
+Extended functionality for commands: {Fore.BLUE}shutdown, tree{Style.RESET_ALL}
 Added {Fore.GREEN}path assurance disclaimers{Style.RESET_ALL} for path resolving.
 Moved command as subcommand: {Fore.LIGHTBLUE_EX}unins{Style.RESET_ALL} -> {Fore.BLUE}app{Style.RESET_ALL}
 Added {Fore.BLUE}app metadata{Style.RESET_ALL}.
 Restructured {Fore.LIGHTBLUE_EX}code base{Style.RESET_ALL} in app scripts.
 Updated {Fore.GREEN}app and dev logos{Style.RESET_ALL}.
-Fixed errors in commands: {Fore.BLUE}filewrt, filerd{Style.RESET_ALL} (solve {Fore.RED}UnicodeDecodeError{Style.RESET_ALL}).
+Fixed errors in commands: {Fore.BLUE}filewrt, filerd; app unins{Style.RESET_ALL} (solve {Fore.RED}UnicodeDecodeError{Style.RESET_ALL}; solve leftover files).
 Added flags to {Fore.BLUE}dirloct{Style.RESET_ALL} for common directories: {Fore.GREEN}-<dwn, -<docs, -<imgs, -<aud, -<vid{Style.RESET_ALL}.
+Added encoding detection for {Fore.BLUE}dirloct{Style.RESET_ALL} to prevent uncaught {Fore.RED}UnicodeDecodeError{Style.RESET_ALL}.
+Updated {Fore.CYAN}path resolving{Style.RESET_ALL} functionality.
     """
 
     @staticmethod
@@ -166,13 +168,11 @@ Added flags to {Fore.BLUE}dirloct{Style.RESET_ALL} for common directories: {Fore
         formatted_entries = []
         raw_lengths = []
 
-        # Split and remove empty lines
         lines = [line.strip() for line in cls.entries.strip().splitlines() if line.strip()]
 
         for i, entry in enumerate(lines, 1):
             formatted = f"{i}. {entry}"
             formatted_entries.append(formatted)
-            # Calculate length after stripping ANSI codes for correct border alignment
             raw_lengths.append(len(cls._strip_ansi(formatted)))
 
         max_content_len = max(raw_lengths) if raw_lengths else 0

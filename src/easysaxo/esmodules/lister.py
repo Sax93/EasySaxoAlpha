@@ -245,6 +245,7 @@ class FileList:
         ".xml": Fore.LIGHTGREEN_EX,
         ".c": Fore.CYAN,
         ".toml": Fore.BLUE,
+        ".lua": Fore.BLUE,
         # docs
         ".md": Fore.CYAN,
         ".txt": Fore.WHITE + Style.DIM,
@@ -291,11 +292,6 @@ class FileDisclaimer:
     _rstr = Fore.LIGHTBLACK_EX
     _strend = Style.RESET_ALL
     _hint = Fore.CYAN
-    
-    def _path_assurance(path):
-        Fd = FileDisclaimer
-        path_assurance = f"{Fd._strinit}If this directory is incorrect, try this path instead: {Fd._hint}{path.upper()}\\{Fd._strend}"
-        return path_assurance
 
     not_found_path = f"{_strinit}Make sure the path is written correctly.{_strend}"
     
@@ -303,6 +299,8 @@ class FileDisclaimer:
 
     res_flag_typo = f"{_strinit}Make sure you typed exactly {_hint}\"-<\"{_rstr} right before the flag name.{_strend}"
     res_flag_typo_2 = f"{_strinit}Make sure the {_hint}flag name{_rstr} you typed exists.{_strend}"
+
+    utf_evaluator = f"{_strinit}Make sure the {_hint}file{_rstr} is encoded in {_hint}UTF-8{_rstr} or {_hint}UTF-16{_rstr}.{_strend}"
 
 # math lists =====================================================================================
 import ast

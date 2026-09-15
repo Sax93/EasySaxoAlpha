@@ -24,7 +24,7 @@ ee4 = True
 # Helper Utilities
 #=================================================
 
-def _resolve_target_args(arg: str) -> str:
+def _resolve_target_args(arg: str, *, for_creation: bool = False) -> str:
     """
     Parses dynamic path targets and flags.
     Handles usages:
@@ -49,6 +49,9 @@ def _resolve_target_args(arg: str) -> str:
         return os.path.join(dest_dir, filename) if filename else dest_dir
 
     # otherwise treat the entire argument string as a single path with spaces
+    if for_creation:
+        return arg.strip()
+
     return DirLocation._resolve_path(arg.strip())
 
 #=================================================
@@ -271,7 +274,8 @@ def c_dircrt(arg):
         easysaxo.k_log("2")
         print(f"{Fore.RED}Missing directory name.{Style.RESET_ALL}")
         return
-    DirLocation.dircrt(_resolve_target_args(arg))
+
+    DirLocation.dircrt(_resolve_target_args(arg, for_creation=True))
 
 @register_command("dirdel", aliases=(["ddelete", "rm-r", "rmdir"]), help_text="dirdel <dirname> [destination_dir] - Deletes a directory.")
 def c_dirdel(arg): 
@@ -291,8 +295,19 @@ def c_filelst(arg):
 
 @register_command("tree", aliases=["filetree", "dirtree"], help_text="tree [dir] - Renders directory as a tree.")
 def c_treedir(arg):
-    target = _resolve_target_args(arg) if arg else ""
-    DirLocation.filetree(target)
+    if not arg:
+        target = ""
+        DirLocation.filetree(target)
+        return
+    
+    parts = arg.split(maxsplit=1)
+    
+    target = _resolve_target_args(parts[0]) if arg else ""
+    if len(parts) > 1 and parts[1].isdigit(): max_depth = int(parts[1])
+    elif len(parts) > 1 and parts[1].lower() in ["max", "all"]: max_depth = 1000
+    else: max_depth = 4
+    
+    DirLocation.filetree(target, max_depth)
 
 @register_command("fileopn", aliases=["openf", "opn"], help_text="fileopn <filepath> [destination_dir] - Opens a file with the default system application.")
 def c_fileopn(arg):
@@ -316,7 +331,8 @@ def c_filecrt(arg):
         easysaxo.k_log("2")
         print(f"{Fore.RED}Missing file argument.{Style.RESET_ALL}")
         return
-    DirLocation.filecrt(_resolve_target_args(arg))
+
+    DirLocation.filecrt(_resolve_target_args(arg, for_creation=True))
 
 @register_command("filerd", aliases=["readf", "cat"], help_text="filerd <filepath> [destination_dir] - Reads and prints text content from a target file.")
 def c_filerd(arg):
@@ -382,11 +398,8 @@ def c_filesz(arg):
     DirLocation.filesz(_resolve_target_args(arg))
 
 @register_command("dirsz", aliases=["dsize", "dsizeof"], help_text="dirsz <dir> [destination_dir] - Shows size of a directory.")
-def c_dirsz(arg): 
-    if not arg:
-        easysaxo.k_log("2")
-        print(f"{Fore.RED}Missing directory path.{Style.RESET_ALL}")
-        return
+def c_dirsz(arg):
+    if not arg: arg = "."
     DirLocation.dirsz(_resolve_target_args(arg))
 
 @register_command("jsonrd", help_text="jsonrd <filepath> [destination_dir] - Parses and pretty-prints JSON file contents.")

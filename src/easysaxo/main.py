@@ -187,18 +187,18 @@ def Core(session_info=None):
         usit = unicodedata.normalize("NFKC", usit).strip()
 
         override_mode = None
-        if usit.endswith(" -e"):
+        if usit.endswith(" -e") or usit.startswith("> "):
             override_mode = "easysaxo"
-            usit = usit[:-2].strip()
-        elif usit.endswith(" -s"):
+            usit = usit[:-2].strip() if usit.endswith(" -e") else usit[2:].strip()
+        elif usit.endswith(" -s") or usit.startswith("$ "):
             override_mode = "system"
-            usit = usit[:-2].strip()
+            usit = usit[:-2].strip() if usit.endswith(" -s") else usit[2:].strip()
 
         effective_mode = override_mode if override_mode is not None else getattr(ThreadData, "target_mode", "auto")
 
         parts = usit.split(maxsplit=1)
         cmd = parts[0].lower()
-        arg = parts[1].lower() if len(parts) > 1 else None
+        arg = parts[1] if len(parts) > 1 else None
 
         if cmd in translations: cmd = translations[cmd]
 
