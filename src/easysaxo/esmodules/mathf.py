@@ -1,12 +1,9 @@
 """Math Holder for EasySaxo"""
 
-# `mathf.py` ONLY FOR MATH FUNCTIONS COMMAND DEFINING
-# math shii and stuff ig
-
 import ast
 import random
 
-from colorama import Fore, Style
+from rich import print
 
 from ..config import easysaxo
 from .lister import MathList as Mt
@@ -19,18 +16,16 @@ class MathFunc:
         attr = attr.strip()
         attr_l = attr.lower()
         if attr in Mt.MATHSET_HELP:
-            print(f"{Fore.GREEN}=== MathSet Help: {attr} ==={Style.RESET_ALL}")
-            print(f"{Fore.YELLOW}{Mt.MATHSET_HELP[attr]}{Style.RESET_ALL}")
+            print(f"[green]=== MathSet Help: {attr} ===[/green]")
+            print(f"[yellow]{Mt.MATHSET_HELP[attr]}[/yellow]")
         elif (attr in Mt.mathset and attr not in Mt._reserved) or (attr_l in Mt.mathset and attr_l not in Mt._reserved):
-            print(f"'{Fore.CYAN}{attr or attr_l}{Style.RESET_ALL}' (user variable) = {Fore.GREEN}{Mt.mathset[attr or attr_l]}{Style.RESET_ALL}")
+            print(f"'[cyan]{attr or attr_l}[/cyan]' (user variable) = [green]{Mt.mathset[attr or attr_l]}[/green]")
         else:
             easysaxo.k_log("")
-            print(f"{Fore.RED}No MathSet documentation found for '{attr}'.{Style.RESET_ALL}")
+            print(f"[red]No MathSet documentation found for '{attr}'.[/red]")
 
     @staticmethod
     def _eval_ast_node(node):
-        # WARNING: van rossum be frowning at ts
-        
         if isinstance(node, ast.Constant):
             if isinstance(node.value, (int, float)): return node.value
             raise ValueError("Only numeric constants allowed.")
@@ -72,26 +67,26 @@ class MathFunc:
             if open_count > close_count: expression += ')' * (open_count - close_count)
 
             parsed_ast = ast.parse(expression, mode='eval').body
-            print(f"Result: {Fore.GREEN}{MathFunc._eval_ast_node(parsed_ast)}{Style.RESET_ALL}")
+            print(f"Result: [green]{MathFunc._eval_ast_node(parsed_ast)}[/green]")
 
         except SyntaxError as e:
             # e.offset points to the character position of the syntax error
             offset = e.offset or 1
             pointer_pos = min(offset - 1, len(expression)) 
             
-            print(f"{Fore.RED}Syntax Error:{Style.RESET_ALL} {e.msg}")
+            print(f"[red]Syntax Error:[/red] {e.msg}")
             print(f"  {expression}")
-            print(f"  {Fore.RED}{' ' * pointer_pos}^{Style.RESET_ALL}")
+            print(f"  [red]{' ' * pointer_pos}^[/red]")
 
         except (ValueError, ZeroDivisionError) as e:
             easysaxo.k_log("6")
-            print(f"{Fore.RED}Evaluation Error:{Style.RESET_ALL} {e}")
+            print(f"[red]Evaluation Error:[/red] {e}")
         except TypeError as e: 
             easysaxo.k_log("6")
-            print(f"{Fore.RED}Type Error:{Style.RESET_ALL} {e}")
+            print(f"[red]Type Error:[/red] {e}")
         except KeyboardInterrupt: 
             easysaxo.k_log("11")
-            print(f"\n{Fore.YELLOW}Evaluation interrupted.{Style.RESET_ALL}")
+            print("\n[yellow]Evaluation interrupted.[/yellow]")
 
     @staticmethod
     def getmath(): print(Mt.math_funcslist)
@@ -101,47 +96,45 @@ class MathFunc:
         try:
             if start is not None and end is not None: num = random.randint(min(start, end), max(start, end))
             elif start is not None: num = random.randint(1, start)
-            else: num = random.randint(1, 1000)
-            print(f"Random number: {Fore.GREEN}{num}{Style.RESET_ALL}")
+            else: num = random.randint(1, 10000)
+            print(f"Random number: [green]{num}[/green]")
         except (ValueError, TypeError, KeyboardInterrupt) as e: 
             easysaxo.k_log("6" if not isinstance(e, KeyboardInterrupt) else "11")
-            print(f"{Fore.RED}Error generating random number: {e}{Style.RESET_ALL}")
+            print(f"[red]Error generating random number: {e}[/red]")
 
     @staticmethod
     def set_var(var_name: str, value: float):
         try:
             Mt.mathset[var_name] = float(value)
-            print(f"Variable {Fore.CYAN}{var_name}{Style.RESET_ALL} assigned value {Fore.GREEN}{float(value)}{Style.RESET_ALL}.")
+            print(f"Variable [cyan]{var_name}[/cyan] assigned value [green]{float(value)}[/green].")
         except ValueError:
             easysaxo.k_log("6")
-            print(f"{Fore.RED}Invalid numeric value provided.{Style.RESET_ALL}")
+            print("[red]Invalid numeric value provided.[/red]")
 
     @staticmethod
     def del_var(var_name: str):
         if var_name in Mt._reserved:
             easysaxo.k_log("m1")
-            print(f"{Fore.RED}Cannot delete built-in constant/function '{var_name}'.{Style.RESET_ALL}")
+            print(f"[red]Cannot delete built-in constant/function '{var_name}'.[/red]")
         elif var_name in Mt.mathset:
             del Mt.mathset[var_name]
-            print(f"Variable {Fore.GREEN}{var_name}{Style.RESET_ALL} deleted.")
+            print(f"Variable [green]{var_name}[/green] deleted.")
         else: 
             easysaxo.k_log("m2")
-            print(f"{Fore.RED}Variable '{var_name}' not found.{Style.RESET_ALL}")
+            print(f"[red]Variable '{var_name}' not found.[/red]")
 
     @staticmethod
     def getvar(var_name: str):
-        if var_name in Mt.mathset and var_name not in Mt._reserved: print(f"{Fore.CYAN}{var_name}{Style.RESET_ALL} = {Fore.GREEN}{Mt.mathset[var_name]}{Style.RESET_ALL}")
-        elif var_name in Mt._reserved: print(f"{Fore.YELLOW}'{var_name}' is a built-in function/constant.{Style.RESET_ALL}")
+        if var_name in Mt.mathset and var_name not in Mt._reserved: print(f"[cyan]{var_name}[/cyan] = [green]{Mt.mathset[var_name]}[/green]")
+        elif var_name in Mt._reserved: print(f"[yellow]'{var_name}' is a built-in function/constant.[/yellow]")
         else: 
             easysaxo.k_log("m2")
-            print(f"{Fore.RED}Variable '{var_name}' not found.{Style.RESET_ALL}")
+            print(f"[red]Variable '{var_name}' not found.[/red]")
 
     @staticmethod
     def list_vars():
         user_vars = {k: v for k, v in Mt.mathset.items() if k not in Mt._reserved}
         if user_vars:
-            print(f"\n{Fore.BLUE}== USER VARIABLES =={Style.RESET_ALL}\n")
-            for k, v in user_vars.items(): print(f"{Fore.CYAN}{k:<15}{Style.RESET_ALL}: {Fore.GREEN}{v}{Style.RESET_ALL}")
-        else: print(f"{Fore.YELLOW}No custom variables saved yet.{Style.RESET_ALL}")
-
-# love math tho
+            print("\n[cyan]== USER VARIABLES ==[/cyan]\n")
+            for k, v in user_vars.items(): print(f"[cyan]{k:<15}[/cyan]: [green]{v}[/green]")
+        else: print("[yellow]No custom variables saved yet.[/yellow]")

@@ -1,18 +1,12 @@
 """Multimedia handler for EasySaxo."""
 
-#`medi.py` ONLY FOR MULTIMEDIA FILE HANDLING COMMAND DEFINING
-
 import os
 
-from colorama import Fore, Style
+from rich import print
 
 from ..config import easysaxo
 from ..esmodules.dirloct import DirLocation
 
-try: # we are trying to import asciiart here to avoid double check in main file
-    from ascii_magic import AsciiArt
-    ASCII_AVAILABLE = True
-except ImportError: ASCII_AVAILABLE = False
 
 class MediaData:
     """Multimedia handler/operator set (Audio and ASCII Render)."""
@@ -33,10 +27,10 @@ class MediaData:
             pygame = MediaData.init_pygame()
             pygame.mixer.music.load(DirLocation._resolve_path(filepath))
             pygame.mixer.music.play()
-            print(f"Playing audio: {Fore.GREEN}{filepath}{Style.RESET_ALL}")
+            print(f"Playing audio: [green]{filepath}[/green]")
         except (FileNotFoundError, PermissionError) as e: 
             easysaxo.k_log("5" if isinstance(e, FileNotFoundError) else "4")
-            print(f"{Fore.RED}Error playing audio file: {e}{Style.RESET_ALL}")
+            print(f"[red]Error playing audio file: {e}[/red]")
 
     @staticmethod
     def stopaudio():
@@ -44,60 +38,54 @@ class MediaData:
             import pygame
             if MediaData.pygame_initialized and pygame.mixer.music.get_busy():
                 pygame.mixer.music.stop()
-                print(f"{Fore.GREEN}Audio stopped.{Style.RESET_ALL}")
-            else: print(f"{Fore.YELLOW}No audio is currently playing.{Style.RESET_ALL}")
+                print("[green]Audio stopped.[/green]")
+            else: print("[yellow]No audio is currently playing.[/yellow]")
         except (ImportError, OSError, KeyboardInterrupt) as e: 
             easysaxo.k_log("10" if not isinstance(e, KeyboardInterrupt) else "11")
-            print(f"{Fore.RED}Error stopping audio: {e}{Style.RESET_ALL}")
+            print(f"[red]Error stopping audio: {e}[/red]")
         
-    # render area
     @staticmethod
     def render_preset(name):
-        import random
-
         from .builtinrender import Image as bt
-        from .lister import ColorList
 
         attr_name = f"{name.lower()}Logo"
         logo = getattr(bt, attr_name, None)
-        
+
         if logo:
-            rancolor = random.choice(ColorList.colors)
-            ranfore = getattr(Fore, rancolor)
-            print(f"{ranfore}{logo}{Style.RESET_ALL}")
+            print(logo)
             return True
-            
-        return False # fallback to file rendering
+
+        return False
 
     @staticmethod
     def render(filepath, colnum=80):
-        if not ASCII_AVAILABLE:
-            print(f"{Fore.RED}ASCII Art not available.{Style.RESET_ALL}")
+        try:
+            from ascii_magic import AsciiArt
+        except ImportError:
+            print("[red]ASCII Art not available.[/red]")
             return
-            # on top of it all, we check if asciiart is available
-            # to avoid errors with the command
 
         resolved_path = DirLocation._resolve_path(filepath)
 
         VALID_EXTENSIONS = ('.png', '.jpg', '.jpeg', '.webp', '.bmp', '.gif')
         if not resolved_path.lower().endswith(VALID_EXTENSIONS):
             easysaxo.k_log("f1")
-            print(f"{Fore.RED}Error: Invalid image extension. Supported: {', '.join(VALID_EXTENSIONS)}{Style.RESET_ALL}")
+            print(f"[red]Error: Invalid image extension. Supported: {', '.join(VALID_EXTENSIONS)}[/red]")
             return
 
         if not os.path.isfile(resolved_path):
             easysaxo.k_log("5")
-            print(f"{Fore.RED}Error: Image file '{filepath}' not found.{Style.RESET_ALL}")
+            print(f"[red]Error: Image file '{filepath}' not found.[/red]")
             return
 
         try:
-            print(f"{Fore.LIGHTMAGENTA_EX}Rendering your image...{Style.RESET_ALL}")
+            print("[magenta]Rendering your image...[/magenta]")
             cols = int(colnum) if str(colnum).isdigit() else 80
             ascii_r = AsciiArt.from_image(resolved_path)
             ascii_r.to_terminal(columns=cols)
         except (ValueError, FileNotFoundError, PermissionError, KeyboardInterrupt) as e:
             easysaxo.k_log("5" if isinstance(e, FileNotFoundError) else "4" if isinstance(e, PermissionError) else "6" if isinstance(e, ValueError) else "11")
-            print(f"{Fore.RED}Could not render: {e}{Style.RESET_ALL}")
+            print(f"[red]Could not render: {e}[/red]")
     
     @staticmethod
     def txt2rt(text):
@@ -105,24 +93,15 @@ class MediaData:
             from art import text2art
         except ImportError:
             easysaxo.k_log("9")
-            print(f"{Fore.RED}Art not available.{Style.RESET_ALL}")
+            print("[red]Art not available.[/red]")
             return
         result = text2art(text)
-        print(f"{Fore.CYAN}{result}{Style.RESET_ALL}")
-        
+        print(f"[cyan]{result}[/cyan]")
+
     @staticmethod
     def renderbanner(descript):
-        import random
-
         from .builtinrender import TextToImage as tti
-        from .lister import ColorList
-        
-        rancolor = random.choice(ColorList.colors)
-        ranfore = getattr(Fore, rancolor)
         attr_name = f"{descript.lower()}Text"
         logo = getattr(tti, attr_name, None)
-        if logo: print(f"{ranfore}{logo}{Style.RESET_ALL}")
-        else: print(f"{Fore.RED}Preset text image '{descript}' not found")
-        
-        
-# holy useless code
+        if logo: print(logo)
+        else: print(f"[red]Preset text image '{descript}' not found[/red]")

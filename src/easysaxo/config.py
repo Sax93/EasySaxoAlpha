@@ -3,7 +3,7 @@ import os
 import time
 
 import psutil
-from colorama import Fore, Style
+from rich import print
 
 
 class App:
@@ -12,10 +12,10 @@ class App:
         self.ver = ver
         self.dev = "SXF"
         self.start_time = time.time()
-        self.tag = f"{Fore.CYAN}[{name}]{Style.RESET_ALL} |>"
+        self.tag = f"[cyan][{name}][/cyan] |>"
         self.mute = True
         self.logger = {
-            # No character before number indicates a general error message
+            # general error message
             "1": "Unknown/malformed command.",
             "2": "No arguments provided.",
             "3": "Operation failed.",
@@ -27,17 +27,17 @@ class App:
             "9": "System command execution failed.",
             "10": "Unexpected error occurred.",
             "11": "Operation canceled",
-            # 'a' before number indicates an info message
+            # info message
             "a0": "Exiting app.",
             "a1": "Condition already evaluated.",
-            # 'f' before number indicates specific file error
+            # file error
             "f1": "Invalid file or path.",
             "f2": "Path is not a directory.",
             "f3": "Path is not a file.",
             "f4": "Path exists.",
-            # 'p' before number indicates specific process error
+            # process error
             "p1": "Process does not exist.",
-            # 'm' before number indicates specific math error
+            # math error
             "m1": "Cannot operate term.",
             "m2": "Variable does not exist.",
             "m3": "Term does not exist."
@@ -76,15 +76,11 @@ class App:
             "m3": "Term does not exist."
         """
         if self.mute == True: return
-        print(f"{self.tag} {Fore.RED}(Code: {log}) {self.logger[log]}{Style.RESET_ALL}")
+        print(f"{self.tag} [red](Code: {log}) [/red][red]{self.logger[log]}[/red]")
 
-    def disclaim(self, disclaimer):
-        """Disclaimer for app, info displayer."""
-        print(f"{self.tag} {disclaimer}")
+    def disclaim(self, disclaimer): print(f"{self.tag} {disclaimer}")
 
     def state(self):
-        """Displays session information, build version, log state, and resource usage."""
-
         _bld = app_databuild()
         build = f"{self.ver} (Build Date: {_bld})"
 
@@ -93,23 +89,23 @@ class App:
         minutes, seconds = divmod(remainder, 60)
         session_time = f"{hours:02d}h {minutes:02d}m {seconds:02d}s"
 
-        log_status = f"{Fore.RED}Muted{Style.RESET_ALL}" if self.mute else f"{Fore.GREEN}Active{Style.RESET_ALL}"
+        log_status = "[red]Muted[/red]" if self.mute else "[green]Active[/green]"
 
         process = psutil.Process(os.getpid())
         mem_info = process.memory_info()
         mem_mb = mem_info.rss / (1024 * 1024)
         cpu_percent = process.cpu_percent(interval=0.1)
 
-        print(f"\n{self.tag} {Fore.YELLOW}=== App State ==={Style.RESET_ALL}")
+        print(f"\n{self.tag} [yellow]=== App State ===[/yellow]")
         print(f"  > Name & Version : {self.name} {build}")
         print(f"  > Developer      : {self.dev}")
         print(f"  > Session Time   : {session_time}")
         print(f"  > Logger State   : {log_status}")
         print(f"  > Memory Usage   : {mem_mb:.2f} MB")
         print(f"  > CPU Usage      : {cpu_percent:.1f}%")
-        print(f"{Fore.CYAN}=" * 30 + f"{Style.RESET_ALL}\n")
+        print("[cyan]=" * 30 + "[/cyan]\n")
         
-easysaxo = App("EasySaxo", "Alpha 1.11.02") # yes im that lazy to write this ever again
+easysaxo = App("EasySaxo", "Alpha 1.12.00")
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
@@ -143,25 +139,22 @@ import re
 
 class Changelog:
     _r_title = f"Changelog! ({easysaxo.name} {easysaxo.ver})"
-    _color_title = f"{Fore.CYAN}Changelog!{Style.RESET_ALL} ({Fore.CYAN}{easysaxo.name} {easysaxo.ver}{Style.RESET_ALL})"
+    _color_title = f"[cyan]Changelog![/cyan] ([cyan]{easysaxo.name} {easysaxo.ver}[/cyan])"
 
-    entries = f"""
-Added new commands: {Fore.BLUE}restart, sleep, lock, tempflush, dnsflush, app{Style.RESET_ALL}.
-Extended functionality for commands: {Fore.BLUE}shutdown, tree{Style.RESET_ALL}
-Added {Fore.GREEN}path assurance disclaimers{Style.RESET_ALL} for path resolving.
-Moved command as subcommand: {Fore.LIGHTBLUE_EX}unins{Style.RESET_ALL} -> {Fore.BLUE}app{Style.RESET_ALL}
-Added {Fore.BLUE}app metadata{Style.RESET_ALL}.
-Restructured {Fore.LIGHTBLUE_EX}code base{Style.RESET_ALL} in app scripts.
-Updated {Fore.GREEN}app and dev logos{Style.RESET_ALL}.
-Fixed errors in commands: {Fore.BLUE}filewrt, filerd; app unins{Style.RESET_ALL} (solve {Fore.RED}UnicodeDecodeError{Style.RESET_ALL}; solve leftover files).
-Added flags to {Fore.BLUE}dirloct{Style.RESET_ALL} for common directories: {Fore.GREEN}-<dwn, -<docs, -<imgs, -<aud, -<vid{Style.RESET_ALL}.
-Added encoding detection for {Fore.BLUE}dirloct{Style.RESET_ALL} to prevent uncaught {Fore.RED}UnicodeDecodeError{Style.RESET_ALL}.
-Updated {Fore.CYAN}path resolving{Style.RESET_ALL} functionality.
+    entries = """
+Added new commands: [blue]move[/blue].
+Fixed errors in commands: [blue]timer[/blue].
+Added new path flags: [cyan]-<inst[/cyan].
+Added subcommands for command [blue]app[/blue]: [cyan]update[/cyan].
+Optimized [red]app files[/red] for better performance.
+Removed dependencies: [blue]colorama[/blue].
+Removed [cyan]Prompt Toolkit Autocompletion[/cyan].
     """
 
     @staticmethod
     def _strip_ansi(text: str) -> str:
-        return re.sub(r'\x1b\[[0-9;]*m', '', text)
+        clean = re.sub(r'\x1b\[[0-9;]*m', '', text)
+        return re.sub(r'\[/?(?:cyan|blue|red|green|yellow|magenta|bold|dim|italic).*?\]', '', clean)
 
     @classmethod
     def print_box(cls):
@@ -176,23 +169,24 @@ Updated {Fore.CYAN}path resolving{Style.RESET_ALL} functionality.
             raw_lengths.append(len(cls._strip_ansi(formatted)))
 
         max_content_len = max(raw_lengths) if raw_lengths else 0
-        min_header_len = len(cls._r_title) + 6
+        min_header_len = len(cls._strip_ansi(cls._r_title)) + 4
         inner_width = max(max_content_len, min_header_len) + 2
 
-        needed_eq = inner_width - len(cls._r_title) - 2
-        left_eq = "=" * (needed_eq // 2)
-        right_eq = "=" * (needed_eq - len(left_eq))
+        needed_eq = inner_width - len(cls._strip_ansi(cls._r_title)) - 2
+        left_eq = "=" * max(0, needed_eq // 2)
+        right_eq = "=" * max(0, needed_eq - len(left_eq))
         top_header = f"|{left_eq} {cls._color_title} {right_eq}|"
 
         print(f"\n{top_header}")
-        print(f"|{' ' * inner_width}|")  # top space line
+        print(f"|{' ' * inner_width}|")
 
         for entry_text, raw_len in zip(formatted_entries, raw_lengths):
             padding = inner_width - raw_len - 1
-            print(f"| {entry_text}{' ' * padding}|")
+            print(f"| {entry_text}{' ' * max(0, padding)}|")
 
-        print(f"|{' ' * inner_width}|")   # bottom space line
-        print(f"|{'=' * inner_width}|")   # bottom border line
+        print(f"|{' ' * inner_width}|")
+        print(f"|{'=' * inner_width}|")
+
 
 def whats_new(): Changelog.print_box()
 
@@ -290,15 +284,13 @@ def build_completion_dict(translations: dict) -> dict:
             "cmdrun": {"sys": None, "app": None, "auto": None},
             "pathdisplay": {"on": None, "off": None, "enable": None, "disable": None},
             "pathmode": {"on": None, "off": None, "enable": None, "disable": None},
-            "language": None,
-            "lang": None,
         },
         "reset": dict.fromkeys(("name", "username", "password", "pswd", "key", "all", "user")),
         "app": {
             "reset": None, "restart": None,
             "unins": None, "uninstall": None,
             "log": {"mute": None, "unmute": None, "codes": None,},
-            "state": None,
+            "state": None, "update": None,
             },
         f"{easysaxo.name.lower()}": {
             "reset": None, "restart": None,
@@ -310,7 +302,7 @@ def build_completion_dict(translations: dict) -> dict:
             **{f"{func}(": None for func in MathList.mathset if func not in MathList._uncallable}
         },
         "mathhelp": dict.fromkeys(MathList.mathset),
-        
+
         "filecrt": file_shortcut,
         "createf": file_shortcut,
         "touch": file_shortcut,
@@ -337,7 +329,9 @@ def build_completion_dict(translations: dict) -> dict:
         "ddelete": file_shortcut,
         "dirdel": file_shortcut,
 
-        "shutdown": dict.fromkeys(("/a", "-c", "abort", "cancel")), "turnoff": dict.fromkeys(("/a", "-c", "abort", "cancel")), "shut": dict.fromkeys(("/a", "-c", "abort", "cancel")),
+        "shutdown": dict.fromkeys(("/a", "-c", "abort", "cancel")),
+        "turnoff": dict.fromkeys(("/a", "-c", "abort", "cancel")),
+        "shut": dict.fromkeys(("/a", "-c", "abort", "cancel")),
         "restart": dict.fromkeys(("/a", "-c", "abort", "cancel")),
     }
 
@@ -352,11 +346,11 @@ def build_completion_dict(translations: dict) -> dict:
 
     for func_obj, cmd_list in func_to_cmds.items():
         primary_match = next((cmd for cmd in cmd_list if cmd in subcommand_maps), None)
-        
+
         subdict = subcommand_maps[primary_match] if primary_match else None
-        
+
         for cmd in cmd_list: comp_dict[cmd] = subdict
-            
+
     for trans_key in translations:
         if trans_key not in comp_dict: comp_dict[trans_key] = None
 
@@ -369,7 +363,7 @@ def app_databuild():
     from .esmodules.lister import FileList
 
     is_at_root = (base_dir == PROJECT_ROOT)
-    
+
     allow_files = []
     for f in FileList._allow:
         if is_at_root: allow_files.append(f if f.endswith(".py") else f"{f}.py")

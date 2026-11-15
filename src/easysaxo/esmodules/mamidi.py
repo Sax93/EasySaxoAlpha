@@ -1,13 +1,11 @@
-"""MIDI execution holder for EasySaxo"""
-
-# this is gonna be horrendeous
+"""Own MIDI execution holder for EasySaxo"""
 
 import sys
 import time
 
 import numpy as np
 import pygame
-from colorama import Fore, Style
+from rich import print
 
 pygame.mixer.init(frequency=44100, size=-16, channels=1, buffer=512)
 
@@ -32,7 +30,7 @@ class MusicIns:
         sound = pygame.mixer.Sound(buffer=buf)
         sound.play()
 
-# song playback support ==============================================================================
+# song playback support
 
 import threading
 
@@ -57,15 +55,15 @@ def _play_track(track_notes):
         time.sleep(duration)
 
 def play_song(song_name: str) -> bool:
-    from .lister import SongSet
+    from .songset import SongSet
 
     song_data = SongSet.get_song(song_name)
     if not song_data:
-        print(f"{Fore.RED}Song '{song_name}' not found.{Style.RESET_ALL}")
+        print(f"[red]Song '{song_name}' not found.[/red]")
         return False
 
     draw_piano()
-    print(f"Playing: {Fore.CYAN}{song_name}{Style.RESET_ALL}")
+    print(f"Playing: [cyan]{song_name}[/cyan]")
 
     if isinstance(song_data, list): song_data = {"track_1": song_data}
 
@@ -79,16 +77,16 @@ def play_song(song_name: str) -> bool:
     return True
 
 def prompt_song_selection():
-    from .lister import SongSet
+    from .songset import SongSet
 
     songs = SongSet.list_songs()
     if not songs:
-        print(f"{Fore.RED}No songs available.{Style.RESET_ALL}")
+        print("[red]No songs available.[/red]")
         return None
 
-    print(f"\n{Fore.CYAN}Available songs:{Style.RESET_ALL}")
+    print("\n[cyan]Available songs:[/cyan]")
     for i, song_name in enumerate(songs, 1): print(f"  {i}. {song_name}")
-    print(f"  {Fore.LIGHTBLACK_EX}Enter number or name (or press Enter to cancel): {Style.RESET_ALL}", end="")
+    print("  [lightblack]Enter number or name (or press Enter to cancel): [/lightblack]", end="")
 
     try:
         choice = input().strip()
@@ -102,27 +100,26 @@ def prompt_song_selection():
         # Try as song name
         if choice.lower() in [s.lower() for s in songs]: return choice.lower()
 
-        # Try fuzzy match
         for s in songs:
             if choice.lower() in s.lower(): return s
 
-        print(f"{Fore.RED}Song '{choice}' not found.{Style.RESET_ALL}")
+        print(f"[red]Song '{choice}' not found.[/red]")
         return None
     except (EOFError, KeyboardInterrupt): return None
 
 def draw_piano(highlight_note=None, mode_info=None):
     print("\033[H\033[J", end="")
-    print(f"{Fore.CYAN}=== Piano keyboard mode ==={Style.RESET_ALL}\n"
-          f"{Fore.LIGHTBLACK_EX}`Ctrl` + `C` to exit | Press 'M' to play a song{Style.RESET_ALL}\n")
+    print("[cyan]=== Piano keyboard mode ===[/cyan]\n"
+          "[lightblack]`Ctrl` + `C` to exit | Press 'M' to play a song[/lightblack]\n")
 
-    if mode_info: print(f"{Fore.YELLOW}{mode_info}{Style.RESET_ALL}\n")
+    if mode_info: print(f"[yellow]{mode_info}[/yellow]\n")
 
     b_layer = "  | | 2 | 3 | | | 5 | 6 | 7 | | | 9 | 0 | | | S | D | F | |   |"
     w_layer = "  | Q | W | E | R | T | Y | U | I | O | P | Z | X | C | V | B |"
 
     if highlight_note:
-        b_layer = b_layer.replace(f" {highlight_note} ", f" {Fore.GREEN}{highlight_note}{Style.RESET_ALL} ")
-        w_layer = w_layer.replace(f" {highlight_note} ", f" {Fore.GREEN}{highlight_note}{Style.RESET_ALL} ")
+        b_layer = b_layer.replace(f" {highlight_note} ", f" [green]{highlight_note}[/green] ")
+        w_layer = w_layer.replace(f" {highlight_note} ", f" [green]{highlight_note}[/green] ")
 
     print("  _____________________________________________________________\n"
           "  | |■■■|■■■| | |■■■|■■■|■■■| | |■■■|■■■| | |■■■|■■■|■■■| |   |\n"
@@ -155,7 +152,6 @@ def run_piano():
     from ..config import clr
     from .lister import MidiSetList
 
-    # Flush input buffer before starting
     if sys.platform == 'win32':
         import msvcrt
         while msvcrt.kbhit(): msvcrt.getch()
@@ -166,7 +162,6 @@ def run_piano():
         try:
             key = get_key_nonblocking()
 
-            # Song selection mode
             if key == 'm':
                 song_name = prompt_song_selection()
                 if song_name:
@@ -179,6 +174,6 @@ def run_piano():
                 MusicIns.p_note(freq)
 
         except KeyboardInterrupt:
-            print(f"{Fore.LIGHTBLACK_EX}Exiting PK.{Style.RESET_ALL}")
+            print("[lightblack]Exiting PK.[/lightblack]")
             clr()
             break

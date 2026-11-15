@@ -1,212 +1,175 @@
 """List, tuple and dict holder for EasySaxo"""
 
-import random
-
-from colorama import Fore, Style
+from rich import print  # noqa: F401
 
 from ..config import easysaxo
 
-# add big lists here. remember to use 'from .esmodules.lister import ...'
-
-# easter egg lists ================================================================================
-
-class EasterList:
-    """Secret's global list for secret commands."""
-    
-    ERRlist = [ # from eas5()  # noqa: RUF012
-        f"NotAnError{Style.RESET_ALL}: {Fore.MAGENTA}Seemingly, there was no error at all",
-        f"ConfidenceError{Style.RESET_ALL}: {Fore.MAGENTA}There was an error, but it was not confident enough to show up",
-        f"NonsenseError{Style.RESET_ALL}: {Fore.MAGENTA}There is not an error, against all odds",
-        f"MissClickError{Style.RESET_ALL}: {Fore.MAGENTA}My bad, bro, I thought there was an error",
-        f"OutOfHardwareError{Style.RESET_ALL}: {Fore.MAGENTA}The error is far out of the hardware (it is the developer)",
-        f"AstigmatismError{Style.RESET_ALL}: {Fore.MAGENTA}There was an error, but I lost it from sight",
-        f"CentralProcessingUnitError{Style.RESET_ALL}: {Fore.MAGENTA}Python detected your CPU is too trash to run the error",
-        f"SentimentalError{Style.RESET_ALL}: {Fore.MAGENTA}The error remembered things from the past, and decided not to show up",
-        f"ConsciousnessError{Style.RESET_ALL}: {Fore.MAGENTA}The error suddenly remembered there was no reason to raise an exception",
-        f"InsufficentGravityError{Style.RESET_ALL}: {Fore.MAGENTA}Python detected local gravity is off. Please put your feet on the floor again to continue",
-        f"SuspiciouslyLookingError{Style.RESET_ALL}: {Fore.MAGENTA}This error might or might not be an actual error",
-        f"StackOverflowRelianceError{Style.RESET_ALL}: {Fore.MAGENTA}The code failed because the 11-year-old StackOverflow post with 3 upvotes had a subtle typo in snippet #2",
-        f"ExecutiveDysfunctionError{Style.RESET_ALL}: {Fore.MAGENTA}The interpreter knows what it needs to do, but it's going to stare at line 42 for two hours instead",
-        f"QuantumUncertaintyError{Style.RESET_ALL}: {Fore.MAGENTA}The error only occurs when you are actively trying to demonstrate it to a senior developer",
-        f"ErrorError{Style.RESET_ALL}: {Fore.MAGENTA}An error ocurred while we tried to show you the error",
-        f"ExistentialError{Style.RESET_ALL}: {Fore.MAGENTA}Python is questioning why it was asked to process this specific array in the grand scope of the universe",
-        f"UserError{Style.RESET_ALL}: {Fore.MAGENTA}Error found 18 inches away from the screen",
-        f"LegacyCodeGraveRobbingError{Style.RESET_ALL}: {Fore.MAGENTA} You somehow touched a function written in 2014 by someone named 'Dave' who left the company, and now the entire build pipeline is crying.",
-        f"CosmicRayError{Style.RESET_ALL}: {Fore.MAGENTA}A photon from a distant galaxy slamed into your PC, now most of your data is still there",
-        f"BluetoothProtocolError{Style.RESET_ALL}: {Fore.MAGENTA}Python refused to pair to Bluetooth because you did not ask to",
-        f"FifthAmendmentError{Style.RESET_ALL}: {Fore.MAGENTA}Under the advice of counsel, I respectfully decline to show the error based upon my rights under the Fifth Amendment to the Constitution", #lol
-        f"DateAndTimeError{Style.RESET_ALL}: {Fore.MAGENTA}Your device's built-in clock is offset by 0.00016s, please fix it",
-        f"{easysaxo.dev}Error{Style.RESET_ALL}: {Fore.MAGENTA}I did not get enough screen time yet",
-        f"NoisePollutionError{Style.RESET_ALL}: {Fore.MAGENTA}Python refused to show the error because of a noise pollution detected {random.randint(2, 59)} miles away from your location",
-        f"TracebackError{Style.RESET_ALL}: {Fore.MAGENTA}Even the traceback has an error that is refusing to show up",
-        f"OutOfStorageError{Style.RESET_ALL}: {Fore.MAGENTA}Disk/drive does not have enough storage to download a picture of Samuel's mother",
-        f"IgnoredError{Style.RESET_ALL}: {Fore.MAGENTA}The error was so boring that Python ignored it",
-        f"MusicOutOfPreferenceError{Style.RESET_ALL}: {Fore.MAGENTA}Python does not like the music the closest human is hearing",
-        f"EnergyWastingError{Style.RESET_ALL}: {Fore.MAGENTA}Python is pleading to shut off your power supply if you keep this up",
-        f"RandomAccessMemoryUsageError{Style.RESET_ALL}: {Fore.MAGENTA}I personally think showing you the error is a waste of RAM",
-        f"MathUselessInformationError{Style.RESET_ALL}: {Fore.MAGENTA}Byte order of the app is not a Mersenne prime number",
-    ]
-
-    slop = [ # from eas2()  # noqa: RUF012
-        "fuh you",
-        "use command 'filecls python' please",
-        "if your reading ts your a dumbahh",
-        "hi",
-        "type c for fast charging",
-        "use 'filedel C:\\Windows\\System32' now",
-        "get back to work kink",
-        f"{random.randint(1, 65566)}"
-    ]
-
-    osaka = [ # from e3()  # noqa: RUF012
-        "saataa andagii", "omaigah", "amerikaya", "fella what?????",
-        "haro everynyan", "get yo ahh to work bud", "haro!",
-        "download osaka collector 2 in github bro trust",
-        "baka baka!"
-    ]
-    
-    
-    yes_no_kw = ["is", "am", "are", "really", "can", "will", "would", "could", "shall", "should", "may", "does", "do"]  # noqa: RUF012
-    
-    l_yes_no = [ # noqa: RUF012
-        "Yes", "No", "Maybe", "HELL NAHH",
-        "I'on know", "OF COURSE BRO HOWS THAT EVEN A QUESTION",
-        "Nah def not"
-        ]
-    
-    l_why = [ # noqa: RUF012
-        "they're from the government", "this world is unfair",
-        "this world is definitely fair", "I say so",
-        "why not?", "they're free to be so ofc !!!1!", "uhh... nah I don't know"
-        ]
-    
-    l_who = [ # noqa: RUF012
-        "Me", "You", "Themselves", "Beats me", "Your mom",
-        "Probably my teacher", "Sounds like a politician",
-        "I don't know", "Same I wonder"
-    ]
-    
-    l_what = [ # noqa: RUF012
-        "The fact that people are starving or sumthin", "A definition of something that you humans assigned to smth",
-        "The name of an unreleased song of an underground artist surely", "I'on know", "A chinese screwdriver's type"
-    ]
-    
-    l_how = [ # noqa: RUF012
-        "With the power of friendship", "Dark magic ig", "Do you think I know?",
-        "Out of thin air", "With some ramen", "Pure Flex Tape bro", "You don't want to know"
-    ]
-    
-    l_when = [  # noqa: RUF012
-        "Yesterday", "Maybe in a few days", "God knows", "Soon, trust",
-        "February 30th bro", "A few days ago", "As if I knew that"
-    ]
-
-# command list ===================================================================================
+# command list
 
 class CommandList:
     """Command-related global lister for information display."""
     
     CMDlist = f"""
-{Fore.CYAN}|======= COMMAND LIST: =======|{Style.RESET_ALL}
-  {Fore.CYAN}help{Style.RESET_ALL}          : Shows this {Fore.CYAN}Command List{Style.RESET_ALL}.
-  {Fore.CYAN}changelog{Style.RESET_ALL}     : Shows the latest {Fore.CYAN}app updates{Style.RESET_ALL}.
-  {Fore.CYAN}requirements{Style.RESET_ALL}  : Shows minimum and recommended {Fore.CYAN}device requirements{Style.RESET_ALL}.
-  {Fore.CYAN}clear{Style.RESET_ALL}         : Clears the {Fore.CYAN}terminal{Style.RESET_ALL} screen.
-  {Fore.CYAN}get{Style.RESET_ALL}           : Gets information of a {Fore.CYAN}variable{Style.RESET_ALL} or an {Fore.CYAN}attribute{Style.RESET_ALL}.
-  {Fore.CYAN}set{Style.RESET_ALL}           : Sets storable information like {Fore.CYAN}user name{Style.RESET_ALL} and {Fore.CYAN}variables{Style.RESET_ALL}.
-  {Fore.CYAN}reset{Style.RESET_ALL}         : Resets {Fore.CYAN}user data{Style.RESET_ALL} (either {Fore.CYAN}user name{Style.RESET_ALL} or {Fore.CYAN}password{Style.RESET_ALL}).
+[cyan]|======= COMMAND LIST: =======|[/cyan]
 
-  {Fore.GREEN}save{Style.RESET_ALL}          : Creates/rewrites a {Fore.GREEN}JSON file{Style.RESET_ALL} with {Fore.GREEN}user{Style.RESET_ALL} data.
-  {Fore.GREEN}load{Style.RESET_ALL}          : Loads a {Fore.GREEN}JSON file{Style.RESET_ALL} with {Fore.GREEN}user{Style.RESET_ALL} data.
-  {Fore.GREEN}jsonrd{Style.RESET_ALL}        : Reads a {Fore.GREEN}JSON file{Style.RESET_ALL}.
-  {Fore.GREEN}regex{Style.RESET_ALL}         : Looks for {Fore.GREEN}patterns{Style.RESET_ALL} in a text or textfile.
+  [cyan]help[/cyan]          : Shows this [cyan]Command List[/cyan].
+  [cyan]changelog[/cyan]     : Shows the latest [cyan]app updates[/cyan].
+  [cyan]requirements[/cyan]  : Shows minimum and recommended [cyan]device requirements[/cyan].
+  [cyan]clear[/cyan]         : Clears the [cyan]terminal[/cyan] screen.
+  [cyan]get[/cyan]           : Gets information of a [cyan]variable[/cyan] or an [cyan]attribute[/cyan].
+  [cyan]set[/cyan]           : Sets storable information like [cyan]user name[/cyan] and [cyan]variables[/cyan].
+  [cyan]reset[/cyan]         : Resets [cyan]user data[/cyan] (either [cyan]user name[/cyan] or [cyan]password[/cyan]).
 
-  {Fore.BLUE}math{Style.RESET_ALL}          : Allows mathematical equations.
-  {Fore.BLUE}mathhelp{Style.RESET_ALL}      : Displays information about math-related functions.
-  {Fore.BLUE}random{Style.RESET_ALL}        : Shows a random {Fore.BLUE}number{Style.RESET_ALL}.
-  {Fore.BLUE}time{Style.RESET_ALL}          : Displays {Fore.BLUE}hour{Style.RESET_ALL} and {Fore.BLUE}date{Style.RESET_ALL}.
-  {Fore.BLUE}timer{Style.RESET_ALL}         : Sets a timer in {Fore.BLUE}seconds{Style.RESET_ALL} before displaying a message.
-  {Fore.BLUE}delvar{Style.RESET_ALL}        : Deletes a specified {Fore.BLUE}variable{Style.RESET_ALL}.
+  [green]save[/green]          : Creates/rewrites a [green]JSON file[/green] with [green]user[/green] data.
+  [green]load[/green]          : Loads a [green]JSON file[/green] with [green]user[/green] data.
+  [green]jsonrd[/green]        : Reads a [green]JSON file[/green].
+  [green]regex[/green]         : Looks for [green]patterns[/green] in a text or textfile.
 
-  {Fore.RED}cd{Style.RESET_ALL}            : Shows current {Fore.RED}path location{Style.RESET_ALL} and allows navigation.
-  {Fore.RED}check{Style.RESET_ALL}         : Checks if required {Fore.RED}script files{Style.RESET_ALL} exist.
-  {Fore.RED}filelst{Style.RESET_ALL}       : Lists {Fore.RED}files{Style.RESET_ALL} and {Fore.RED}folders{Style.RESET_ALL} in a directory.
-  {Fore.RED}tree{Style.RESET_ALL}          : Renders {Fore.RED}directory{Style.RESET_ALL} as a tree.
-  {Fore.RED}filecrt{Style.RESET_ALL}       : Creates a {Fore.RED}file{Style.RESET_ALL} with specified extension.
-  {Fore.RED}filerd{Style.RESET_ALL}        : Reads and displays the content of a {Fore.RED}file{Style.RESET_ALL}.
-  {Fore.RED}filedel{Style.RESET_ALL}       : Deletes a {Fore.RED}file{Style.RESET_ALL}.
-  {Fore.RED}filewrt{Style.RESET_ALL}       : Writes content in a {Fore.RED}file{Style.RESET_ALL}.
-  {Fore.RED}fileopn{Style.RESET_ALL}       : Opens a {Fore.RED}file{Style.RESET_ALL}.
-  {Fore.RED}filecls{Style.RESET_ALL}       : Closes a {Fore.RED}file{Style.RESET_ALL}.
-  {Fore.RED}filesort{Style.RESET_ALL}      : Sorts and dumps {Fore.RED}files{Style.RESET_ALL} in a directory by extension.
-  {Fore.RED}filesz{Style.RESET_ALL}        : Gets and shows the size of a {Fore.RED}file{Style.RESET_ALL}.
-  {Fore.RED}dirsz{Style.RESET_ALL}         : Gets and shows the size of a {Fore.RED}directory{Style.RESET_ALL}.
-  {Fore.RED}unzip{Style.RESET_ALL}         : Gets and extracts the content of a {Fore.RED}ZIP file{Style.RESET_ALL}.
+  [blue]math[/blue]          : Allows mathematical equations.
+  [blue]mathhelp[/blue]      : Displays information about math-related functions.
+  [blue]random[/blue]        : Shows a random [blue]number[/blue].
+  [blue]time[/blue]          : Displays [blue]hour[/blue] and [blue]date[/blue].
+  [blue]timer[/blue]         : Sets a timer in [blue]seconds[/blue] before displaying a message.
+  [blue]delvar[/blue]        : Deletes a specified [blue]variable[/blue].
 
-  {Fore.MAGENTA}playaudio{Style.RESET_ALL}     : Plays an {Fore.MAGENTA}audio file{Style.RESET_ALL} (specify route).
-  {Fore.MAGENTA}stopaudio{Style.RESET_ALL}     : Stops the current {Fore.MAGENTA}audio file{Style.RESET_ALL}.
-  {Fore.MAGENTA}render{Style.RESET_ALL}        : Renders and draws a specified {Fore.MAGENTA}image file{Style.RESET_ALL}.
-  {Fore.MAGENTA}banner{Style.RESET_ALL}        : Renders and prints inputted {Fore.MAGENTA}text{Style.RESET_ALL}.
-  {Fore.MAGENTA}pkm{Style.RESET_ALL}           : Enters the {Fore.MAGENTA}Piano Keyboard Mode{Style.RESET_ALL}.
+  [red]cd[/red]            : Shows current [red]path location[/red] and allows navigation.
+  [red]check[/red]         : Checks if required [red]script files[/red] exist.
+  [red]filelst[/red]       : Lists [red]files[/red] and [red]folders[/red] in a directory.
+  [red]tree[/red]          : Renders [red]directory[/red] as a tree.
+  [red]filecrt[/red]       : Creates a [red]file[/red] with specified extension.
+  [red]filerd[/red]        : Reads and displays the content of a [red]file[/red].
+  [red]filedel[/red]       : Deletes a [red]file[/red].
+  [red]filewrt[/red]       : Writes content in a [red]file[/red].
+  [red]move[/red]          : Moves [red]files[/red] to a directory.
+  [red]fileopn[/red]       : Opens a [red]file[/red].
+  [red]filecls[/red]       : Closes a [red]file[/red].
+  [red]filesort[/red]      : Sorts and dumps [red]files[/red] in a directory by extension.
+  [red]filesz[/red]        : Gets and shows the size of a [red]file[/red].
+  [red]dirsz[/red]         : Gets and shows the size of a [red]directory[/red].
+  [red]unzip[/red]         : Gets and extracts the content of a [red]ZIP file[/red].
 
-  {Fore.LIGHTBLUE_EX}web{Style.RESET_ALL}           : Sends a {Fore.LIGHTBLUE_EX}request to an URL{Style.RESET_ALL}, thus installing files from links if requested.
-  {Fore.LIGHTBLUE_EX}dnsflush{Style.RESET_ALL}      : Clears the cache of the {Fore.LIGHTBLUE_EX}system DNS resolver{Style.RESET_ALL}.
+  [magenta]playaudio[/magenta]     : Plays an [magenta]audio file[/magenta] (specify route).
+  [magenta]stopaudio[/magenta]     : Stops the current [magenta]audio file[/magenta].
+  [magenta]render[/magenta]        : Renders and draws a specified [magenta]image file[/magenta].
+  [magenta]banner[/magenta]        : Renders and prints inputted [magenta]text[/magenta].
+  [magenta]pkm[/magenta]           : Enters the [magenta]Piano Keyboard Mode[/magenta].
 
-  {Fore.LIGHTBLACK_EX}shutdown{Style.RESET_ALL}      : {Fore.LIGHTBLACK_EX}Shuts the system down{Style.RESET_ALL} or cancels such operation.
-  {Fore.LIGHTBLACK_EX}restart{Style.RESET_ALL}       : {Fore.LIGHTBLACK_EX}Restarts the system{Style.RESET_ALL}.
-  {Fore.LIGHTBLACK_EX}sleep{Style.RESET_ALL}         : {Fore.LIGHTBLACK_EX}Suspends the system{Style.RESET_ALL}.
-  {Fore.LIGHTBLACK_EX}lock{Style.RESET_ALL}          : {Fore.LIGHTBLACK_EX}Lock the user session{Style.RESET_ALL} immediately.
-  {Fore.LIGHTBLACK_EX}tempflush{Style.RESET_ALL}     : Clears the {Fore.LIGHTBLACK_EX}system /Temp directory{Style.RESET_ALL}.
-  {Fore.LIGHTBLACK_EX}app{Style.RESET_ALL}           : Runs {easysaxo.name} base commands.
-  {Fore.LIGHTBLACK_EX}exit{Style.RESET_ALL}          : Exit {easysaxo.name}.
-Remember you can search for command syntax and usage by using {Fore.CYAN}help <cmd/attr>{Style.RESET_ALL} :)
+  [blue]web[/blue]           : Sends a [blue]request to an URL[/blue], thus installing files from links if requested.
+  [blue]dnsflush[/blue]      : Clears the cache of the [blue]system DNS resolver[/blue].
+
+  [lightblack]shutdown[/lightblack]      : [lightblack]Shuts the system down[/lightblack] or cancels such operation.
+  [lightblack]restart[/lightblack]       : [lightblack]Restarts the system[/lightblack].
+  [lightblack]sleep[/lightblack]         : [lightblack]Suspends the system[/lightblack].
+  [lightblack]lock[/lightblack]          : [lightblack]Lock the user session[/lightblack] immediately.
+  [lightblack]tempflush[/lightblack]     : Clears the [lightblack]system /Temp directory[/lightblack].
+  [lightblack]app[/lightblack]           : Runs {easysaxo.name} base commands.
+  [lightblack]exit[/lightblack]          : Exit {easysaxo.name}.
+Remember you can search for command syntax and usage by using [cyan]help <cmd/attr>[/cyan] :)
     """
 
-    FWRTlist = f"""
-{Fore.YELLOW}Commands:{Style.RESET_ALL}
-{Fore.GREEN}:l{Style.RESET_ALL} -> List buffer with line numbers
-{Fore.GREEN}:d <line_num>{Style.RESET_ALL} -> Delete a line
-{Fore.GREEN}:i <line_num> <text>{Style.RESET_ALL} -> Insert text at line number
-{Fore.GREEN}:c{Style.RESET_ALL} -> Clear buffer entirely
-{Fore.GREEN}:w{Style.RESET_ALL} or {Fore.GREEN}:x{Style.RESET_ALL} or {Fore.GREEN}EOF{Style.RESET_ALL} -> Save & Exit
-{Fore.GREEN}:q{Style.RESET_ALL} -> Quit without saving
-{Fore.GREEN}:lt{Style.RESET_ALL} -> Lint current.
+    ALIASList = f"""
+[cyan]|======= ALIASES LIST: =======|[/cyan]
+
+  [cyan]help[/cyan]          : (?), (-h).
+  [cyan]changelog[/cyan]     : (news), (upd), (whatsnew), (updates).
+  [cyan]requirements[/cyan]  : (reqs), (sysreqs).
+  [cyan]clear[/cyan]         : (cls), (clrscr).
+  [cyan]get[/cyan]           : No aliases.
+  [cyan]set[/cyan]           : No aliases.
+  [cyan]reset[/cyan]         : No aliases.
+
+  [green]save[/green]          : No aliases.
+  [green]load[/green]          : No aliases.
+  [green]jsonrd[/green]        : No aliases.
+  [green]regex[/green]         : No aliases.
+
+  [blue]math[/blue]          : (eq), (eval).
+  [blue]mathhelp[/blue]      : (mhelp).
+  [blue]random[/blue]        : No aliases.
+  [blue]time[/blue]          : (date).
+  [blue]timer[/blue]         : No aliases.
+  [blue]delvar[/blue]        : No aliases.
+
+  [red]cd[/red]            : (chdir).
+  [red]check[/red]         : (allowance), (checkf), (filechk).
+  [red]filelst[/red]       : (ls), (dir), (lsdir), (dirls), (listdir), (dirlist).
+  [red]tree[/red]          : (filetree), (dirtree).
+  [red]filecrt[/red]       : (createf), (touch).
+  [red]filerd[/red]        : (readf), (cat).
+  [red]filedel[/red]       : (rm), (deletef).
+  [red]filewrt[/red]       : (writef).
+  [red]move[/red]          : (mv), (movef), (filemv).
+  [red]fileopn[/red]       : (openf), (opn).
+  [red]filecls[/red]       : (closef), (killproc), (clsf).
+  [red]filesort[/red]      : (sortf).
+  [red]filesz[/red]        : (sizef), (sizeof).
+  [red]dirsz[/red]         : (dsize), (dsizeof).
+  [red]unzip[/red]         : (extract), (uzip).
+
+  [magenta]playaudio[/magenta]     : (playa).
+  [magenta]stopaudio[/magenta]     : (stopa).
+  [magenta]render[/magenta]        : (asciiart), (art).
+  [magenta]banner[/magenta]        : (tart), (amply).
+  [magenta]pkm[/magenta]           : (pianomode), (pmode).
+
+  [blue]web[/blue]           : (request), (rq).
+  [blue]dnsflush[/blue]      : (dnsf).
+
+  [lightblack]shutdown[/lightblack]      : (turnoff), (shut).
+  [lightblack]restart[/lightblack]       : No aliases.
+  [lightblack]sleep[/lightblack]         : (suspend), (hiber).
+  [lightblack]lock[/lightblack]          : (scrlock), (lockscreen).
+  [lightblack]tempflush[/lightblack]     : (tmpf), (tmpclr).
+  [lightblack]app[/lightblack]           : ({easysaxo.name.lower()}).
+  [lightblack]exit[/lightblack]          : (quit), (kill).
     """
 
-    LOGlist = f"""
-{Fore.CYAN}Log code |>{Style.RESET_ALL}
-  {Fore.LIGHTBLACK_EX}> No character before number indicates a general error message.{Style.RESET_ALL}
-    {Fore.CYAN}1{Style.RESET_ALL} ------> Unknown/malformed command.
-    {Fore.CYAN}2{Style.RESET_ALL} ------> No arguments provided.
-    {Fore.CYAN}3{Style.RESET_ALL} ------> Operation failed.
-    {Fore.CYAN}4{Style.RESET_ALL} ------> Permission denied or access error.
-    {Fore.CYAN}5{Style.RESET_ALL} ------> File or directory not found.
-    {Fore.CYAN}6{Style.RESET_ALL} ------> Invalid input or value error.
-    {Fore.CYAN}7{Style.RESET_ALL} ------> Network or connection error.
-    {Fore.CYAN}8{Style.RESET_ALL} ------> Request or API error.
-    {Fore.CYAN}9{Style.RESET_ALL} ------> System command execution failed.
-    {Fore.CYAN}10{Style.RESET_ALL} -----> Unexpected error occurred.
-    {Fore.CYAN}11{Style.RESET_ALL} -----> Operation canceled.
 
-  {Fore.LIGHTBLACK_EX}> 'a' before number indicates an info message.{Style.RESET_ALL}
-    {Fore.CYAN}a0{Style.RESET_ALL} -----> Exiting app.
-
-  {Fore.LIGHTBLACK_EX}> 'f' before number indicates specific file error.{Style.RESET_ALL}
-    {Fore.CYAN}f1{Style.RESET_ALL} -----> Path or file is invalid.
-    {Fore.CYAN}f2{Style.RESET_ALL} -----> Path is a file.
-    {Fore.CYAN}f3{Style.RESET_ALL} -----> Path is a directory.
-    {Fore.CYAN}f4{Style.RESET_ALL} -----> Path exists.
-
-  {Fore.LIGHTBLACK_EX}> 'p' before number indicates specific process error.{Style.RESET_ALL}
-    {Fore.CYAN}p1{Style.RESET_ALL} -----> No such running process / Process does not exist.
-
-  {Fore.LIGHTBLACK_EX}> 'm' before number indicates specific math error{Style.RESET_ALL}
-    {Fore.CYAN}m1{Style.RESET_ALL} -----> Cannot operate over term.
-    {Fore.CYAN}m2{Style.RESET_ALL} -----> Variable does not exist.
-    {Fore.CYAN}m3{Style.RESET_ALL} -----> Term does not exist.
+    FWRTlist = """
+[yellow]Commands:[/yellow]
+[green]:l[/green] -> List buffer with line numbers
+[green]:d <line_num>[/green] -> Delete a line
+[green]:i <line_num> <text>[/green] -> Insert text at line number
+[green]:c[/green] -> Clear buffer entirely
+[green]:w[/green] or [green]:x[/green] or [green]EOF[/green] -> Save & Exit
+[green]:q[/green] -> Quit without saving
+[green]:lt[/green] -> Lint current.
     """
 
-# file list ===============================================================================
+    LOGlist = """
+[cyan]Log code |>[/cyan]
+  [lightblack]> No character before number indicates a general error message.[/lightblack]
+    [cyan]1[/cyan] ------> Unknown/malformed command.
+    [cyan]2[/cyan] ------> No arguments provided.
+    [cyan]3[/cyan] ------> Operation failed.
+    [cyan]4[/cyan] ------> Permission denied or access error.
+    [cyan]5[/cyan] ------> File or directory not found.
+    [cyan]6[/cyan] ------> Invalid input or value error.
+    [cyan]7[/cyan] ------> Network or connection error.
+    [cyan]8[/cyan] ------> Request or API error.
+    [cyan]9[/cyan] ------> System command execution failed.
+    [cyan]10[/cyan] -----> Unexpected error occurred.
+    [cyan]11[/cyan] -----> Operation canceled.
+
+  [lightblack]> 'a' before number indicates an info message.[/lightblack]
+    [cyan]a0[/cyan] -----> Exiting app.
+
+  [lightblack]> 'f' before number indicates specific file error.[/lightblack]
+    [cyan]f1[/cyan] -----> Path or file is invalid.
+    [cyan]f2[/cyan] -----> Path is a file.
+    [cyan]f3[/cyan] -----> Path is a directory.
+    [cyan]f4[/cyan] -----> Path exists.
+
+  [lightblack]> 'p' before number indicates specific process error.[/lightblack]
+    [cyan]p1[/cyan] -----> No such running process / Process does not exist.
+
+  [lightblack]> 'm' before number indicates specific math error[/lightblack]
+    [cyan]m1[/cyan] -----> Cannot operate over term.
+    [cyan]m2[/cyan] -----> Variable does not exist.
+    [cyan]m3[/cyan] -----> Term does not exist.
+    """
+
+# file list
 
 class FileList:
     """File verifier list for file viewing and handling."""
@@ -236,65 +199,63 @@ class FileList:
 
     EXTENSION_COLORS = {  # noqa: RUF012
         # scripts
-        ".py": Fore.LIGHTYELLOW_EX,
-        ".js": Fore.YELLOW,
-        ".jar": Fore.RED, ".jav": Fore.RED,
-        ".html": Fore.LIGHTRED_EX,
-        ".css": Fore.LIGHTBLUE_EX,
-        ".json": Fore.LIGHTYELLOW_EX,
-        ".xml": Fore.LIGHTGREEN_EX,
-        ".c": Fore.CYAN,
-        ".toml": Fore.BLUE,
-        ".lua": Fore.BLUE,
+        ".py": "[lightyellow]",
+        ".js": "[yellow]",
+        ".jar": "[red]", ".jav": "[red]",
+        ".html": "[lightred]",
+        ".css": "[cyan]",
+        ".json": "[lightyellow]",
+        ".xml": "[lightgreen]",
+        ".c": "[cyan]",
+        ".toml": "[blue]",
+        ".lua": "[blue]",
         # docs
-        ".md": Fore.CYAN,
-        ".txt": Fore.WHITE + Style.DIM,
-        ".doc": Fore.BLUE,".docx": Fore.BLUE,
-        ".xls": Fore.GREEN, ".xlsx": Fore.GREEN,
-        ".pdf": Fore.RED,
-        ".pptx": Fore.RED,
+        ".md": "[cyan]",
+        ".txt": "[white] + [dim]",
+        ".doc": "[blue]",".docx": "[blue]",
+        ".xls": "[green]", ".xlsx": "[green]",
+        ".pdf": "[red]",
+        ".pptx": "[red]",
         # media
-        ".png": Fore.MAGENTA,
-        ".ico": Fore.MAGENTA,
-        ".jpg": Fore.MAGENTA, ".jpe": Fore.MAGENTA,".jfif": Fore.MAGENTA, ".jpeg": Fore.MAGENTA,
-        ".svg": Fore.MAGENTA,
-        ".webp": Fore.MAGENTA,
-        ".mp3": Fore.LIGHTMAGENTA_EX,
-        ".flac": Fore.LIGHTMAGENTA_EX,
-        ".ogg": Fore.LIGHTMAGENTA_EX,
-        ".wav": Fore.LIGHTMAGENTA_EX,
-        ".mid": Fore.LIGHTMAGENTA_EX,
-        ".mp4": Fore.LIGHTCYAN_EX,
-        ".gif": Fore.LIGHTCYAN_EX,
+        ".png": "[magenta]",
+        ".ico": "[magenta]",
+        ".jpg": "[magenta]", ".jpe": "[magenta]",".jfif": "[magenta]", ".jpeg": "[magenta]",
+        ".svg": "[magenta]",
+        ".webp": "[magenta]",
+        ".mp3": "[lightmagenta]",
+        ".flac": "[lightmagenta]",
+        ".ogg": "[lightmagenta]",
+        ".wav": "[lightmagenta]",
+        ".mid": "[lightmagenta]",
+        ".mp4": "[lightcyan]",
+        ".gif": "[lightcyan]",
         # fls
-        ".zip": Fore.LIGHTRED_EX, ".rar": Fore.LIGHTRED_EX,
-        ".exe": Fore.RED, ".bat": Fore.RED, ".sh": Fore.RED,
-        ".bak": Fore.LIGHTYELLOW_EX, ".pak": Fore.LIGHTYELLOW_EX,
-        ".ini": Fore.LIGHTBLACK_EX,
-        ".dat": Fore.LIGHTBLACK_EX,
-        ".dll": Fore.LIGHTBLACK_EX,
-        ".pkg": Fore.LIGHTBLACK_EX,
-        ".bin": Fore.LIGHTBLACK_EX,
-        ".cmd": Fore.LIGHTBLACK_EX,
+        ".zip": "[lightred]", ".rar": "[lightred]",
+        ".exe": "[red]", ".bat": "[red]", ".sh": "[red]",
+        ".bak": "[lightyellow]", ".pak": "[lightyellow]",
+        ".ini": "[lightblack]",
+        ".dat": "[lightblack]",
+        ".dll": "[lightblack]",
+        ".pkg": "[lightblack]",
+        ".bin": "[lightblack]",
+        ".cmd": "[lightblack]",
         # misc
-        ".lnk": Fore.GREEN,
-        ".url": Fore.GREEN,
-        ".tmp": Fore.LIGHTBLACK_EX,
-        ".gitignore": Fore.LIGHTBLACK_EX,
-        ".gitconfig": Fore.LIGHTBLACK_EX,
-        ".ttf": Fore.LIGHTBLUE_EX,
+        ".lnk": "[green]",
+        ".url": "[green]",
+        ".tmp": "[lightblack]",
+        ".gitignore": "[lightblack]",
+        ".gitconfig": "[lightblack]",
+        ".ttf": "[cyan]",
     }
 
 
 class FileDisclaimer:
     """Hint disclaimer for exceptions during path resolving."""
-    _strinit = Fore.LIGHTBLACK_EX + Style.DIM
-    _rstr = Fore.LIGHTBLACK_EX
-    _strend = Style.RESET_ALL
-    _hint = Fore.CYAN
+    _strinit = "[lightblack] + [dim]"
+    _rstr = "[lightblack]"
+    _strend = "[/dim]"
+    _hint = "[cyan]"
 
-    not_found_path = f"{_strinit}Make sure the path is written correctly.{_strend}"
-    
     cd_d_flag = f"{_strinit}{_hint}'/d'{_rstr} in this command is automated, you do not need to type it!{_strend}"
 
     res_flag_typo = f"{_strinit}Make sure you typed exactly {_hint}\"-<\"{_rstr} right before the flag name.{_strend}"
@@ -302,7 +263,7 @@ class FileDisclaimer:
 
     utf_evaluator = f"{_strinit}Make sure the {_hint}file{_rstr} is encoded in {_hint}UTF-8{_rstr} or {_hint}UTF-16{_rstr}.{_strend}"
 
-# math lists =====================================================================================
+# math lists
 import ast
 import math
 import operator
@@ -355,22 +316,12 @@ class MathList:
     }
 
     math_funcslist = (
-        f"{Fore.BLUE}MathSet{Style.RESET_ALL}:\n"
-        f"{Fore.CYAN}sqrt, sin, cos, tan, log, log10, pi, e, fact, gamma{Style.RESET_ALL}.\n"
-        f"You can use {Fore.GREEN}mathhelp <mathset>{Style.RESET_ALL} to dive deeper in MathSet usage."
+        "[blue]MathSet[/blue]:\n"
+        "[cyan]sqrt, sin, cos, tan, log, log10, pi, e, fact, gamma[/cyan].\n"
+        "You can use [green]mathhelp <mathset>[/green] to dive deeper in MathSet usage."
     )
 
-# colorama color list ==============================================================================
-
-class ColorList:
-    """ANSI color list."""
-    colors = [  # noqa: RUF012
-        "RED", "BLUE", "GREEN", "BLACK", "MAGENTA", "YELLOW", "CYAN", "WHITE",
-        "LIGHTRED_EX", "LIGHTBLUE_EX", "LIGHTGREEN_EX", "LIGHTBLACK_EX",
-        "LIGHTMAGENTA_EX", "LIGHTYELLOW_EX", "LIGHTCYAN_EX", "LIGHTWHITE_EX"
-    ]
-
-# mamidi ============================================================================================
+# mamidi
 
 class MidiSetList:
     """Keybinds and note assigning list for Piano Keyboard."""
@@ -410,576 +361,21 @@ class MidiSetList:
         'b': ('C6', note_freqs['C6'])
     }
 
-class SongSet:
-    """Song set list for Piano Keyboard."""
-    # song structure: list of {"key": ["<k_binding>"], "duration": <secs>}
-    songs = {  # noqa: RUF012
-        "Twinkle Twinkle": { # q = 0.4
-            "melody": [
-                {"key": "q", "duration": 0.4}, {"key": "q", "duration": 0.4},
-                {"key": "t", "duration": 0.4}, {"key": "t", "duration": 0.4},
-                {"key": "y", "duration": 0.4}, {"key": "y", "duration": 0.4},
-                {"key": "t", "duration": 0.8},
-                {"key": "r", "duration": 0.4}, {"key": "r", "duration": 0.4},
-                {"key": "e", "duration": 0.4}, {"key": "e", "duration": 0.4},
-                {"key": "w", "duration": 0.4}, {"key": "w", "duration": 0.4},
-                {"key": "q", "duration": 0.8},
-                {"key": "t", "duration": 0.4}, {"key": "t", "duration": 0.4},
-                {"key": "r", "duration": 0.4}, {"key": "r", "duration": 0.4},
-                {"key": "e", "duration": 0.4}, {"key": "e", "duration": 0.4},
-                {"key": "w", "duration": 0.8},
-                {"key": "t", "duration": 0.4}, {"key": "t", "duration": 0.4},
-                {"key": "r", "duration": 0.4}, {"key": "r", "duration": 0.4},
-                {"key": "e", "duration": 0.4}, {"key": "e", "duration": 0.4},
-                {"key": "w", "duration": 0.8},
-                {"key": "q", "duration": 0.4}, {"key": "q", "duration": 0.4},
-                {"key": "t", "duration": 0.4}, {"key": "t", "duration": 0.4},
-                {"key": "y", "duration": 0.4}, {"key": "y", "duration": 0.4},
-                {"key": "t", "duration": 0.8},
-                {"key": "r", "duration": 0.4}, {"key": "r", "duration": 0.4},
-                {"key": "e", "duration": 0.4}, {"key": "e", "duration": 0.4},
-                {"key": "w", "duration": 0.4}, {"key": "w", "duration": 0.4},
-                {"key": "q", "duration": 0.8},
-            ],
-        },
-
-        "Ode to Joy": { # q = 0.5
-            "melody": [
-                # intro
-                {"key": "p", "duration": 0.5}, {"key": "p", "duration": 0.5},
-                {"key": "z", "duration": 0.5}, {"key": "x", "duration": 0.5},
-                {"key": "x", "duration": 0.5}, {"key": "z", "duration": 0.5},
-                {"key": "p", "duration": 0.5}, {"key": "o", "duration": 0.5},
-                {"key": "i", "duration": 0.5}, {"key": "i", "duration": 0.5},
-                {"key": "o", "duration": 0.5}, {"key": "p", "duration": 0.5},
-                {"key": "p", "duration": 0.75}, {"key": "o", "duration": 0.25},
-                {"key": "o", "duration": 0.25}, {"key": "c", "duration": 0.25},
-                {"key": "x", "duration": 0.25}, {"key": "z", "duration": 0.25},
-                {"key": "p", "duration": 0.5}, {"key": "p", "duration": 0.5},
-                {"key": "z", "duration": 0.5}, {"key": "x", "duration": 0.5},
-                {"key": "x", "duration": 0.5}, {"key": "z", "duration": 0.5},
-                {"key": "p", "duration": 0.5}, {"key": "o", "duration": 0.5},
-                {"key": "i", "duration": 0.5}, {"key": "i", "duration": 0.5},
-                {"key": "o", "duration": 0.5}, {"key": "p", "duration": 0.5},
-                {"key": "o", "duration": 0.75}, {"key": "i", "duration": 0.25},
-                {"key": "i", "duration": 1.0},
-                # mid
-                {"key": "o", "duration": 1.0},
-                {"key": "p", "duration": 0.5}, {"key": "i", "duration": 0.5},
-                {"key": "o", "duration": 0.5},
-                {"key": "p", "duration": 0.25}, {"key": "z", "duration": 0.25},
-                {"key": "p", "duration": 0.5}, {"key": "i", "duration": 0.5},
-                {"key": "o", "duration": 0.5},
-                {"key": "p", "duration": 0.25}, {"key": "z", "duration": 0.25},
-                {"key": "p", "duration": 0.5}, {"key": "o", "duration": 0.5},
-                {"key": "i", "duration": 0.5}, {"key": "o", "duration": 0.5},
-                {"key": "t", "duration": 0.5}, {"key": "p", "duration": 0.5},
-                # outro
-                {"key": "p", "duration": 0.5}, {"key": "p", "duration": 0.5},
-                {"key": "z", "duration": 0.5}, {"key": "x", "duration": 0.5},
-                {"key": "x", "duration": 0.5}, {"key": "z", "duration": 0.5},
-                {"key": "p", "duration": 0.5}, {"key": "o", "duration": 0.5},
-                {"key": "i", "duration": 0.5}, {"key": "i", "duration": 0.5},
-                {"key": "o", "duration": 0.5}, {"key": "p", "duration": 0.5},
-                {"key": "o", "duration": 0.75}, {"key": "i", "duration": 0.25},
-                {"key": "i", "duration": 1.0},
-                ],
-            "harmony": [
-                # intro
-                {"key": ["q", "e", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
-                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["w", "r", "t"], "duration": 1.0},
-                {"key": ["q", "e", "y"], "duration": 1.0}, {"key": ["q", "e", "y"], "duration": 1.0},
-                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["w", "r", "t"], "duration": 1.0},
-                {"key": ["q", "e", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
-                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["w", "r", "t"], "duration": 1.0},
-                {"key": ["q", "e", "y"], "duration": 1.0}, {"key": ["q", "e", "y"], "duration": 1.0},
-                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
-                # mid
-                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
-                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
-                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["w", "e", "6"], "duration": 1.0},
-                {"key": ["q", "e", "y"], "duration": 0.5}, {"key": ["w", "5", "u"], "duration": 0.5},
-                {"key": ["w", "r", "t"], "duration": 1.0},
-                # outro
-                {"key": ["q", "e", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
-                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["w", "r", "t"], "duration": 1.0},
-                {"key": ["q", "e", "y"], "duration": 1.0}, {"key": ["q", "e", "y"], "duration": 1.0},
-                {"key": ["w", "r", "t"], "duration": 1.0}, {"key": ["q", "e", "t"], "duration": 1.0},
-            ]
-        },
-
-        "Panamanian Murga": { # q = 0.4
-            "melody": [
-                # Intro
-                {"key": "o", "duration": 0.2}, {"key": "z", "duration": 0.4},
-                {"key": "c", "duration": 0.6}, {"key": "y", "duration": 2.0},
-                {"key": "y", "duration": 0.2}, {"key": "9", "duration": 0.4},
-                {"key": "p", "duration": 0.6}, {"key": "o", "duration": 2.0},
-                {"key": "o", "duration": 0.2}, {"key": "z", "duration": 0.4},
-                {"key": "c", "duration": 0.6}, {"key": "y", "duration": 2.0},
-                {"key": "y", "duration": 0.2}, {"key": "9", "duration": 0.4},
-                {"key": "p", "duration": 0.6}, {"key": "o", "duration": 2.0},
-                # Prime intro
-                {"key": "o", "duration": 0.2}, {"key": "z", "duration": 0.4},
-                {"key": "c", "duration": 0.6}, {"key": "y", "duration": 0.4},
-                {"key": "y", "duration": 0.4}, {"key": "c", "duration": 0.4},
-                {"key": "y", "duration": 0.8},
-                {"key": "y", "duration": 0.2}, {"key": "9", "duration": 0.4},
-                {"key": "p", "duration": 0.6}, {"key": "o", "duration": 0.4},
-                {"key": "o", "duration": 0.4}, {"key": "z", "duration": 0.4},
-                {"key": "o", "duration": 0.8},
-                {"key": "o", "duration": 0.2}, {"key": "z", "duration": 0.4},
-                {"key": "c", "duration": 0.6}, {"key": "y", "duration": 0.4},
-                {"key": "y", "duration": 0.4}, {"key": "c", "duration": 0.4},
-                {"key": "y", "duration": 0.8},
-                {"key": "y", "duration": 0.2}, {"key": "9", "duration": 0.4},
-                {"key": "p", "duration": 0.6}, {"key": "o", "duration": 1.2},
-                # chorus
-                {"key": "o", "duration": 0.4}, {"key": "z", "duration": 0.4},
-                {"key": "c", "duration": 0.4}, {"key": "c", "duration": 0.4},
-                {"key": "z", "duration": 0.4},
-                {"key": "o", "duration": 0.2}, {"key": "9", "duration": 0.6},
-                {"key": "p", "duration": 0.8},
-                {"key": ["x", "p"], "duration": 0.2}, {"key": ["x", "p"], "duration": 0.4},
-                {"key": ["x", "p"], "duration": 0.4}, {"key": ["f", "x"], "duration": 0.2},
-                {"key": ["x", "9"], "duration": 0.4}, {"key": ["p", "9"], "duration": 0.4},
-                {"key": ["z", "o"], "duration": 0.8},
-                {"key": "o", "duration": 0.4}, {"key": "z", "duration": 0.4},
-                {"key": "c", "duration": 0.4}, {"key": "c", "duration": 0.4},
-                {"key": "z", "duration": 0.4},
-                {"key": "o", "duration": 0.2}, {"key": "9", "duration": 0.6},
-                {"key": "p", "duration": 0.8},
-                {"key": ["x", "p"], "duration": 0.2}, {"key": ["x", "p"], "duration": 0.4},
-                {"key": ["x", "p"], "duration": 0.4}, {"key": ["f", "x"], "duration": 0.2},
-                {"key": ["x", "9"], "duration": 0.4}, {"key": ["p", "9"], "duration": 0.4},
-                {"key": "o", "duration": 0.8},
-                ]
-        },
-
-        "The Entertainer": { # q = 0.4
-            "melody": [
-                # intro
-                {"key": "o", "duration": 0.2}, {"key": "p", "duration": 0.2},
-                {"key": "i", "duration": 0.2}, {"key": "y", "duration": 0.4},
-                {"key": "u", "duration": 0.2}, {"key": "t", "duration": 0.4},
-                {"key": "w", "duration": 0.2}, {"key": "e", "duration": 0.2},
-                {"key": "q", "duration": 0.2}, {"key": "y", "duration": 0.4},
-                {"key": "u", "duration": 0.2}, {"key": "t", "duration": 0.4},
-                {"key": "w", "duration": 0.2}, {"key": "e", "duration": 0.2},
-                {"key": "q", "duration": 0.2}, {"key": "y", "duration": 0.4},
-                {"key": "u", "duration": 0.2}, {"key": "y", "duration": 0.2},
-                {"key": "6", "duration": 0.2}, {"key": "t", "duration": 0.8},
-                {"key": "x", "duration": 0.4},
-                {"key": "w", "duration": 0.2}, {"key": "3", "duration": 0.2},
-                # chorus
-                {"key": "e", "duration": 0.2}, {"key": "i", "duration": 0.4},
-                {"key": "e", "duration": 0.2}, {"key": "i", "duration": 0.4},
-                {"key": "e", "duration": 0.2}, {"key": "i", "duration": 1.2},
-                {"key": "i", "duration": 0.2},
-                {"key": "o", "duration": 0.2}, {"key": "0", "duration": 0.2},
-                {"key": "p", "duration": 0.2},
-                {"key": "i", "duration": 0.2}, {"key": "o", "duration": 0.2},
-                {"key": "p", "duration": 0.4}, {"key": "u", "duration": 0.2},
-                {"key": "o", "duration": 0.4}, {"key": "i", "duration": 1.2},
-
-                {"key": "w", "duration": 0.2}, {"key": "3", "duration": 0.2},
-                {"key": "e", "duration": 0.2}, {"key": "i", "duration": 0.4},
-                {"key": "e", "duration": 0.2}, {"key": "i", "duration": 0.4},
-                {"key": "e", "duration": 0.2}, {"key": "i", "duration": 1.4},
-                {"key": "y", "duration": 0.2}, {"key": "t", "duration": 0.2},
-                {"key": "5", "duration": 0.2}, {"key": "y", "duration": 0.2},
-                {"key": "i", "duration": 0.2}, {"key": "p", "duration": 0.4},
-                {"key": "o", "duration": 0.2}, {"key": "i", "duration": 0.2},
-                {"key": "y", "duration": 0.2}, {"key": "o", "duration": 1.2},
-
-                {"key": "w", "duration": 0.2}, {"key": "3", "duration": 0.2},
-                {"key": "e", "duration": 0.2}, {"key": "i", "duration": 0.4},
-                {"key": "e", "duration": 0.2}, {"key": "i", "duration": 0.4},
-                {"key": "e", "duration": 0.2}, {"key": "i", "duration": 1.2},
-                {"key": "i", "duration": 0.2},
-                {"key": "o", "duration": 0.2}, {"key": "0", "duration": 0.2},
-                {"key": "p", "duration": 0.2},
-                {"key": "i", "duration": 0.2}, {"key": "o", "duration": 0.2},
-                {"key": "p", "duration": 0.4}, {"key": "u", "duration": 0.2},
-                {"key": "o", "duration": 0.4}, {"key": "i", "duration": 1.2},
-
-                {"key": "i", "duration": 0.2}, {"key": "o", "duration": 0.2},
-                {"key": "p", "duration": 0.2},
-                {"key": "i", "duration": 0.2}, {"key": "o", "duration": 0.2},
-                {"key": "p", "duration": 0.4}, {"key": "i", "duration": 0.2},
-                {"key": "o", "duration": 0.2}, {"key": "i", "duration": 0.2},
-                {"key": "p", "duration": 0.2},
-                {"key": "i", "duration": 0.2}, {"key": "o", "duration": 0.2},
-                {"key": "p", "duration": 0.4}, {"key": "i", "duration": 0.2},
-                {"key": "o", "duration": 0.2}, {"key": "i", "duration": 0.2},
-                {"key": "p", "duration": 0.2},
-                {"key": "i", "duration": 0.2}, {"key": "o", "duration": 0.2},
-                {"key": "p", "duration": 0.4}, {"key": "u", "duration": 0.2},
-                {"key": "o", "duration": 0.4}, {"key": "i", "duration": 1.2},
-            ],
-        },
-
-        "Birdhunting Chant": [ # q = 0.5
-            # intro
-            {"key": "o", "duration": 0.25}, {"key": "p", "duration": 0.25},
-            {"key": "o", "duration": 0.25}, {"key": "i", "duration": 0.25},
-            {"key": "u", "duration": 0.25}, {"key": "y", "duration": 0.25},
-            {"key": "u", "duration": 0.5},
-            {"key": "t", "duration": 0.5}, {"key": "u", "duration": 0.5},
-            {"key": "o", "duration": 0.5},
-            {"key": "o", "duration": 0.25}, {"key": "i", "duration": 0.25},
-            {"key": "u", "duration": 0.25}, {"key": "y", "duration": 0.25},
-            {"key": "u", "duration": 1.5},
-            {"key": "o", "duration": 0.25}, {"key": "p", "duration": 0.25},
-            {"key": "o", "duration": 0.25}, {"key": "i", "duration": 0.25},
-            {"key": "u", "duration": 0.25}, {"key": "y", "duration": 0.25},
-            {"key": "u", "duration": 0.5},
-            {"key": "t", "duration": 0.5}, {"key": "u", "duration": 0.5},
-            {"key": "o", "duration": 0.5},
-            {"key": "o", "duration": 0.5}, {"key": "o", "duration": 0.5},
-            {"key": "t", "duration": 1.5},
-            # prime intro
-            {"key": "q", "duration": 0.5},
-            {"key": "p", "duration": 0.25}, {"key": "i", "duration": 0.25},
-            {"key": "t", "duration": 0.25}, {"key": "p", "duration": 0.25},
-            {"key": "w", "duration": 0.5},
-            {"key": "o", "duration": 0.25}, {"key": "u", "duration": 0.25},
-            {"key": "t", "duration": 0.25}, {"key": "o", "duration": 0.25},
-            {"key": "q", "duration": 0.5},
-            {"key": "i", "duration": 0.25}, {"key": "y", "duration": 0.25},
-            {"key": "5", "duration": 0.25}, {"key": "i", "duration": 0.25},
-            {"key": "u", "duration": 0.5}, {"key": "t", "duration": 0.5},
-            {"key": "o", "duration": 0.5},
-
-            {"key": "q", "duration": 0.5},
-            {"key": "p", "duration": 0.25}, {"key": "i", "duration": 0.25},
-            {"key": "t", "duration": 0.25}, {"key": "p", "duration": 0.25},
-            {"key": "w", "duration": 0.5},
-            {"key": "o", "duration": 0.25}, {"key": "u", "duration": 0.25},
-            {"key": "t", "duration": 0.25}, {"key": "o", "duration": 0.25},
-            {"key": "q", "duration": 0.5},
-            {"key": "i", "duration": 0.25}, {"key": "y", "duration": 0.25},
-            {"key": "5", "duration": 0.25}, {"key": "i", "duration": 0.25},
-            {"key": "u", "duration": 0.5}, {"key": "t", "duration": 1.0},
-            {"key": "x", "duration": 0.5},
-        ],
-
-        "Happy Birthday": { # q = 0.5
-            "melody": [
-                {"key": "i", "duration": 0.33}, {"key": "i", "duration": 0.17},
-                # stranza
-                {"key": "o", "duration": 0.5}, {"key": "i", "duration": 0.5},
-                {"key": "z", "duration": 0.5}, {"key": "p", "duration": 1.0},
-                {"key": "i", "duration": 0.33}, {"key": "i", "duration": 0.17},
-                {"key": "o", "duration": 0.5}, {"key": "i", "duration": 0.5},
-                {"key": "x", "duration": 0.5}, {"key": "z", "duration": 1.0},
-                {"key": "i", "duration": 0.33}, {"key": "i", "duration": 0.17},
-                {"key": "b", "duration": 0.5}, {"key": "c", "duration": 0.5},
-                {"key": "z", "duration": 0.5}, {"key": "p", "duration": 0.5},
-                {"key": "o", "duration": 0.5},
-                {"key": "f", "duration": 0.33}, {"key": "f", "duration": 0.17},
-                {"key": "c", "duration": 0.5}, {"key": "z", "duration": 0.5},
-                {"key": "x", "duration": 0.5}, {"key": "z", "duration": 0.5},
-            ],
-            "harmony": [
-                {"key": "null", "duration": 0.5},
-                # stranza
-                {"key": "q", "duration": 0.5},
-                {"key": ["r", "y"], "duration": 0.5}, {"key": ["r", "y"], "duration": 0.5},
-                {"key": "q", "duration": 0.5},
-                {"key": ["e", "t"], "duration": 0.5}, {"key": ["e", "t"], "duration": 0.5},
-                {"key": "q", "duration": 0.5},
-                {"key": ["e", "t"], "duration": 0.5}, {"key": ["e", "t"], "duration": 0.5},
-                {"key": "q", "duration": 0.5},
-                {"key": ["r", "y"], "duration": 0.5}, {"key": ["r", "y"], "duration": 0.5},
-                {"key": "q", "duration": 0.5},
-                {"key": ["3", "r", "y"], "duration": 0.5}, {"key": ["3", "r", "y"], "duration": 0.5},
-                {"key": "w", "duration": 0.5},
-                {"key": ["r", "7"], "duration": 0.5}, {"key": ["r", "7"], "duration": 0.5},
-                {"key": "q", "duration": 0.5},
-                {"key": ["r", "y"], "duration": 0.5}, {"key": ["e", "t"], "duration": 0.5},
-                {"key": ["q", "r", "y"], "duration": 1.0}
-
-            ]
-        },
-
-        "The Girl from Ipanema": { # q = 0.6
-            "melody": [
-                # Chorus
-                {"key": "t", "duration": 0.9}, {"key": "e", "duration": 0.3},
-                {"key": "e", "duration": 0.6}, {"key": "w", "duration": 0.3},
-                {"key": "t", "duration": 0.9}, {"key": "e", "duration": 0.3},
-                {"key": "e", "duration": 0.6}, {"key": "e", "duration": 0.3},
-                {"key": "w", "duration": 0.3}, {"key": "t", "duration": 0.9},
-                {"key": "e", "duration": 0.6}, {"key": "e", "duration": 0.6},
-                {"key": "w", "duration": 0.3}, {"key": "t", "duration": 0.6},
-                {"key": "t", "duration": 0.3}, {"key": "e", "duration": 0.3},
-                {"key": "e", "duration": 0.6}, {"key": "e", "duration": 0.3},
-                {"key": "w", "duration": 0.3}, {"key": "r", "duration": 0.6},
-                {"key": "w", "duration": 0.6}, {"key": "w", "duration": 0.9},
-                {"key": "w", "duration": 0.3}, {"key": "q", "duration": 0.3},
-                {"key": "e", "duration": 0.6}, {"key": "q", "duration": 0.6},
-                {"key": "i", "duration": 0.6},
-                {"key": "i", "duration": 0.3}, {"key": "7", "duration": 0.6},
-                {"key": "i", "duration": 4.8},
-
-                {"key": "t", "duration": 0.9}, {"key": "e", "duration": 0.3},
-                {"key": "e", "duration": 0.6}, {"key": "w", "duration": 0.3},
-                {"key": "t", "duration": 0.9}, {"key": "e", "duration": 0.3},
-                {"key": "e", "duration": 0.6}, {"key": "e", "duration": 0.3},
-                {"key": "w", "duration": 0.6}, {"key": "t", "duration": 0.6},
-                {"key": "e", "duration": 0.6}, {"key": "e", "duration": 0.6},
-                {"key": "w", "duration": 0.3}, {"key": "t", "duration": 0.6},
-                {"key": "t", "duration": 0.3}, {"key": "e", "duration": 0.3},
-                {"key": "e", "duration": 0.6}, {"key": "e", "duration": 0.3},
-                {"key": "w", "duration": 0.3}, {"key": "r", "duration": 0.6},
-                {"key": "w", "duration": 0.6}, {"key": "w", "duration": 0.9},
-                {"key": "w", "duration": 0.3}, {"key": "q", "duration": 0.3},
-                {"key": "e", "duration": 0.6}, {"key": "q", "duration": 0.6},
-                {"key": "i", "duration": 0.6},
-                {"key": "i", "duration": 0.3}, {"key": "7", "duration": 0.6},
-                {"key": "i", "duration": 4.8},
-            ]
-        },
-
-        "Vivaldi's Winter": { # q = 1
-            "melody": [
-                {"key": "i", "duration": 0.5},
-                {"key": "x", "duration": 0.25}, {"key": "z", "duration": 0.25},
-                {"key": "p", "duration": 0.5},
-                {"key": "o", "duration": 0.25}, {"key": "i", "duration": 0.25},
-                {"key": "o", "duration": 0.5}, {"key": "t", "duration": 1.0},
-                {"key": "t", "duration": 0.5},
-                {"key": "z", "duration": 0.25}, {"key": "p", "duration": 0.25},
-                {"key": "o", "duration": 0.25}, {"key": "i", "duration": 0.25},
-                {"key": "u", "duration": 0.5}, {"key": "z", "duration": 0.5},
-                {"key": "z", "duration": 0.5}, {"key": "p", "duration": 1.0},
-                {"key": "p", "duration": 0.5},
-
-                {"key": "o", "duration": 0.5},
-                {"key": "p", "duration": 0.25}, {"key": "z", "duration": 0.25},
-                {"key": "x", "duration": 0.5},
-                {"key": "c", "duration": 0.25}, {"key": "v", "duration": 0.25},
-
-                {"key": "i", "duration": 0.5},
-                {"key": "o", "duration": 0.25}, {"key": "p", "duration": 0.25},
-                {"key": "z", "duration": 0.5},
-                {"key": "x", "duration": 0.25}, {"key": "c", "duration": 0.25},
-
-                {"key": "u", "duration": 0.5},
-                {"key": "i", "duration": 0.25}, {"key": "o", "duration": 0.25},
-                {"key": "p", "duration": 0.5},
-                {"key": "z", "duration": 0.25}, {"key": "x", "duration": 0.25},
-
-                {"key": "y", "duration": 0.5},
-                {"key": "u", "duration": 0.25}, {"key": "i", "duration": 0.25},
-                {"key": "o", "duration": 0.5},
-                {"key": "p", "duration": 0.25}, {"key": "i", "duration": 0.25},
-
-                {"key": "u", "duration": 1.25}, {"key": "t", "duration": 0.25},
-                {"key": "5", "duration": 0.25}, {"key": "t", "duration": 0.25},
-
-                {"key": "o", "duration": 1.25}, {"key": "t", "duration": 0.25},
-                {"key": "5", "duration": 0.25}, {"key": "t", "duration": 0.25},
-
-                {"key": "p", "duration": 1.25}, {"key": "t", "duration": 0.25},
-                {"key": "5", "duration": 0.25}, {"key": "t", "duration": 0.25},
-
-                {"key": "s", "duration": 1.25}, {"key": "o", "duration": 0.25},
-                {"key": "i", "duration": 0.25}, {"key": "o", "duration": 0.25},
-
-                {"key": "x", "duration": 0.5}, {"key": "t", "duration": 1.0},
-                {"key": "x", "duration": 0.5},
-                {"key": "x", "duration": 0.25}, {"key": "s", "duration": 0.25},
-                {"key": "p", "duration": 0.25}, {"key": "o", "duration": 0.25},
-                {"key": "i", "duration": 0.25}, {"key": "u", "duration": 0.25},
-                {"key": "y", "duration": 0.25}, {"key": "t", "duration": 0.25},
-                {"key": "y", "duration": 1.5}, {"key": "t", "duration": 0.5},
-                {"key": "t", "duration": 1.0},
-            ],
-        },
-
-        "Nokia Ringtone": { # q = 0.3
-            "melody": [
-                {"key": "p", "duration": 0.15}, {"key": "o", "duration": 0.15},
-                {"key": "5", "duration": 0.3}, {"key": "6", "duration": 0.3},
-                {"key": "9", "duration": 0.15}, {"key": "u", "duration": 0.15},
-                {"key": "w", "duration": 0.3}, {"key": "e", "duration": 0.3},
-                {"key": "u", "duration": 0.15}, {"key": "y", "duration": 0.15},
-                {"key": "2", "duration": 0.3}, {"key": "e", "duration": 0.3},
-                {"key": "y", "duration": 0.3},
-            ]
-        },
-
-        "Whiplash": { # q = 0.28
-            "melody": [
-                # brass 1
-                {"key": ["x", "o"], "duration": 0.28},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["x", "o"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 0.28},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
-                {"key": ["x", "o"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["z", "i"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 0.28},
-                # piano bass 1
-                {"key": "i", "duration": 0.28},
-                {"key": "7", "duration": 0.14}, {"key": "6", "duration": 0.14},
-                {"key": "t", "duration": 0.28},
-                {"key": "q", "duration": 0.14}, {"key": "5", "duration": 0.28},
-                {"key": "r", "duration": 0.28},
-                {"key": "q", "duration": 0.14}, {"key": "3", "duration": 0.28},
-                # brass 2
-                {"key": ["x", "o"], "duration": 0.28},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["x", "o"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 0.28},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
-                {"key": ["f", "z"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 0.56},
-                # piano bass 2
-                {"key": "q", "duration": 0.28},
-                {"key": "q", "duration": 0.14}, {"key": "w", "duration": 0.14},
-                {"key": "3", "duration": 0.28},
-                {"key": "r", "duration": 0.14}, {"key": "5", "duration": 0.28},
-                {"key": "r", "duration": 0.28},
-                {"key": "3", "duration": 0.14}, {"key": "q", "duration": 0.28},
-                # brass 3
-                {"key": ["x", "o"], "duration": 0.28},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["x", "o"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 0.28},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
-                {"key": ["x", "o"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["z", "i"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 0.28},
-                # piano bass 3
-                {"key": "i", "duration": 0.28},
-                {"key": "7", "duration": 0.14}, {"key": "6", "duration": 0.14},
-                {"key": "t", "duration": 0.28},
-                {"key": "q", "duration": 0.14}, {"key": "5", "duration": 0.28},
-                {"key": "r", "duration": 0.28},
-                {"key": "q", "duration": 0.14}, {"key": "3", "duration": 0.28},
-                # brass 4 outro
-                {"key": ["x", "o"], "duration": 0.28},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["x", "o"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 0.28},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
-                {"key": ["f", "z"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 1.12},
-                {"key": ["z", "i"], "duration": 0.14}, {"key": ["x", "o"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["z", "i"], "duration": 0.14},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
-                {"key": ["x", "o"], "duration": 0.14}, {"key": ["f", "z"], "duration": 0.28},
-                {"key": ["x", "o", "7"], "duration": 1.12},
-            ]
-        },
-
-        "Megalovania": {  # q = 0.24
-            "melody": [
-                {"key": "w", "duration": 0.12}, {"key": "w", "duration": 0.12},
-                {"key": "o", "duration": 0.24},
-                {"key": "y", "duration": 0.36},
-                {"key": "6", "duration": 0.24}, {"key": "t", "duration": 0.24},
-                {"key": "r", "duration": 0.24}, {"key": "w", "duration": 0.12},
-                {"key": "r", "duration": 0.12}, {"key": "t", "duration": 0.12},
-                {"key": "q", "duration": 0.12}, {"key": "q", "duration": 0.12},
-                {"key": "o", "duration": 0.24},
-                {"key": "y", "duration": 0.36},
-                {"key": "6", "duration": 0.24}, {"key": "t", "duration": 0.24},
-                {"key": "r", "duration": 0.24}, {"key": "w", "duration": 0.12},
-                {"key": "r", "duration": 0.12}, {"key": "t", "duration": 0.12},
-                {"key": "u", "duration": 0.12}, {"key": "u", "duration": 0.12},
-                {"key": "o", "duration": 0.24},
-                {"key": "y", "duration": 0.36},
-                {"key": "6", "duration": 0.24}, {"key": "t", "duration": 0.24},
-                {"key": "r", "duration": 0.24}, {"key": "w", "duration": 0.12},
-                {"key": "r", "duration": 0.12}, {"key": "t", "duration": 0.12},
-                {"key": "7", "duration": 0.12}, {"key": "7", "duration": 0.12},
-                {"key": "o", "duration": 0.24},
-                {"key": "y", "duration": 0.36},
-                {"key": "6", "duration": 0.24}, {"key": "t", "duration": 0.24},
-                {"key": "r", "duration": 0.24}, {"key": "w", "duration": 0.12},
-                {"key": "r", "duration": 0.12}, {"key": "t", "duration": 0.12},
-            ]
-        },
-
-        "Tetris Korobeiniki": {
-            "melody": [ # q = 0.4
-                {"key": "p", "duration": 0.4},
-                {"key": "u", "duration": 0.2}, {"key": "i", "duration": 0.2},
-                {"key": "o", "duration": 0.4},
-                {"key": "i", "duration": 0.2}, {"key": "u", "duration": 0.2},
-                {"key": "y", "duration": 0.4},
-                {"key": "y", "duration": 0.2}, {"key": "i", "duration": 0.2},
-                {"key": "p", "duration": 0.4},
-                {"key": "o", "duration": 0.2}, {"key": "i", "duration": 0.2},
-                {"key": "u", "duration": 0.4},
-                {"key": "u", "duration": 0.2}, {"key": "i", "duration": 0.2},
-                {"key": "o", "duration": 0.4}, {"key": "p", "duration": 0.4},
-                {"key": "i", "duration": 0.4}, {"key": "y", "duration": 0.4},
-                {"key": "y", "duration": 1.0},
-
-                {"key": "o", "duration": 0.4}, {"key": "z", "duration": 0.2},
-                {"key": "c", "duration": 0.4},
-                {"key": "x", "duration": 0.2}, {"key": "z", "duration": 0.2},
-                {"key": "p", "duration": 0.6}, {"key": "i", "duration": 0.2},
-                {"key": "p", "duration": 0.4},
-                {"key": "o", "duration": 0.2}, {"key": "i", "duration": 0.2},
-                {"key": "u", "duration": 0.4},
-                {"key": "u", "duration": 0.2}, {"key": "i", "duration": 0.2},
-                {"key": "o", "duration": 0.4}, {"key": "p", "duration": 0.4},
-                {"key": "i", "duration": 0.4}, {"key": "y", "duration": 0.4},
-                {"key": "y", "duration": 1.0},
-            ],
-            "harmony": [
-                {"key": "w", "duration": 0.2},
-                {"key": ["w", "e", "6"], "duration": 0.4}, {"key": ["w", "e", "6"], "duration": 0.4},
-                {"key": ["w", "e", "6"], "duration": 0.4}, {"key": ["w", "e", "6"], "duration": 0.4},
-                {"key": ["q", "e", "y"], "duration": 0.4}, {"key": ["q", "e", "y"], "duration": 0.4},
-                {"key": ["q", "e", "y"], "duration": 0.4}, {"key": ["q", "e", "y"], "duration": 0.4},
-                {"key": ["w", "e", "6"], "duration": 0.4}, {"key": ["w", "e", "6"], "duration": 0.4},
-                {"key": ["w", "e", "6"], "duration": 0.4}, {"key": ["w", "e", "6"], "duration": 0.4},
-                {"key": ["q", "e", "y"], "duration": 0.4}, {"key": ["q", "e", "y"], "duration": 0.4},
-                {"key": ["2", "e", "y"], "duration": 0.4}, {"key": ["2", "e", "y"], "duration": 0.4},
-                {"key": ["w", "r", "y"], "duration": 0.4}, {"key": ["w", "r", "y"], "duration": 0.4},
-                {"key": ["w", "r", "y"], "duration": 0.4}, {"key": ["w", "r", "y"], "duration": 0.4},
-                {"key": ["q", "e", "y"], "duration": 0.4}, {"key": ["q", "e", "y"], "duration": 0.4},
-                {"key": ["q", "e", "y"], "duration": 0.4}, {"key": ["q", "e", "y"], "duration": 0.4},
-                {"key": ["w", "e", "6"], "duration": 0.4}, {"key": ["w", "e", "6"], "duration": 0.4},
-                {"key": ["w", "e", "6"], "duration": 0.4}, {"key": ["w", "e", "6"], "duration": 0.4},
-                {"key": ["q", "e", "y"], "duration": 0.4}, {"key": ["q", "e", "y"], "duration": 0.2},
-                {"key": ["q", "e", "y"], "duration": 0.4},
-            ]
-        },
-    }
-
-    @classmethod
-    def list_songs(cls) -> list: return list(cls.songs.keys())
-
-    @classmethod
-    def get_song(cls, name: str) -> list | None:
-        name_lower = name.lower()
-        for key in cls.songs:
-            if key.lower() == name_lower: return cls.songs[key]
-        return None
-
-    @classmethod
-    def add_song(cls, name: str, notes: list): cls.songs[name.lower()] = notes
-
-# reqs
 
 class SystemList:
     """System global list for requirements and miscellaneous system information."""
-    min_req = f"""
-  {Fore.BLUE}OS{Style.RESET_ALL}        : {Fore.LIGHTBLUE_EX}Windows 10 / Linux (kernel 4.19+){Style.RESET_ALL}
-  {Fore.BLUE}CPU{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}Single-Core 1.5 GHz (x86-64){Style.RESET_ALL}
-  {Fore.BLUE}RAM{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}128MB free memory{Style.RESET_ALL}
-  {Fore.BLUE}Storage{Style.RESET_ALL}   : {Fore.LIGHTBLUE_EX}200MB free space (including dependencies){Style.RESET_ALL}
-  {Fore.BLUE}Python{Style.RESET_ALL}    : {Fore.LIGHTBLUE_EX}3.10+ Python version{Style.RESET_ALL}
+    min_req = """
+  [blue]OS[/blue]        : [cyan]Windows 10 / Linux (kernel 4.19+)[/cyan]
+  [blue]CPU[/blue]       : [cyan]Single-Core 1.5 GHz (x86-64)[/cyan]
+  [blue]RAM[/blue]       : [cyan]128MB free memory[/cyan]
+  [blue]Storage[/blue]   : [cyan]200MB free space (including dependencies)[/cyan]
+  [blue]Python[/blue]    : [cyan]3.10+ Python version[/cyan]
 """
 
-    rec_req = f"""
-  {Fore.BLUE}OS{Style.RESET_ALL}        : {Fore.LIGHTBLUE_EX}Windows 10 / Linux (kernel 4.19+){Style.RESET_ALL}
-  {Fore.BLUE}CPU{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}Dual-Core 2.0 GHz (x86-64 / ARM64){Style.RESET_ALL}
-  {Fore.BLUE}RAM{Style.RESET_ALL}       : {Fore.LIGHTBLUE_EX}1024MB free memory{Style.RESET_ALL}
-  {Fore.BLUE}Storage{Style.RESET_ALL}   : {Fore.LIGHTBLUE_EX}400MB free space{Style.RESET_ALL}
-  {Fore.BLUE}Python{Style.RESET_ALL}    : {Fore.LIGHTBLUE_EX}3.13 Python version{Style.RESET_ALL}
+    rec_req = """
+  [blue]OS[/blue]        : [cyan]Windows 10 / Linux (kernel 4.19+)[/cyan]
+  [blue]CPU[/blue]       : [cyan]Dual-Core 2.0 GHz (x86-64 / ARM64)[/cyan]
+  [blue]RAM[/blue]       : [cyan]1024MB free memory[/cyan]
+  [blue]Storage[/blue]   : [cyan]400MB free space[/cyan]
+  [blue]Python[/blue]    : [cyan]3.13 Python version[/cyan]
 """

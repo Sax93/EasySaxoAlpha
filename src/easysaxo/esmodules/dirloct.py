@@ -1,11 +1,4 @@
-"""Directory / File manager for EasySaxo.
-
-Includes:
-- `base_dir`, `dir_forcreate` and `PROJECT_ROOT`
-- DirLocation class
-"""
-
-# `dirloct.py` ONLY FOR FILE-RELATED COMMAND DEFINING
+"""Directory / File manager for EasySaxo."""
 
 import os
 import platform
@@ -14,7 +7,7 @@ import sys
 import tempfile
 import zipfile
 
-from colorama import Fore, Style
+from rich import print
 
 from ..config import easysaxo
 from .lister import FileDisclaimer as Fd
@@ -27,6 +20,7 @@ dir_forcreate = os.path.join(PROJECT_ROOT, "esmodules", "filecreation")
 class DirLocation:
     """Path identifier global operator and handler"""
     FLAGS = {  # noqa: RUF012
+        "-<inst": lambda: os.path.join(PROJECT_ROOT, "..", ".."),
         "-<root": lambda: PROJECT_ROOT,
         "-<es": lambda: os.path.join(PROJECT_ROOT, "esmodules"),
         "-<fc": lambda: dir_forcreate,
@@ -56,7 +50,7 @@ class DirLocation:
                 return "UTF-8"
         except Exception as e:  # noqa: BLE001
             easysaxo.k_log("10")
-            print(f"{Fore.RED}Error reading file for BOM: {e}{Style.RESET_ALL}")
+            print(f"[red]Error reading file for BOM: {e}[/red]")
             return "Error"
 
     @staticmethod
@@ -83,20 +77,21 @@ class DirLocation:
             return clean_path
         
         if "_" in filepath:
-            filepath = filepath.replace("_", " ")  # bc ofc the clanker has
-            return filepath                        # to do everything now
+            filepath = filepath.replace("_", " ")
+            return filepath
 
         return clean_path
 
     @staticmethod
     def _resolve_path(filepath: str, *, for_creation: bool = False) -> str:
+        """Parses the entered filepath and resolves it to an absolute path based on a fixed order."""
         path = DirLocation._parse_flag_or_path(filepath)
 
         if not path: return base_dir
 
         path = os.path.normpath(path)
 
-        # explicit and absolute paths should win immediately
+        # explicit and absolute paths should be parsed first
         if os.path.isabs(path): return os.path.abspath(path)
 
         candidates = (
@@ -109,10 +104,10 @@ class DirLocation:
         for candidate in candidates:
             if os.path.exists(candidate): return os.path.abspath(candidate)
 
-        # missing paths now need an explicit creation policy
+        # missing paths now need an explicit creation sign
         if for_creation: return os.path.abspath(os.path.join(dir_forcreate, path))
 
-        # fefault fallback
+        # default fallback
         return os.path.abspath(os.path.join(base_dir, path))
 
     @staticmethod
@@ -121,27 +116,27 @@ class DirLocation:
         if _f_bom in ["None", "Error"]:
             easysaxo.k_log("f1")
             print(Fd.utf_evaluator)
-            print(f"{Fore.YELLOW}File {Fore.CYAN}{filepath}{Fore.YELLOW} could not be read.{Style.RESET_ALL}")
+            print(f"[yellow]File [cyan]{filepath}[yellow] could not be read.[/yellow]")
             return False
         elif _f_bom == "Directory":
             easysaxo.k_log("f3")
             print(Fd.utf_evaluator)
-            print(f"{Fore.YELLOW}Path {Fore.CYAN}{filepath}{Fore.YELLOW} is a directory, not a file.{Style.RESET_ALL}")
+            print(f"[yellow]Path [cyan]{filepath}[yellow] is a directory, not a file.[/yellow]")
             return False
         elif _f_bom not in ["UTF-8", "UTF-16"]:
             easysaxo.k_log("f1")
             print(Fd.utf_evaluator)
-            print(f"{Fore.YELLOW}File {Fore.CYAN}{filepath}{Fore.YELLOW} is not UTF-8 or UTF-16 encoded (detected BOM: {Fore.RED}{_f_bom}{Style.RESET_ALL})")
+            print(f"[yellow]File [cyan]{filepath}[yellow] is not UTF-8 or UTF-16 encoded (detected BOM: [red]{_f_bom}[/red])")
             return False
 
-        print(f"Encoding: {Fore.YELLOW}{_f_bom}{Style.RESET_ALL}")
+        print(f"Encoding: [yellow]{_f_bom}[/yellow]")
         return True
 
     @staticmethod
     def cd(path=None):
         global base_dir
         if not path:
-            print(f"Current directory: {Fore.MAGENTA}{DirLocation.get_display_path()}{Style.RESET_ALL}")
+            print(f"Current directory: [magenta]{DirLocation.get_display_path()}[/magenta]")
             return
 
         clean_path = path.strip()
@@ -155,16 +150,16 @@ class DirLocation:
         if os.path.exists(target) and os.path.isdir(target):
             os.chdir(target)
             base_dir = os.getcwd()
-            print(f"Directory changed to {Fore.MAGENTA}{DirLocation.get_display_path()}{Style.RESET_ALL}")
+            print(f"Directory changed to [magenta]{DirLocation.get_display_path()}[/magenta]")
         else:
             easysaxo.k_log("5")
-            print(f"{Fore.RED}Directory '{clean_path}' does not exist.{Style.RESET_ALL}")
+            print(f"[red]Directory '{clean_path}' does not exist.[/red]")
 
     @staticmethod
     def get_display_path(path=None):
         """Returns ~easysaxo relative path if within PROJECT_ROOT, else returns normalized path."""
         target_path = os.path.abspath(path) if path else base_dir
-        
+
         if target_path == PROJECT_ROOT: return "~easysaxo"
         elif target_path.startswith(PROJECT_ROOT + os.sep):
             rel_path = os.path.relpath(target_path, PROJECT_ROOT)
@@ -184,17 +179,17 @@ class DirLocation:
                 target_path = os.path.join(PROJECT_ROOT, file)
 
                 if not os.path.exists(target_path):
-                    print(f"{Fore.RED}Missing: {Fore.YELLOW}{file}{Style.RESET_ALL}")
+                    print(f"[red]Missing: [yellow]{file}[/yellow][/red]")
                     continue
 
                 is_init = file.endswith("__init__.py")
-                is_valid_size = is_init or os.path.getsize(target_path) > 0
+                is_valid_size = is_init or os.path.exists(target_path) and os.path.getsize(target_path) > 3
 
                 if not is_valid_size:
-                    print(f"{Fore.CYAN}Empty (expected non-empty): {Fore.YELLOW}{file}{Style.RESET_ALL}")
+                    print(f"[cyan]Below size: [yellow]{file}[/yellow][/cyan]")
                     return
 
-                print(f"{Fore.GREEN}Checked: {Fore.YELLOW}{file}{Style.RESET_ALL}")
+                print(f"[green]Checked: [yellow]{file}[/yellow][/green]")
         except (ImportError, KeyboardInterrupt) as e: easysaxo.k_log("11" if isinstance(e, KeyboardInterrupt) else "10")
 
     @staticmethod
@@ -203,11 +198,11 @@ class DirLocation:
             full_path = DirLocation._resolve_path(filepath)
             if not os.path.exists(full_path):
                 easysaxo.k_log("5")
-                print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                print(f"File [red]{filepath}[/red] does not exist.")
                 return
             if os.path.isdir(full_path):
                 easysaxo.k_log("f3")
-                print(f"{Fore.RED}{filepath}{Style.RESET_ALL} is a directory, not a file.")
+                print(f"[red]{filepath}[/red] is a directory, not a file.")
                 return
 
             size_bytes = os.path.getsize(full_path)
@@ -219,10 +214,10 @@ class DirLocation:
                 size_bytes /= 1024.0
 
             display_file = DirLocation.get_display_path(full_path)
-            print(f"Size of {Fore.CYAN}{display_file}{Style.RESET_ALL}: {Fore.YELLOW}{readable_size}{Style.RESET_ALL}")
+            print(f"Size of [cyan]{display_file}[/cyan]: [yellow]{readable_size}[/yellow]")
         except (FileNotFoundError, PermissionError, KeyboardInterrupt) as e:
             easysaxo.k_log("4" if isinstance(e, PermissionError) else "5" if isinstance(e, FileNotFoundError) else "11")
-            print(f"{Fore.RED}Error getting file size: {e}{Style.RESET_ALL}")
+            print(f"[red]Error getting file size: {e}[/red]")
 
     @staticmethod
     def dirsz(filepath=None):
@@ -231,11 +226,11 @@ class DirLocation:
             full_path = os.path.abspath(DirLocation._resolve_path(filepath)) if filepath else base_dir
             if not os.path.exists(full_path):
                 easysaxo.k_log("5")
-                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                print(f"Directory [red]{filepath}[/red] does not exist.")
                 return
             if not os.path.isdir(full_path):
                 easysaxo.k_log("f2")
-                print(f"{Fore.RED}{filepath}{Style.RESET_ALL} is a file, not a directory.")
+                print(f"[red]{filepath}[/red] is a file, not a directory.")
                 return
 
             if os.path.dirname(full_path) == full_path:
@@ -265,11 +260,11 @@ class DirLocation:
             display_dir = DirLocation.get_display_path(full_path)
             if filepath and filepath != ".": target_display = f"{filepath} ({display_dir})"
             else: target_display = display_dir
-            
-            print(f"Size of directory {Fore.CYAN}{target_display}{Style.RESET_ALL}: {Fore.YELLOW}{readable_size}{Style.RESET_ALL}")
+
+            print(f"Size of directory [cyan]{target_display}[/cyan]: [yellow]{readable_size}[/yellow]")
         except (FileNotFoundError, PermissionError, KeyboardInterrupt) as e: 
             easysaxo.k_log("5" if isinstance(e, FileNotFoundError) else "4" if isinstance(e, PermissionError) else "11")
-            print(f"{Fore.RED}Error getting directory size: {e}{Style.RESET_ALL}")
+            print(f"[red]Error getting directory size: {e}[/red]")
 
     @staticmethod
     def ls(filepath=None):
@@ -277,34 +272,34 @@ class DirLocation:
             target_dir = DirLocation._resolve_path(filepath) if filepath else base_dir
             if not os.path.exists(target_dir):
                 easysaxo.k_log("5")
-                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                print(f"Directory [red]{filepath}[/red] does not exist.")
                 return
             if not os.path.isdir(target_dir):
                 easysaxo.k_log("f2")
-                print(f"{Fore.RED}{filepath}{Style.RESET_ALL} is not a directory.")
+                print(f"[red]{filepath}[/red] is not a directory.")
                 return
 
             display_dir = DirLocation.get_display_path(target_dir)
-            print(f"\n--- Directory Contents of {Fore.CYAN}{display_dir}{Style.RESET_ALL} ---")
-            
+            print(f"\n--- Directory Contents of [cyan]{display_dir}[/cyan] ---")
+
             with os.scandir(target_dir) as entries:
                 for entry in sorted(entries, key=lambda e: e.name.lower()):
-                    if entry.is_dir(follow_symlinks=False): print(f"{Fore.BLUE}[DIR]  {entry.name}{Style.RESET_ALL}")
+                    if entry.is_dir(follow_symlinks=False): print(f"[blue][DIR]  {entry.name}[/blue]")
                     else:
                         size_bytes = entry.stat(follow_symlinks=False).st_size
-                        
+
                         for unit in ['B', 'KB', 'MB', 'GB']:
                             if size_bytes < 1024.0:
                                 size_str = f"{size_bytes:.2f} {unit}"
                                 break
                             size_bytes /= 1024.0
 
-                        print(f"{Fore.GREEN}[FILE] {entry.name}{Style.RESET_ALL} ({Fore.YELLOW}{size_str}{Style.RESET_ALL})")
-                        
+                        print(f"[green][FILE] {entry.name}[/green] ([yellow]{size_str}[/yellow])")
+
             print("--- End of Directory Listing ---\n")
         except (PermissionError, FileNotFoundError) as e: 
             easysaxo.k_log("4" if isinstance(e, PermissionError) else "5")
-            print(f"{Fore.RED}Error listing directory: {e}{Style.RESET_ALL}")
+            print(f"[red]Error listing directory: {e}[/red]")
 
     @staticmethod
     def filetree(filepath=None, max_depth=4):
@@ -312,27 +307,27 @@ class DirLocation:
             target_dir = DirLocation._resolve_path(filepath) if filepath else base_dir
             if not os.path.exists(target_dir):
                 easysaxo.k_log("5")
-                print(f"Directory {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                print(f"Directory [red]{filepath}[/red] does not exist.")
                 return
             if not os.path.isdir(target_dir):
                 easysaxo.k_log("f2")
-                print(f"{Fore.RED}{filepath}{Style.RESET_ALL} is not a directory.")
+                print(f"[red]{filepath}[/red] is not a directory.")
                 return
 
             display_dir = DirLocation.get_display_path(target_dir)
-            print(f"\n{Fore.CYAN} Directory Tree: {display_dir}{Style.RESET_ALL}\n")
+            print(f"\n[cyan] Directory Tree: {display_dir}[/cyan]\n")
 
             def _build_tree(dir_path, prefix="", current_depth=0):
                 if current_depth > max_depth:
-                    print(f"{prefix}{Fore.LIGHTBLACK_EX}... (max depth reached){Style.RESET_ALL}")
+                    print(f"{prefix}[lightblack]... (max depth reached)[/lightblack]")
                     return
 
                 try: entries = sorted(os.listdir(dir_path))
                 except PermissionError:
-                    print(f"{prefix}{Fore.RED}[Permission Denied]{Style.RESET_ALL}")
+                    print(f"{prefix}[red][Permission Denied][/red]")
                     return
                 except OSError:
-                    print(f"{prefix}{Fore.RED}[OS Exception]{Style.RESET_ALL}")
+                    print(f"{prefix}[red][OS Exception][/red]")
                     return
 
                 dirs = [e for e in entries if os.path.isdir(os.path.join(dir_path, e))]
@@ -349,21 +344,21 @@ class DirLocation:
                     item_path = os.path.join(dir_path, item)
 
                     if os.path.isdir(item_path):
-                        print(f"{prefix}{connector}{Fore.BLUE}{Style.BRIGHT}{item}/{Style.RESET_ALL}")
+                        print(f"{prefix}{connector}[blue][BRIGHT]{item}/[/BRIGHT][/blue]")
                         _build_tree(item_path, prefix + child_prefix, current_depth + 1)
                     else:
                         from .lister import FileList
                         _, ext = os.path.splitext(item)
-                        ext_color = FileList.EXTENSION_COLORS.get(ext.lower(), Fore.WHITE)
+                        ext_color = FileList.EXTENSION_COLORS.get(ext.lower(), "[white]")
 
-                        print(f"{prefix}{connector}{ext_color}{item}{Style.RESET_ALL}")
+                        print(f"{prefix}{connector}{ext_color}{item}[/white]")
 
             _build_tree(target_dir)
-            print(f"\n{Fore.CYAN}--- End of Directory Tree ---{Style.RESET_ALL}\n")
+            print("\n[cyan]--- End of Directory Tree ---[/cyan]\n")
 
         except (PermissionError, FileNotFoundError, KeyboardInterrupt) as e: 
             easysaxo.k_log("5" if isinstance(e, FileNotFoundError) else "4" if isinstance(e, PermissionError) else "11")
-            print(f"{Fore.RED}Error rendering directory tree: {e}{Style.RESET_ALL}")
+            print(f"[red]Error rendering directory tree: {e}[/red]")
 
     @staticmethod
     def fileopn(filepath):
@@ -372,13 +367,13 @@ class DirLocation:
             full_path = DirLocation._resolve_path(filepath)
             if not os.path.exists(full_path):
                 easysaxo.k_log("5")
-                print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                print(f"File [red]{filepath}[/red] does not exist.")
                 return None
 
             display_file = DirLocation.get_display_path(full_path)
 
             if filepath.endswith(".py"):
-                print(f"Executing {Fore.GREEN}{display_file}{Style.RESET_ALL}...")
+                print(f"Executing [green]{display_file}[/green]...")
 
                 result = subprocess.run(
                     [sys.executable, full_path],
@@ -389,25 +384,25 @@ class DirLocation:
 
                 if result.returncode != 0:
                     traceback_str = result.stderr
-                    print(f"{Fore.MAGENTA}Program returns an exception:{Style.RESET_ALL}\n{traceback_str}")
+                    print(f"[magenta]Program returns an exception:[/magenta]\n{traceback_str}")
                     return traceback_str
                 else:
                     if result.stdout: print(result.stdout, end="")
-                    print(f"{Fore.GREEN}Program finished with exit code {Fore.CYAN}{result.returncode}{Style.RESET_ALL}")
+                    print(f"[green]Program finished with exit code [/green][cyan]{result.returncode}[/cyan]")
                     return None
             else:
-                print(f"Opening {Fore.GREEN}{display_file}{Style.RESET_ALL}...")
+                print(f"Opening [green]{display_file}[/green]...")
                 if os.name == "nt": os.startfile(full_path)
                 elif platform.system() == "Darwin": subprocess.run(["open", full_path], check=True)
                 else: subprocess.run(["xdg-open", full_path], check=True)
                 return None
 
         except subprocess.CalledProcessError as e:
-            print(f"\nProgram '{Fore.RED}{full_path}{Style.RESET_ALL}' returned exit code {Fore.LIGHTBLUE_EX + str(e.returncode) + Style.RESET_ALL}:\n"
-                  f"{Fore.LIGHTMAGENTA_EX}{e}{Style.RESET_ALL}")
+            print(f"\nProgram '[red]{full_path}[/red]' returned exit code [cyan]{e.returncode!s}[/cyan]:\n"
+                  f"[magenta]{e}[/magenta]")
         except (PermissionError, FileNotFoundError) as e:
             easysaxo.k_log("4" if isinstance(e, PermissionError) else "5")
-            print(f"{Fore.RED}Error opening file: {e}{Style.RESET_ALL}")
+            print(f"[red]Error opening file: {e}[/red]")
             return str(e)
 
     @staticmethod
@@ -420,34 +415,34 @@ class DirLocation:
                 try:
                     if target in proc.info["name"].lower():
                         proc.terminate()
-                        print(f"Closed process {Fore.GREEN}{proc.info['name']}{Style.RESET_ALL} (PID: {proc.info['pid']}).")
+                        print(f"Closed process [green]{proc.info['name']}[/green] (PID: {proc.info['pid']}).")
                         terminated = True
                 except (psutil.NoSuchProcess, psutil.AccessDenied): continue
             if not terminated:
                 easysaxo.k_log("p1")
-                print(f"No running process found matching {Fore.YELLOW}{process_name_or_file}{Style.RESET_ALL}.")
+                print(f"No running process found matching [yellow]{process_name_or_file}[/yellow].")
         except (PermissionError, psutil.NoSuchProcess, psutil.AccessDenied) as e:
             easysaxo.k_log("4" if isinstance(e, PermissionError or psutil.AccessDenied) else "10")
-            print(f"{Fore.RED}Error closing file process: {e}{Style.RESET_ALL}")
+            print(f"[red]Error closing file process: {e}[/red]")
 
     @staticmethod
     def filecrt(filepath):
         try:
             full_path = DirLocation._resolve_path(filepath, for_creation=True)
             display_file = DirLocation.get_display_path(full_path)
-            
+
             if os.path.exists(full_path): 
                 easysaxo.k_log("f4")
-                print(f"File {Fore.YELLOW}{display_file}{Style.RESET_ALL} already exists.")
+                print(f"File [yellow]{display_file}[/yellow] already exists.")
             else:
                 parent_dir = os.path.dirname(full_path)
                 if parent_dir: os.makedirs(parent_dir, exist_ok=True)
 
                 open(full_path, "a").close()
-                print(f"File {Fore.GREEN}{display_file}{Style.RESET_ALL} created successfully.")
+                print(f"File [green]{display_file}[/green] created successfully.")
         except (PermissionError, FileNotFoundError) as e:
             easysaxo.k_log("4")
-            print(f"{Fore.RED}Error creating file: {e}{Style.RESET_ALL}")
+            print(f"[red]Error creating file: {e}[/red]")
 
     @staticmethod
     def dircrt(filepath):
@@ -456,13 +451,13 @@ class DirLocation:
             display_dir = DirLocation.get_display_path(full_path)
             if os.path.exists(full_path):
                 easysaxo.k_log("f4")
-                print(f"Directory or path {Fore.YELLOW}{display_dir}{Style.RESET_ALL} already exists.")
+                print(f"Directory or path [yellow]{display_dir}[/yellow] already exists.")
             else:
                 os.makedirs(full_path, exist_ok=True)
-                print(f"Directory {Fore.GREEN}{display_dir}{Style.RESET_ALL} created successfully.")
+                print(f"Directory [green]{display_dir}[/green] created successfully.")
         except PermissionError as e: 
             easysaxo.k_log("4")
-            print(f"{Fore.RED}Error creating directory: {e}{Style.RESET_ALL}")
+            print(f"[red]Error creating directory: {e}[/red]")
 
     @staticmethod
     def dirdel(filepath):
@@ -471,20 +466,20 @@ class DirLocation:
             display_dir = DirLocation.get_display_path(full_path)
             if os.path.exists(full_path) and os.path.isdir(full_path):
                 os.rmdir(full_path)
-                print(f"Directory {Fore.GREEN}{display_dir}{Style.RESET_ALL} deleted successfully.")
+                print(f"Directory [green]{display_dir}[/green] deleted successfully.")
             else:
                 easysaxo.k_log("5" if not os.path.exists(full_path) else "f2")
-                print(f"Directory {Fore.RED}{display_dir}{Style.RESET_ALL} does not exist or is not a folder.")
+                print(f"Directory [red]{display_dir}[/red] does not exist or is not a folder.")
         except (OSError):
             import shutil
             full_path = DirLocation._resolve_path(filepath)
             display_dir = DirLocation.get_display_path(full_path)
             if os.path.exists(full_path) and os.path.isdir(full_path):
                 shutil.rmtree(full_path)
-                print(f"Directory {Fore.GREEN}{display_dir}{Style.RESET_ALL} deleted successfully.")
+                print(f"Directory [green]{display_dir}[/green] deleted successfully.")
         except (KeyboardInterrupt, PermissionError) as e:
             easysaxo.k_log("4" if isinstance(e, PermissionError) else "11")
-            print(f"{Fore.RED}Error deleting directory: {e}{Style.RESET_ALL}")
+            print(f"[red]Error deleting directory: {e}[/red]")
 
     @staticmethod
     def filerd(filepath):
@@ -507,21 +502,21 @@ class DirLocation:
                         from pygments.lexers import PythonLexer
 
                         display_content = highlight(content, PythonLexer(), TerminalFormatter())
-                    except ImportError:  display_content = f"{Fore.GREEN}{content}{Style.RESET_ALL}"
+                    except ImportError:  display_content = f"[green]{content}[/green]"
 
-                print(f"\n--- Contents of {Fore.CYAN}{display_file}{Style.RESET_ALL} ---\n{display_content}\n--- End of file ---")
+                print(f"\n--- Contents of [cyan]{display_file}[/cyan] ---\n{display_content}\n--- End of file ---")
             else:
                 easysaxo.k_log("5")
-                print(f"File {Fore.RED}{filepath}{Style.RESET_ALL} does not exist.")
+                print(f"File [red]{filepath}[/red] does not exist.")
         except PermissionError as e:
             easysaxo.k_log("4")
-            print(f"{Fore.RED}Error reading file: {e}{Style.RESET_ALL}")
+            print(f"[red]Error reading file: {e}[/red]")
         except UnicodeDecodeError:
             easysaxo.k_log("f1")
-            print(f"{Fore.RED}Make sure your file is valid for reading.{Style.RESET_ALL}")
+            print("[red]Make sure your file is valid for reading.[/red]")
         except KeyboardInterrupt:
             easysaxo.k_log("11")
-            print(f"\n{Fore.RED}Read operation cancelled by user.{Style.RESET_ALL}")
+            print("\n[red]Read operation cancelled by user.[/red]")
 
     @staticmethod
     def filedel(filepath):
@@ -530,13 +525,13 @@ class DirLocation:
             display_file = DirLocation.get_display_path(full_path)
             if os.path.exists(full_path):
                 os.remove(full_path)
-                print(f"File {Fore.GREEN}{display_file}{Style.RESET_ALL} deleted successfully.")
+                print(f"File [green]{display_file}[/green] deleted successfully.")
                 return
             easysaxo.k_log("5")
-            print(f"File {Fore.RED}{display_file}{Style.RESET_ALL} does not exist.")
+            print(f"File [red]{display_file}[/red] does not exist.")
         except (PermissionError, OSError) as e:  
             easysaxo.k_log("4")
-            print(f"{Fore.RED}Error deleting file: {e}{Style.RESET_ALL}")
+            print(f"[red]Error deleting file: {e}[/red]")
 
     @staticmethod
     def filewrt(filepath, content=None):
@@ -545,8 +540,7 @@ class DirLocation:
         from .lister import CommandList
 
         class QuickLinter(ast.NodeVisitor):
-            def __init__(self):
-                self.warnings = []
+            def __init__(self): self.warnings = []
 
             def visit_FunctionDef(self, node):
                 if any(c.isupper() for c in node.name):
@@ -594,18 +588,18 @@ class DirLocation:
 
             if os.path.isdir(full_path):
                 easysaxo.k_log("f3")
-                print(f"File {Fore.YELLOW}{display_file}{Style.RESET_ALL} is a directory, not a file.")
+                print(f"File [yellow]{display_file}[/yellow] is a directory, not a file.")
                 return
 
             if content is None:
-                print(f"{Fore.CYAN}--- Interactive Line Editor for '{display_file}' ---{Style.RESET_ALL}")
+                print(f"[cyan]--- Interactive Line Editor for '{display_file}' ---[/cyan]")
                 print(CommandList.FWRTlist)
 
                 lines = []
                 if os.path.exists(full_path):
                     try:
                         with open(full_path, "r", encoding="utf-8") as f: lines = f.read().splitlines()
-                        if lines: print(f"{Fore.LIGHTBLACK_EX}Loaded existing file content ({len(lines)} lines).{Style.RESET_ALL}")
+                        if lines: print(f"[lightblack]Loaded existing file content ({len(lines)} lines).[/lightblack]")
                     except PermissionError: """just dont give two shiis"""
 
                 while True:
@@ -617,37 +611,37 @@ class DirLocation:
                             if filepath.endswith(".py"):
                                 warnings, syntax_err = _run_linter("\n".join(lines))
                                 if syntax_err:
-                                    print(f"{Fore.RED}[Linter] {syntax_err}{Style.RESET_ALL}")
-                                    confirm = input(f"{Fore.YELLOW}Save with syntax error? (y/N): {Style.RESET_ALL}").strip().lower()
+                                    print(f"[red][Linter] {syntax_err}[/red]")
+                                    confirm = input("[yellow]Save with syntax error? (y/N): [/yellow]").strip().lower()
                                     if confirm != 'y':  continue
                                 elif warnings:
-                                    print(f"{Fore.YELLOW}[Linter Warnings]:{Style.RESET_ALL}")
-                                    for w in warnings:   print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
+                                    print("[yellow][Linter Warnings]:[/yellow]")
+                                    for w in warnings:   print(f" - [yellow]{w}[/yellow]")
                             break
 
                         elif cmd == ":q":
-                            print(f"{Fore.YELLOW}Changes discarded.{Style.RESET_ALL}")
+                            print("[yellow]Changes discarded.[/yellow]")
                             return
 
                         elif cmd in [":lint", ":check", ":lt"]:
                             if not filepath.endswith(".py"):
-                                print(f"{Fore.YELLOW}File is not a Python script.{Style.RESET_ALL}")
+                                print("[yellow]File is not a Python script.[/yellow]")
                                 return
                             warnings, syntax_err = _run_linter("\n".join(lines))
-                            if syntax_err: print(f"{Fore.RED}[Linter] {syntax_err}{Style.RESET_ALL}")
+                            if syntax_err: print(f"[red][Linter] {syntax_err}[/red]")
                             elif warnings:
-                                print(f"{Fore.YELLOW}[Linter Found {len(warnings)} Warning(s)]:{Style.RESET_ALL}")
-                                for w in warnings: print(f" - {Fore.YELLOW}{w}{Style.RESET_ALL}")
-                            else: print(f"{Fore.GREEN}[Linter] Check return no errors.{Style.RESET_ALL}")
+                                print(f"[yellow][Linter Found {len(warnings)} Warning(s)]:[/yellow]")
+                                for w in warnings: print(f" - [yellow]{w}[/yellow]")
+                            else: print("[green][Linter] Check return no errors.[/green]")
 
                         elif cmd in [":l", ":list"]:
-                            print(f"\n{Fore.CYAN}--- Buffer Preview ---{Style.RESET_ALL}")
-                            for idx, l in enumerate(lines, 1): print(f"{Fore.YELLOW}{idx:3d} |{Style.RESET_ALL} {l}")
-                            print(f"{Fore.CYAN}-----------------------{Style.RESET_ALL}\n")
+                            print("\n[cyan]--- Buffer Preview ---[/cyan]")
+                            for idx, l in enumerate(lines, 1): print(f"[yellow]{idx:3d} |[/yellow] {l}")
+                            print("[cyan]-----------------------[/cyan]\n")
 
                         elif cmd == ":c":
                             lines.clear()
-                            print(f"{Fore.RED}Buffer cleared.{Style.RESET_ALL}")
+                            print("[red]Buffer cleared.[/red]")
 
                         elif cmd.startswith(":d"):
                             parts = cmd.split(maxsplit=1)
@@ -655,11 +649,9 @@ class DirLocation:
                                 idx = int(parts[1]) - 1
                                 if 0 <= idx < len(lines):
                                     removed = lines.pop(idx)
-                                    print(f"{Fore.RED}Removed line {idx+1}: {Style.RESET_ALL}{removed}")
-                                else: 
-                                    print(f"{Fore.RED}Invalid line number.{Style.RESET_ALL}")
-                            else: 
-                                print(f"{Fore.RED}Usage: :d <line_number>{Style.RESET_ALL}")
+                                    print(f"[red]Removed line {idx+1}: [/red]{removed}")
+                                else: print("[red]Invalid line number.[/red]")
+                            else: print("[red]Usage: :d <line_number>[/red]")
 
                         elif cmd.startswith(":i"):
                             parts = cmd.split(maxsplit=2)
@@ -668,32 +660,30 @@ class DirLocation:
                                 new_text = parts[2]
                                 if 0 <= idx <= len(lines):
                                     lines.insert(idx, new_text)
-                                    print(f"{Fore.GREEN}Inserted line {idx+1}.{Style.RESET_ALL}")
-                                else: 
-                                    print(f"{Fore.RED}Line number out of range.{Style.RESET_ALL}")
-                            else: 
-                                print(f"{Fore.RED}Usage: :i <line_number> <text>{Style.RESET_ALL}")
+                                    print("[green]Inserted line {idx+1}.[/green]")
+                                else: print("[red]Line number out of range.[/red]")
+                            else: print("[red]Usage: :i <line_number> <text>[/red]")
 
-                        elif cmd in [":h", ":help"]:  print(CommandList.FWRTlist)
+                        elif cmd in [":h", ":help"]: print(CommandList.FWRTlist)
 
-                        else:  lines.append(line)
+                        else: lines.append(line)
 
                     except KeyboardInterrupt:
-                        print(f"\n{Fore.RED}Write operation cancelled.{Style.RESET_ALL}")
+                        print("\n[red]Write operation cancelled.[/red]")
                         return
                 content = "\n".join(lines)
 
             with open(full_path, "w", encoding="utf-8") as f: f.write(content)
-            print(f"Content written to {Fore.GREEN}{display_file}{Style.RESET_ALL} successfully.")
+            print(f"Content written to [green]{display_file}[/green] successfully.")
         except (PermissionError, FileNotFoundError) as e: 
             easysaxo.k_log("4")
-            print(f"{Fore.RED}Error writing to file: {e}{Style.RESET_ALL}")
+            print(f"[red]Error writing to file: {e}[/red]")
         except UnicodeDecodeError:
             easysaxo.k_log("f1")
-            print(f"{Fore.RED}Make sure your file is valid for writing.{Style.RESET_ALL}") 
+            print("[red]Make sure your file is valid for writing.[/red]") 
         except KeyboardInterrupt:
             easysaxo.k_log("11")
-            print(f"\n{Fore.RED}Write operation cancelled by user.{Style.RESET_ALL}")
+            print("\n[red]Write operation cancelled by user.[/red]")
 
     @staticmethod
     def filesort(dirpath, file_ext, dirdest):
@@ -706,7 +696,7 @@ class DirLocation:
 
             if not os.path.exists(source_dir) or not os.path.isdir(source_dir):
                 easysaxo.k_log("5" if not os.path.exists(source_dir) else "f2")
-                print(f"{Fore.RED}Source directory '{dirpath}' does not exist or is not a directory.{Style.RESET_ALL}")
+                print(f"[red]Source directory '{dirpath}' does not exist or is not a directory.[/red]")
                 return
 
             os.makedirs(dest_dir, exist_ok=True)
@@ -717,18 +707,86 @@ class DirLocation:
             for item in os.listdir(source_dir):
                 src_file_path = os.path.join(source_dir, item)
 
-                if os.path.isdir(src_file_path): 
-                    continue
+                if os.path.isdir(src_file_path): continue
 
                 if item.lower().endswith(file_ext):
                     dest_file_path = os.path.join(dest_dir, item)
                     shutil.move(src_file_path, dest_file_path)
                     moved_count += 1
 
-            print(f"{Fore.GREEN}Successfully moved {moved_count} file(s) with extension '{file_ext}' to '{display_dest}'.{Style.RESET_ALL}")
+            print(f"[green]Successfully moved {moved_count} file(s) with extension '{file_ext}' to '{display_dest}'.[/green]")
         except (PermissionError) as e:
             easysaxo.k_log("4")
-            print(f"{Fore.RED}Error moving files into destination '{dirdest}': {e}{Style.RESET_ALL}")
+            print(f"[red]Error moving files into destination '{dirdest}': {e}[/red]")
+
+    @staticmethod
+    def filemove(arg: str):
+        try:
+            import shutil
+            if not arg:
+                easysaxo.k_log("2")
+                print("[red]Usage: move [file] [dir] OR move (file1, file2) [dir][/red]")
+                return
+
+            arg_str = arg.strip()
+            files = []
+            dest_raw = "."
+
+            # group files in parentheses
+            if arg_str.startswith("("):
+                end_idx = arg_str.find(")")
+                if end_idx == -1:
+                    easysaxo.k_log("1")
+                    print("[red]Malformed parentheses.[/red]")
+                    return
+                raw_files = arg_str[1:end_idx].split(",")
+                files = [f.strip() for f in raw_files if f.strip()]
+                dest_raw = arg_str[end_idx+1:].strip() or "."
+            else:
+                parts = arg_str.split()
+                if len(parts) >= 2:
+                    if parts[0].lower() in DirLocation.FLAGS and len(parts) == 2:
+                        if parts[1].lower() in DirLocation.FLAGS:
+                            files = [parts[0]]
+                            dest_raw = parts[1]
+                        else:
+                            files = [parts[1]]
+                            dest_raw = parts[0]
+                    else:
+                        files = [" ".join(parts[:-1])]
+                        dest_raw = parts[-1]
+                else:
+                    files = [arg_str]
+                    dest_raw = "."
+
+            dest_path = DirLocation._resolve_path(dest_raw)
+            os.makedirs(dest_path, exist_ok=True)
+            if not os.path.isdir(dest_path):
+                easysaxo.k_log("f2")
+                print(f"[red]Destination '{dest_raw}' is not a valid directory.[/red]")
+                return
+
+            moved_count = 0
+            for f_item in files:
+                src_path = DirLocation._resolve_path(f_item)
+                if not os.path.exists(src_path):
+                    easysaxo.k_log("5")
+                    print(f"[red]File or directory '{f_item}' does not exist.[/red]")
+                    continue
+
+                filename = os.path.basename(src_path)
+                target_dest_path = os.path.join(dest_path, filename)
+
+                shutil.move(src_path, target_dest_path)
+                display_src = DirLocation.get_display_path(src_path)
+                display_dest = DirLocation.get_display_path(target_dest_path)
+                print(f"Moved [green]{display_src}[/green] -> [yellow]{display_dest}[/yellow]")
+                moved_count += 1
+
+            print(f"[green]Successfully moved {moved_count} item(s).[/green]")
+        except (PermissionError, OSError, KeyboardInterrupt) as e:
+            easysaxo.k_log("4" if isinstance(e, PermissionError) else "11")
+            print(f"[red]Error executing move command: {e}[/red]")
 
     @staticmethod
     def unzip(zip_path: str, extract_to: str | None = None):
@@ -737,12 +795,12 @@ class DirLocation:
 
             if not os.path.exists(full_zip):
                 easysaxo.k_log("5")
-                print(f"{Fore.RED}File '{zip_path}' does not exist.{Style.RESET_ALL}")
+                print(f"[red]File '{zip_path}' does not exist.[/red]")
                 return
 
             if not zipfile.is_zipfile(full_zip):
                 easysaxo.k_log("f1")
-                print(f"{Fore.RED}'{zip_path}' is not a valid zip archive.{Style.RESET_ALL}")
+                print(f"[red]'{zip_path}' is not a valid zip archive.[/red]")
                 return
 
             # if no output folder specified, default to a directory named after the zip
@@ -756,14 +814,12 @@ class DirLocation:
             display_zip = DirLocation.get_display_path(full_zip)
             display_extract = DirLocation.get_display_path(extract_to)
 
-            print(f"Extracting {Fore.CYAN}{display_zip}{Style.RESET_ALL} -> {Fore.YELLOW}{display_extract}{Style.RESET_ALL}...")
+            print(f"Extracting [cyan]{display_zip}[/cyan] -> [yellow]{display_extract}[/yellow]...")
 
             with zipfile.ZipFile(full_zip, "r") as zip_ref: zip_ref.extractall(extract_to)
 
-            print(f"{Fore.GREEN}Extraction complete!{Style.RESET_ALL}")
+            print("[green]Extraction complete![/green]")
 
         except (zipfile.BadZipFile, PermissionError, OSError, KeyboardInterrupt) as e: 
             easysaxo.k_log("3")
-            print(f"{Fore.RED}Failed to extract zip: {e}{Style.RESET_ALL}")
-
-# do not move, its sensitive and it may do nothing
+            print(f"[red]Failed to extract zip: {e}[/red]")

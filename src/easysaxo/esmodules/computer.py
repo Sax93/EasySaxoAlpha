@@ -14,7 +14,7 @@ import subprocess
 import sys
 
 import psutil
-from colorama import Fore, Style
+from rich import print
 
 from ..config import easysaxo
 
@@ -33,44 +33,44 @@ class ComputerData:
             import cpuinfo
         except ImportError: cpuinfo = None
 
-        print(f"Processor Model: {Fore.BLUE}{platform.processor() or 'Unknown'}{Style.RESET_ALL}")
+        print(f"Processor Model: [blue]{platform.processor() or 'Unknown'}[/blue]")
         if cpuinfo:
             try:
                 info = cpuinfo.get_cpu_info()
-                print(f"Brand: {Fore.CYAN}{info.get('brand_raw', 'N/A')}{Style.RESET_ALL}")
-                print(f"Architecture: {Fore.CYAN}{info.get('arch', 'N/A')}{Style.RESET_ALL}")
-                print(f"L2 Cache: {Fore.CYAN}{info.get('l2_cache_size', 'N/A')}{Style.RESET_ALL}")
-                print(f"L3 Cache: {Fore.CYAN}{info.get('l3_cache_size', 'N/A')}{Style.RESET_ALL}")
+                print(f"Brand: [cyan]{info.get('brand_raw', 'N/A')}[/cyan]")
+                print(f"Architecture: [cyan]{info.get('arch', 'N/A')}[/cyan]")
+                print(f"L2 Cache: [cyan]{info.get('l2_cache_size', 'N/A')}[/cyan]")
+                print(f"L3 Cache: [cyan]{info.get('l3_cache_size', 'N/A')}[/cyan]")
             except (AttributeError, TypeError, ValueError, KeyboardInterrupt) as e: return e
 
-        print(f"Cores: {Fore.BLUE}{psutil.cpu_count(logical=False)} Physical | {psutil.cpu_count(logical=True)} Logical{Style.RESET_ALL}")
+        print(f"Cores: [blue]{psutil.cpu_count(logical=False)}[/blue] Physical | [blue]{psutil.cpu_count(logical=True)}[/blue] Logical")
         try:
             freq = psutil.cpu_freq()
-            if freq: print(f"Speed: {Fore.BLUE}{freq.current:.2f} MHz (Min: {freq.min:.2f} MHz, Max: {freq.max:.2f} MHz){Style.RESET_ALL}")
+            if freq: print(f"Speed: [blue]{freq.current:.2f} MHz (Min: {freq.min:.2f} MHz, Max: {freq.max:.2f} MHz)[/blue]")
         except (AttributeError, TypeError, ValueError, KeyboardInterrupt) as e: return e
 
-        print(f"Total CPU Usage: {Fore.BLUE}{psutil.cpu_percent(interval=0.0)}{Style.RESET_ALL}%")
-        print(f"Core Usage: {Fore.BLUE}{psutil.cpu_percent(interval=0.2, percpu=True)}{Style.RESET_ALL}%")
+        print(f"Total CPU Usage: [blue]{psutil.cpu_percent(interval=0.0)}[/blue]%")
+        print(f"Core Usage: [blue]{psutil.cpu_percent(interval=0.2, percpu=True)}[/blue]%")
 
     @staticmethod
     def getarch():
-        print(f"Architecture: {Fore.BLUE}{Style.BRIGHT}{platform.architecture()[0]} ({platform.machine()}){Style.RESET_ALL}")
-        print(f"Byte Order: {Fore.BLUE}{sys.byteorder.upper()}-endian{Style.RESET_ALL}")
+        print(f"Architecture: [blue][bold]{platform.architecture()[0]} ({platform.machine()})[/bold][/blue]")
+        print(f"Byte Order: [blue]{sys.byteorder.upper()}-endian[/blue]")
 
     @staticmethod
     def getram():
         try:
             mem = psutil.virtual_memory()
-            print(f"Total RAM: {Fore.GREEN}{mem.total / (1024**3):.2f} GB{Style.RESET_ALL}")
-            print(f"Available RAM: {Fore.GREEN}{mem.available / (1024**3):.2f} GB{Style.RESET_ALL}")
-            print(f"Used RAM: {Fore.GREEN}{mem.used / (1024**3):.2f} GB ({mem.percent}%){Style.RESET_ALL}")
+            print(f"Total RAM: [green]{mem.total / (1024**3):.2f} GB[/green]")
+            print(f"Available RAM: [green]{mem.available / (1024**3):.2f} GB[/green]")
+            print(f"Used RAM: [green]{mem.used / (1024**3):.2f} GB ([/green][blue]{mem.percent}%[/blue][green])[/green]")
             try:
                 swap = psutil.swap_memory()
-                print(f"Swap Total: {Fore.GREEN}{swap.total / (1024**3):.2f} GB{Style.RESET_ALL}")
-                print(f"Swap Used: {Fore.GREEN}{swap.used / (1024**3):.2f} GB ({swap.percent}%){Style.RESET_ALL}")
+                print(f"Swap Total: [green]{swap.total / (1024**3):.2f} GB[/green]")
+                print(f"Swap Used: [green]{swap.used / (1024**3):.2f} GB ([/green][blue]{swap.percent}%[/blue][green])[/green]")
             except RuntimeError: 
                 easysaxo.k_log("10")
-                print(f"Swap Memory: {Fore.YELLOW}Unavailable{Style.RESET_ALL}")
+                print("Swap Memory: [yellow]Unavailable[/yellow]")
         except KeyboardInterrupt: 
             easysaxo.k_log("a0")
             return
@@ -86,10 +86,10 @@ class ComputerData:
                 gpus = GPUtil.getGPUs()
                 if gpus:
                     for gpu in gpus:
-                        print(f"GPU Name: {Fore.RED}{gpu.name}{Style.RESET_ALL}")
-                        print(f"  VRAM Total: {Fore.RED}{gpu.memoryTotal} MB{Style.RESET_ALL}")
-                        print(f"  VRAM Used: {Fore.RED}{gpu.memoryUsed} MB ({gpu.memoryUtil*100:.1f}%){Style.RESET_ALL}")
-                        print(f"  Temperature: {Fore.RED}{gpu.temperature} °C{Style.RESET_ALL}")
+                        print(f"GPU Name: [red]{gpu.name}[/red]")
+                        print(f"  VRAM Total: [red]{gpu.memoryTotal} MB[/red]")
+                        print(f"  VRAM Used: [red]{gpu.memoryUsed} MB ([/red][blue]{gpu.memoryUtil*100:.1f}%[/blue][red])[/red]")
+                        print(f"  Temperature: [red]{gpu.temperature} °C[/red]")
                     return
             except (ImportError, ValueError, AttributeError, KeyboardInterrupt) as e: return e
 
@@ -100,18 +100,18 @@ class ComputerData:
                     capture_output=True, text=True, timeout=5, check=True
                     )
                 output = result.stdout.strip()
-                if output: print(f"\nGPU Details:\n{Fore.RED}{output}{Style.RESET_ALL}\n")
-                else: print(f"GPU: {Fore.RED}No GPU detected{Style.RESET_ALL}")
+                if output: print(f"\nGPU Details:\n[red]{output}[/red]\n")
+                else: print("GPU: [red]No GPU detected[/red]")
             else:
                 result = subprocess.run(["lspci", "-v", "-mm"], capture_output=True, text=True, timeout=5,check=True)
                 for line in result.stdout.split("\n"):
                     if "VGA" in line or "Display" in line:
-                        print(f"GPU: {Fore.RED}{Style.BRIGHT}{line.strip()}{Style.RESET_ALL}")
+                        print(f"GPU: [red]{line.strip()}[/red]")
                         break
-                else: print(f"GPU: {Fore.RED}No GPU detected{Style.RESET_ALL}")
+                else: print("GPU: [red]No GPU detected[/red]")
         except (PermissionError, subprocess.CalledProcessError, KeyboardInterrupt): 
             easysaxo.k_log("4")
-            print(f"GPU: {Fore.RED}Unable to detect GPU{Style.RESET_ALL}")
+            print("GPU: [red]Unable to detect GPU[/red]")
 
     @staticmethod
     def getmotherboard():
@@ -121,11 +121,11 @@ class ComputerData:
                     ["powershell", "-Command", "Get-CimInstance Win32_BaseBoard | Select-Object Manufacturer, Product, SerialNumber"],
                     capture_output=True, text=True, timeout=5, check=True)
                 print(f"\nMotherboard Info:\n"
-                      f"{Fore.CYAN}{result.stdout.strip()}{Style.RESET_ALL}\n")
-            else: print(f"Motherboard: {Fore.CYAN}Requires root permissions (dmidecode) on Linux/Unix{Style.RESET_ALL}\n")
+                      f"[red]{result.stdout.strip()}[/red]\n")
+            else: print("Motherboard: [cyan]Requires root permissions (dmidecode) on Linux/Unix[/cyan]\n")
         except (PermissionError, AttributeError, subprocess.CalledProcessError, KeyboardInterrupt) as e: 
             easysaxo.k_log("4" if isinstance(e, PermissionError) else "11" if isinstance(e, KeyboardInterrupt) else "10")
-            print(f"Motherboard: {Fore.RED}Error fetching motherboard data:\n{e}{Style.RESET_ALL}")
+            print(f"Motherboard: [red]Error fetching motherboard data:\n{e}[/red]")
 
     @staticmethod
     def getdisk():
@@ -140,7 +140,7 @@ class ComputerData:
                 table.add_column("Free", style="green")
                 table.add_column("Usage", style="magenta")
 
-                for p in partitions: # bad joke here 
+                for p in partitions:
                     try:
                         u = psutil.disk_usage(p.mountpoint)
                         table.add_row(p.mountpoint, p.fstype, f"{u.total / (1024**3):.2f} GB", f"{u.free / (1024**3):.2f} GB", f"{u.percent}%")
@@ -152,77 +152,74 @@ class ComputerData:
                 for partition in partitions:
                     try:
                         usage = psutil.disk_usage(partition.mountpoint)
-                        print(f"Drive {Fore.YELLOW}{partition.mountpoint}{Style.RESET_ALL} ({partition.fstype}): {Fore.YELLOW}{usage.total / (1024**3):.2f} GB{Style.RESET_ALL} Total, {Fore.YELLOW}{usage.free / (1024**3):.2f} GB{Style.RESET_ALL} Free ({usage.percent}% Used)")
-                    except PermissionError: 
-                        
+                        print(f"Drive [yellow]{partition.mountpoint}[/yellow] ({partition.fstype}): [yellow]{usage.total / (1024**3):.2f} GB[/yellow] Total, [yellow]{usage.free / (1024**3):.2f} GB[/yellow] Free ([magenta]{usage.percent}%[/magenta] Used)")
+                    except PermissionError:
                         easysaxo.k_log("4")
-                        print(f"Drive {Fore.YELLOW}{partition.mountpoint}{Style.RESET_ALL}: Access denied.")
+                        print(f"Drive [yellow]{partition.mountpoint}[/yellow]: Access denied.")
 
             try:
                 io = psutil.disk_io_counters()
                 if io:
-                    print(f"\n--- Disk I/O Metrics ---\nRead: {Fore.YELLOW}{io.read_bytes / (1024**2):.2f} MB{Style.RESET_ALL} | Written: {Fore.YELLOW}{io.write_bytes / (1024**2):.2f} MB{Style.RESET_ALL}")
+                    print(f"\n--- Disk I/O Metrics ---\nRead: [yellow]{io.read_bytes / (1024**2):.2f} MB[/yellow] | Written: [yellow]{io.write_bytes / (1024**2):.2f} MB[/yellow]")
             except (AttributeError, TypeError, ValueError, PermissionError) as e: 
                 easysaxo.k_log("10" if not isinstance(e, ValueError or TypeError) else "6" if not isinstance(e, PermissionError) else "4")
-                print(f"{Fore.RED}Could not fetch disk data.{Style.RESET_ALL}")
-        except KeyboardInterrupt: 
-            easysaxo.k_log("11")
-            print(f"{Fore.RED}Cancelled disk data fetching.{Style.RESET_ALL}")
-            
+                print("[red]Could not fetch disk data.[/red]")
+            print("[red]Cancelled disk data fetching.[/red]")
+        except (PermissionError, AttributeError, TypeError, ValueError, KeyboardInterrupt) as e: 
+            easysaxo.k_log("10" if not isinstance(e, ValueError or TypeError) else "6" if not isinstance(e, PermissionError) else "4")
+            print(f"[red]Could not fetch disk data: {e}[/red]")
+    
     @staticmethod
     def getbattery():
         try:
             battery = psutil.sensors_battery()
             if battery:
                 plugged = "Plugged In" if battery.power_plugged else "On Battery"
-                print(f"Battery Charge: {Fore.CYAN}{battery.percent}%{Style.RESET_ALL} ({plugged})")
+                print(f"Battery Charge: [cyan]{battery.percent}%[/cyan] ({plugged})")
                 if battery.secsleft not in [psutil.POWER_TIME_UNLIMITED, psutil.POWER_TIME_UNKNOWN]:
                     mins = battery.secsleft // 60
-                    print(f"Time Remaining: {Fore.CYAN}{mins // 60}h {mins % 60}m{Style.RESET_ALL}")
-            else:
-                print(f"Battery: {Fore.CYAN}No battery detected{Style.RESET_ALL}")
+                    print(f"Time Remaining: [cyan]{mins // 60}h {mins % 60}m[/cyan]")
+            else: print("Battery: [cyan]No battery detected[/cyan]")
         except (ValueError, AttributeError, KeyboardInterrupt) as e:
             easysaxo.k_log("10" if not isinstance(e, ValueError) else "11" if not isinstance(e, PermissionError) else "4")
-            print(f"Battery: {Fore.RED}Unable to detect battery status{Style.RESET_ALL}") # poor
+            print("Battery: [red]Unable to detect battery status[/red]") # poor
 
     @staticmethod
     def getos():
-        print(f"Operating System: {Fore.BLUE}{platform.system()} {platform.release()}{Style.RESET_ALL}")
-        print(f"OS Version: {Fore.BLUE}{platform.version()}{Style.RESET_ALL}")
-        print(f"Full Platform Tag: {Fore.BLUE}{platform.platform()}{Style.RESET_ALL}")
-        # unless you barely have a kboard
+        print(f"Operating System: [blue]{platform.system()} {platform.release()}[/blue]")
+        print(f"OS Version: [blue]{platform.version()}[/blue]")
+        print(f"Full Platform Tag: [blue]{platform.platform()}[/blue]")
 
     @staticmethod
     def getpythoninfo():
         import locale
-        print(f"Python Version: {Fore.GREEN}{platform.python_version()} ({platform.python_compiler()}){Style.RESET_ALL}")
-        print(f"Executable Path: {Fore.GREEN}{sys.executable}{Style.RESET_ALL}")
-        print(f"Virtual Environment: {Fore.GREEN}{'Active' if sys.prefix != sys.base_prefix else 'Inactive'}{Style.RESET_ALL}")
+        print(f"Python Version: [green]{platform.python_version()} ([green]{platform.python_compiler()})[/green]")
+        print(f"Executable Path: [green]{sys.executable}[/green]")
+        print(f"Virtual Environment: [green]{'Active' if sys.prefix != sys.base_prefix else 'Inactive'}[/green]")
         loc, enc = locale.getlocale()
-        print(f"System Locale: {Fore.GREEN}{loc or 'Default'} | Encoding: {enc or 'UTF-8'}{Style.RESET_ALL}")
+        print(f"System Locale: [green]{loc or 'Default'} | Encoding: {enc or 'UTF-8'}[/green]")
 
     @staticmethod
     def getuserinfo():
         import getpass
         import socket
-        print(f"Logged User: {Fore.CYAN}{getpass.getuser()}{Style.RESET_ALL}")
-        print(f"Device Name (Hostname): {Fore.CYAN}{socket.gethostname()}{Style.RESET_ALL}")
+        print(f"Logged User: [cyan]{getpass.getuser()}[/cyan]")
+        print(f"Device Name (Hostname): [cyan]{socket.gethostname()}[/cyan]")
 
     @staticmethod
     def getenvvars():
         print("\n--- Environment Variables ---")
-        for key, value in list(os.environ.items())[:15]:
-            print(f"{Fore.MAGENTA}{key}{Style.RESET_ALL}: {value}")
+        for key, value in list(os.environ.items())[:15]: print(f"[magenta]{key}[/magenta]: {value}")
         print(f"... total {len(os.environ)} variables loaded.")
 
     @staticmethod
     def getinstalledpackages():
         try:
             reqs = subprocess.check_output([sys.executable, "-m", "uv", "pip", "list"])
-            print(f"\n{Fore.CYAN}--- Installed Pip Packages ---{Style.RESET_ALL}\n{reqs.decode('utf-8')}")
+            print(f"\n[cyan]--- Installed Pip Packages ---[/cyan]\n{reqs.decode('utf-8')}")
         except (PermissionError, AttributeError, subprocess.CalledProcessError, KeyboardInterrupt) as e: 
             easysaxo.k_log("10" if not isinstance(e, PermissionError or KeyboardInterrupt) else "4" if isinstance(e, PermissionError) else "11")
-            print(f"{Fore.RED}Error retrieving installed packages:\n{e}{Style.RESET_ALL}")
+            print(f"[red]Error retrieving installed packages:\n{e}[/red]")
 
     @staticmethod
     def getprocesses():
@@ -244,7 +241,7 @@ class ComputerData:
         else:
             print("\nTop 5 CPU-Consuming Processes:")
             for p in processes:
-                print(f"  PID: {p.info['pid']} | Name: {Fore.CYAN}{p.info['name']}{Style.RESET_ALL} | CPU: {p.info['cpu_percent']}% | RAM: {p.info['memory_percent']:.2f}%")
+                print(f"  PID: {p.info['pid']} | Name: [cyan]{p.info['name']}[/cyan] | CPU: {p.info['cpu_percent']}% | RAM: {p.info['memory_percent']:.2f}%")
 
 class ComputerOper:
     """Computer internal operation handler."""
@@ -254,7 +251,7 @@ class ComputerOper:
             if isinstance(waittime, str) and waittime.lower() in ["/a", "-c", "cancel", "abort"]:
                 if os.name == 'nt': os.system("shutdown /a")
                 else: os.system("sudo shutdown -c")
-                print(f"{Fore.GREEN}Scheduled shutdown action canceled.{Style.RESET_ALL}")
+                print("[green]Scheduled shutdown action canceled.[/green]")
                 return
 
             if isinstance(waittime, str) and waittime.isdigit(): waittime = int(waittime)
@@ -277,7 +274,7 @@ class ComputerOper:
             if isinstance(waittime, str) and waittime.lower() in ["/a", "-c", "cancel", "abort"]: 
                 if os.name == 'nt': os.system("shutdown /a")
                 else: os.system("sudo shutdown -c")
-                print(f"{Fore.GREEN}Scheduled restart action canceled.{Style.RESET_ALL}")
+                print("[green]Scheduled restart action canceled.[/green]")
                 return
             print("Restarting the system...")
             if os.name == 'nt': os.system(f"shutdown /r /t {waittime if waittime is not None else 0}")
@@ -301,7 +298,7 @@ class ComputerOper:
             elif "darwin" in current_os: subprocess.run(["pmset", "sleepnow"], check=True)
 
             else: print(f"Unsupported Operating System: {platform.system()}")
-                
+
         except (subprocess.CalledProcessError, OSError) as e: 
             easysaxo.k_log("9" if not isinstance(e, KeyboardInterrupt) else "11")
             print(f"Failed to suspend the device: {e}")
@@ -321,7 +318,7 @@ class ComputerOper:
             else: os.system("xdg-screensaver lock || loginctl lock-session")
         except (PermissionError, KeyboardInterrupt, OSError) as e: 
             easysaxo.k_log("4" if not isinstance(e, KeyboardInterrupt) else "11")
-            print(f"{Fore.RED}Could not lock screen: {e}{Style.RESET_ALL}")
+            print(f"[red]Could not lock screen: {e}[/red]")
 
     @staticmethod
     def clean_temp():
@@ -329,7 +326,7 @@ class ComputerOper:
             temp_dir = os.environ.get("TEMP") if os.name == "nt" else "/tmp"
             if not temp_dir or not os.path.exists(temp_dir):
                 easysaxo.k_log("5")
-                print(f"{Fore.YELLOW}Temp directory path not found.{Style.RESET_ALL}")
+                print("[yellow]Temp directory path not found.[/yellow]")
                 return
 
             deleted_files = 0
@@ -346,7 +343,7 @@ class ComputerOper:
                     except (PermissionError, OSError): continue
 
             mb_freed = deleted_size / (1024 ** 2)
-            print(f"{Fore.GREEN}Temp Cleanup Done: Cleared {deleted_files} files ({mb_freed:.2f} MB freed).{Style.RESET_ALL}")
+            print(f"[green]Temp Cleanup Done: Cleared {deleted_files} files ({mb_freed:.2f} MB freed).[/green]")
         except KeyboardInterrupt:
             easysaxo.k_log("11")
             print("Flush interrupted.")
@@ -354,9 +351,6 @@ class ComputerOper:
     @staticmethod
     def requirements():
         from .lister import SystemList
-        print(f"{Fore.CYAN}{easysaxo.name} {easysaxo.ver} Requirements:{Style.RESET_ALL}\n")
+        print(f"[cyan]{easysaxo.name} {easysaxo.ver} Requirements:[/cyan]\n")
         print(f"Minimum requirements:\n{SystemList.min_req}\n")
-        print(f"Reccomended requirements:\n{SystemList.rec_req}")
- 
-                
-# note: 8 out of 10 intel celeron inside cpus crash here
+        print(f"Recommended requirements:\n{SystemList.rec_req}")

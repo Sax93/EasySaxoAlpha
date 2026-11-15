@@ -6,7 +6,7 @@
 import threading
 import time
 
-from colorama import Fore, Style
+from rich import print
 
 from ..config import easysaxo
 from .dirloct import DirLocation, base_dir
@@ -31,17 +31,15 @@ class ThreadData:
     target_mode = "auto"
     path_display = False
     log_muter = True
-    # why storing this here? to make ezsaxo less comprehensible
 
     @staticmethod
-    def getthreads():
-        print(f"Active background threads: {Fore.GREEN}{threading.active_count()}{Style.RESET_ALL}")
+    def getthreads(): print(f"Active background threads: [green]{threading.active_count()}[/green]")
 
     @staticmethod
     def _timer_task(seconds, message):
         time.sleep(seconds)
         if PROMPT_TOOLKIT_AVAILABLE: print_formatted_text(HTML(f"<ansiyellow>==== [TIMER ALERT]: {message} ====</ansiyellow>"))
-        else: print(f"\n{Fore.YELLOW}==== [TIMER ALERT]: {message} ===={Style.RESET_ALL}\n")
+        else: print(f"\n[yellow]==== [TIMER ALERT]: {message} ====[/yellow]\n")
 
     @staticmethod
     def set_timer(seconds, message):
@@ -49,10 +47,10 @@ class ThreadData:
             sec = int(seconds)
             msg = message or "Timer finished!"
             threading.Thread(target=ThreadData._timer_task, args=(sec, msg), daemon=True).start()
-            print(f"Timer set for {Fore.CYAN}{sec} seconds{Style.RESET_ALL} in the background.")
+            print(f"Timer set for [cyan]{sec} seconds[/cyan] in the background.")
         except ValueError:
             easysaxo.k_log("6")
-            print(f"{Fore.RED}Please provide a valid integer for seconds.{Style.RESET_ALL}")
+            print("[red]Please provide a valid integer for seconds.[/red]")
 
 import json
 import os
@@ -83,17 +81,17 @@ class SessionManager:
                     "log_muter": ThreadData.log_muter
                 }, f, indent=4)
             SessionManager.active_session_file = target
-            print(f"{Fore.GREEN}Session saved successfully to '{os.path.basename(target)}'.{Style.RESET_ALL}")
+            print(f"[green]Session saved successfully to '{os.path.basename(target)}'.[/green]")
         except (PermissionError, FileNotFoundError, KeyboardInterrupt) as e: 
             easysaxo.k_log("4" if isinstance(e, PermissionError) else "5" if isinstance(e, FileNotFoundError) else "11")
-            print(f"{Fore.RED}Error saving session: {e}{Style.RESET_ALL}")
+            print(f"[red]Error saving session: {e}[/red]")
 
     @staticmethod
     def load_session(filepath: str | None) -> dict:
         target = DirLocation._resolve_path(filepath) if filepath else SessionManager.active_session_file
         default_data = {"user_name": "User", "password": None}
         if not os.path.exists(target):
-            print("File not specified or found. Default data loaded.")
+            print("[yellow]File not specified or found. Default data loaded.[/yellow]")
             return default_data
 
         try:
@@ -109,19 +107,18 @@ class SessionManager:
             for var_name, value in data.get("variables", {}).items(): MathList.mathset[var_name] = value
 
             SessionManager.active_session_file = target
-            print(f"{Fore.CYAN + Style.DIM}Loaded '{os.path.basename(target)}' for user '{user_name}'.{Style.RESET_ALL}")
+            print(f"[cyan]Loaded '{os.path.basename(target)}' for user '{user_name}'.[/cyan]")
 
             return {
                 "user_name": user_name,
                 "password": password,
                 "pathdisplay": data.get("pathdisplay", False),
-                "target_mode": data.get("target_mode", "auto"),
                 "log_muter": data.get("log_muter", True)
             }
 
         except (json.JSONDecodeError, ImportError, FileNotFoundError, KeyboardInterrupt) as e:
             easysaxo.k_log("11" if isinstance(e, KeyboardInterrupt) else "5" if isinstance(e, FileNotFoundError) else "3")
-            print(f"{Fore.RED}Failed to load session: {e}{Style.RESET_ALL}")
+            print(f"[red]Failed to load session: {e}[/red]")
             return default_data
 
 # set command
@@ -129,14 +126,15 @@ class SessionManager:
 def set_stat(arg):
     if not arg:
         easysaxo.k_log("2")
-        print(f"{Fore.RED}Usage: set <setting> <name> [value]{Style.RESET_ALL}")
+        print("[red]Usage: set <setting> <name> [value][/red]")
         return
 
     parts = arg.split(maxsplit=2)
+
     # edit username
     if parts[0].lower() == "name" and len(parts) >= 2:
         ThreadData.current_user = parts[1]
-        print(f"User name replaced to {Fore.GREEN}{parts[1]}{Style.RESET_ALL}.")
+        print(f"User name replaced to [green]{parts[1]}[/green].")
         SessionManager.save_session(ThreadData.current_user)
 
     # edit/add variable
@@ -151,7 +149,7 @@ def set_stat(arg):
         plain_pwd = parts[1].encode('utf-8')
         hashed_bytes = bcrypt.hashpw(plain_pwd, bcrypt.gensalt())
         ThreadData.current_pswd = hashed_bytes.decode('utf-8')
-        print(f"Password assigned successfully. It will load {Fore.MAGENTA}next session{Style.RESET_ALL}.")
+        print("Password assigned successfully. It will load [magenta]next session[/magenta].")
         SessionManager.save_session(ThreadData.current_user)
 
     # set command match
@@ -159,29 +157,28 @@ def set_stat(arg):
         mode_arg = parts[1].lower()
         if mode_arg in ["sys", "path", "device", "s"]: # system
             ThreadData.target_mode = "system"
-            print(f"{Fore.LIGHTGREEN_EX}Default execution mode set to: System Shell{Style.RESET_ALL}")
+            print("[lightgreen]Default execution mode set to: System Shell[/lightgreen]")
         elif mode_arg in ["es", "app", "local", "e"]: # app
             ThreadData.target_mode = "easysaxo"
-            print(f"{Fore.LIGHTCYAN_EX}Default execution mode set to: {easysaxo.name} Shell (Internal){Style.RESET_ALL}")
+            print(f"[lightcyan]Default execution mode set to: {easysaxo.name} Shell (Internal)[/lightcyan]")
         else: # auto
             ThreadData.target_mode = "auto"
-            print(f"{Fore.LIGHTYELLOW_EX}Default execution mode set to: Auto (EasySaxo -> System){Style.RESET_ALL}")
-            print(f"Use {Fore.CYAN}'-e'{Style.RESET_ALL} to force app command, or {Fore.CYAN}'-s'{Style.RESET_ALL} to force system command.")
+            print("[lightyellow]Default execution mode set to: Auto (EasySaxo -> System)[/lightyellow]")
+            print("Use [cyan]'-e'[/cyan] to force app command, or [cyan]'-s'[/cyan] to force system command.")
 
     # set name <-> path display
     elif parts[0].lower() in ["pathmode", "pathdisplay"] and len(parts) >= 2:
         path_arg = parts[1].lower()
         if path_arg in ["on", "enable"]:
             ThreadData.path_display = True
-            print(f"{Fore.LIGHTGREEN_EX}Path mode enabled.{Style.RESET_ALL}")
+            print("[lightgreen]Path mode enabled.[/lightgreen]")
         elif path_arg in ["off", "disable"]:
             ThreadData.path_display = False
-            print(f"{Fore.LIGHTRED_EX}Path mode disabled{Style.RESET_ALL}")
+            print("[lightred]Path mode disabled.[/lightred]")
         else:
             easysaxo.k_log("1") 
-            print(f"{Fore.RED}Unknown/malformed subcommand.{Style.RESET_ALL}")
+            print("[red]Unknown/malformed subcommand.[/red]")
         SessionManager.save_session(ThreadData.current_user)
-            
     else:
         easysaxo.k_log("1")
-        print(f"{Fore.RED}Unknown/malformed set subcommand.{Style.RESET_ALL}")
+        print("[red]Unknown/malformed set subcommand.[/red]")

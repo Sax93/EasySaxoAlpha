@@ -10,4 +10,5 @@ if [ ! -f ".venv/bin/python" ]; then
     ./.venv/bin/python -m pip install -e .
 fi
 
+./.venv/bin/python -m uv sync
 ./.venv/bin/python -m easysaxo.main
