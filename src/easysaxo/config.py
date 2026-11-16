@@ -105,7 +105,7 @@ class App:
         print(f"  > CPU Usage      : {cpu_percent:.1f}%")
         print("[cyan]=" * 30 + "[/cyan]\n")
         
-easysaxo = App("EasySaxo", "Alpha 1.13.01")
+easysaxo = App("EasySaxo", "Alpha 1.12.00")
 
 COMMAND_REGISTRY = {}
 GET_REGISTRY = {}
